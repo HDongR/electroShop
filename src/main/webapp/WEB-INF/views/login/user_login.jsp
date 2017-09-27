@@ -31,9 +31,7 @@
 			  	 	<img id="kakao_img" src="/resources/img/kakao_a.png" height="36" />
 			  	</a> 
 			  	
-			  	<a class="col-sm-4" id="naver_id_login">
-			  	 	
-			  	</a>   
+			  	<a class="col-sm-4" id="naver_id_login"/>  
 		  	</div>
  		</div>
 	</form>   

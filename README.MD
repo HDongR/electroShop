@@ -8,7 +8,7 @@ css는 부트스트랩을 이용하였습니다.
 
 
 ## License
-The Spring Framework is released under version 2.0 of the [Apache License][].
+This project is released under version 2.0 of the [Apache License][].
 
 [ElectroShop]: https://github.com/HDongR/electroShop
 [Apache License]: http://www.apache.org/licenses/LICENSE-2.0

@@ -12,7 +12,11 @@
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
 	
 	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">    
-		<property name="locations" value="classpath:/properties/database.properties"/>    
+		<property name="locations">
+		<list>
+			<value>classpath:/properties/database.properties</value>
+		</list> 
+		</property>
 		<property name="fileEncoding" value="UTF-8"/>
     </bean>
  
@@ -53,5 +57,5 @@
 	<!-- @Transactional을 이용하여 트랜잭션 가능하게함 -->
 	<tx:annotation-driven transaction-manager="transactionManager"/>	
 	
-	<context:component-scan base-package="ryu.park.shop.dao, ryu.park.shop.service" /> 
+	<context:component-scan base-package="ryu.park.shop.dao, ryu.park.shop.service, ryu.park.shop.utils" /> 
 </beans>

@@ -47,7 +47,7 @@
 
 	<!-- session timeout 설정 -->
 	<session-config>
-		<session-timeout>5</session-timeout>
+		<session-timeout>1</session-timeout>
 	</session-config>
 	
 	<!-- session timeout event 관리 -->

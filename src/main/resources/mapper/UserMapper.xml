@@ -3,8 +3,19 @@
 <!-- 맵핑될 DAO 인터페이스의 Full name 을 줍니다. -->
 <mapper namespace="UserMapper"> 
 	<select id="findUser" resultType="UserVO"> 
-		SELECT user_id, email, phone_num, addr_city, addr_area, addr_detail, name, nickname
-			FROM USER_T
-			WHERE user_id = #{userId} 
+		SELECT user_id, email, phone_num, password, addr_city, addr_area, addr_detail, name, nickname, join_date, join_type
+		FROM USER_T
+		WHERE email = #{email} 
 	</select>
+	
+	<select id="loginUser" resultType="UserVO">
+		SELECT * 
+		FROM USER_T
+		WHERE email = #{email} and password = #{password}
+	</select>
+	
+	<insert id="addUser" parameterType="UserVO">
+		INSERT INTO USER_T (email, password, nickname, join_date, join_type)
+		VALUES (#{email}, #{password}, #{nickname}, #{joinDate}, #{joinType})
+	</insert>
 </mapper>

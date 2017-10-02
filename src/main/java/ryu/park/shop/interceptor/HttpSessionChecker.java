@@ -14,17 +14,15 @@ public class HttpSessionChecker implements HttpSessionListener {
 
 	@Override
 	public void sessionCreated(HttpSessionEvent event) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Session ID".concat(event.getSession().getId()).concat(" created at ")
-					.concat(new Date().toString()));
-		}
+
+		logger.info("Session ID".concat(event.getSession().getId()).concat(" created at ").concat(new Date().toString()));
+
 	}
 
 	@Override
 	public void sessionDestroyed(HttpSessionEvent event) {
-		if (logger.isDebugEnabled()) {
-			logger.debug("Session ID".concat(event.getSession().getId()).concat(" destroyed at ")
-					.concat(new Date().toString()));
-		}
+
+		logger.info("Session ID".concat(event.getSession().getId()).concat(" destroyed at ").concat(new Date().toString()));
+
 	}
 }

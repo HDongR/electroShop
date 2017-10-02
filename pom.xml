@@ -21,6 +21,14 @@
 		</repository>
 	</repositories>
 	<dependencies>
+
+		<!-- SecurityCodec -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.10</version>
+		</dependency>
+
 		<!-- Validation -->
 		<dependency>
 			<groupId>javax.validation</groupId>

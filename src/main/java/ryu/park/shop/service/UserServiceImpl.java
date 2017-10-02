@@ -22,13 +22,12 @@ public class UserServiceImpl implements UserService{
 		return dao.findUser(userId);
 	}
 
-	@Transactional
+	
 	@Override
-	public void addUser(UserVO userVo) {
-		dao.addUser(userVo);
-		
-	}
-
+	public UserVO loginUser(UserVO userVO) { 
+		return dao.loginUser(userVO);
+	} 
+	
 	@Transactional
 	@Override
 	public void updateUser(UserVO userVO) {
@@ -41,6 +40,12 @@ public class UserServiceImpl implements UserService{
 	public void deleteUser(UserVO userVO) {
 		dao.deleteUser(userVO);
 		
+	}
+
+	@Transactional
+	@Override
+	public int addUser(UserVO userVO) {
+		return dao.addUser(userVO); 
 	}
 
 }

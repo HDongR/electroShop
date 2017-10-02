@@ -168,7 +168,7 @@
 				        			}
 					, function(data, status){
 					        if(status == 'success'){
-					        		if(data == 'isCommonJoined' || data == 'isKakaoJoined' || data == 'isNaverJoined'){
+					        		if(data == 'isManagerJoined' || data == 'isCommonJoined' || data == 'isKakaoJoined' || data == 'isNaverJoined'){
 					        			alert('dupl'); 
 					        			$scope.isDuplicateCheck = false;
 					        			emailCheckBtn(false);
@@ -202,7 +202,7 @@
 				//회원가입 
 				$('#join_complete').click(function(){   
 					$('#join_complete').prop('disabled', true);
-					$.post("/user/join_user_complete",
+					$.post("/user/esjoin",
 						    {
 						        email: $scope.email,
 						        password: $scope.pwd,

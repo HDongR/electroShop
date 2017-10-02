@@ -33,6 +33,7 @@ public class UserController {
 
 	@Autowired
 	private UserService service;
+	
 	@Autowired
 	private SecurityUtils securityUtils;
 
@@ -46,6 +47,9 @@ public class UserController {
 		if (user == null) {
 			logger.info("checkEmail: null");
 			response.getWriter().print("isNotDuplicateEmail");
+		} else if( user.getJoinType() == JoinType.MANAGER) {
+			logger.info("checkEmail: MANAGER");
+			response.getWriter().print("isManagerJoined");
 		} else if (user.getJoinType() == JoinType.COMMON) {
 			logger.info("checkEmail: COMMON");
 			response.getWriter().print("isCommonJoined");
@@ -101,11 +105,11 @@ public class UserController {
 		return "user/join_user";
 	}
 
-	// join es user
-	@RequestMapping(value = "join_user_complete", method = RequestMethod.POST)
+	// es join
+	@RequestMapping(value = "esjoin", method = RequestMethod.POST)
 	public void joinUser(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
-		logger.info("joinUser");
+		logger.info("es join");
 		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
 			logger.info("valid error");
 			response.getWriter().print("validError");
@@ -124,11 +128,11 @@ public class UserController {
 		}
 	}
 
-	// kakao join
-	@RequestMapping(value = "kakaojoin", method = RequestMethod.POST)
+	// sns join
+	@RequestMapping(value = "snsjoin", method = RequestMethod.POST)
 	public void kakaoJoin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
-		logger.info("kakaoJoin");
+		logger.info("snsJoin");
 		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
 			logger.info("valid error");
 			response.getWriter().print("validError");
@@ -147,11 +151,11 @@ public class UserController {
 		}
 	}
 
-	// kakao login
-	@RequestMapping(value = "kakaologin", method = RequestMethod.POST)
+	// sns login
+	@RequestMapping(value = "snslogin", method = RequestMethod.POST)
 	public void kakaoLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse res) throws IOException {
-		logger.info("kakaoLogin");
+		logger.info("snsLogin");
 		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
 			logger.info("valid error");
 			res.getWriter().print("validError");
@@ -169,50 +173,5 @@ public class UserController {
 			}
 		}
 	}
-
-	// naver join
-	@RequestMapping(value = "naverjoin", method = RequestMethod.POST)
-	public void naverJoin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
-		logger.info("naverJoin");
-		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
-			logger.info("valid error");
-			response.getWriter().print("validError");
-		} else {
-			user.setPassword(securityUtils.getHash(user.getEmail()));
-			logger.info(user.getPassword());
-			int r = service.addUser(user);
-			logger.info("result:" + r);
-			if (r > 0) { // database 에러처리
-				response.getWriter().print("joinUserComplete");
-				HttpSession session = request.getSession();
-				session.setAttribute("user", user);
-			} else {
-				response.getWriter().print("databaseError");
-			}
-		}
-	}
-
-	//naver login
-	@RequestMapping(value = "naverlogin", method = RequestMethod.POST)
-	public void naverLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
-			HttpServletResponse res) throws IOException {
-		logger.info("naverLogin");
-		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
-			logger.info("valid error");
-			res.getWriter().print("validError");
-		} else {
-			user.setPassword(securityUtils.getHash(user.getEmail()));
-			UserVO userVO = service.loginUser(user);
-
-			if (userVO == null) {
-				res.getWriter().print("invalid Email or Pwd");
-			} else {
-				HttpSession session = request.getSession(true);
-				session.setAttribute("user", userVO);
-
-				res.getWriter().print("loginComplete");
-			}
-		}
-	}
+ 
 }

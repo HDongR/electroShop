@@ -122,6 +122,89 @@
 
 			});
 	
+</script> 
+
+<script>
+// sns login
+
+function checkEmail(_joinType, _email, _nickname){ 
+		$.post('/user/check_email',{
+				email: _email
+				}
+				, function(data, status){
+				if(status == 'success'){ 
+						if(data == 'isNotDuplicateEmail') { 
+							snsJoin(_joinType, _email, _nickname); 
+						}else if(data == 'isManagerJoined'){
+							alert('이미 관리자로 가입하셨습니다.');
+						}else if(data == 'isCommonJoined'){
+							alert('이미 ES로 가입하셨습니다.');
+						}else if(data == 'isNaverJoined' || data == 'isKakaoJoined'){
+							if(_joinType == 'NAVER' && data == 'isKakaoJoined'){
+								alert('이미 KAKAO로 가입하셨습니다.');
+							}else if(_joinType == 'KAKAO' && data == 'isNaverJoined'){
+								alert('이미 NAVER로 가입하셨습니다.');
+							}else{
+								snsLogin(_email);
+							}
+						} 
+				}else{
+						alert('다시 시도해 주세요');
+				}
+		});  
+	}  
+	
+	
+function snsLogin(_email){
+	$.post("/user/snslogin",
+		    {
+		        email: _email,
+		        password: ''
+		    },
+		    function(data, status){
+				if(status == 'success'){
+		        		if(data == 'validError'){ 
+		        			alert('유효하지 않은 데이터를 입력하셨네요');   
+		        		}else if(data == "invalid Email or Pwd"){
+		        			alert('유효하지 않은 이메일 또는 비밀번호입니다');   
+		        		}else if(data == 'loginComplete') {  
+		        			//complete
+		        			location.href='/'; 
+		        		}
+		        }else{
+		        		alert('다시 시도해 주세요');
+		        }
+				 
+		    }); 
+}
+
+// sns join
+function snsJoin(_joinType, _email, _nickname){
+	$.post("/user/snsjoin",
+		    {
+		        email: _email, 
+		        password: '',
+		        nickname: _nickname,
+		        joinDate: now(),
+		        joinType: _joinType
+		    },
+		    function(data, status){ 
+				if(status == 'success'){
+		        		if(data == 'validError'){ 
+		        			alert('유효하지 않은 데이터를 입력하셨네요');  
+		        		}else if(data == 'databaseError'){
+		        			alert('database error'); 
+		        		}else if(data == 'joinUserComplete') {  
+		        			//complete
+		        			location.href='/';
+		        		}
+		        }else{
+		        		alert('다시 시도해 주세요');
+		        }
+				 
+		    });
+}
+
 </script>
 
 <!-- naver -->
@@ -138,80 +221,10 @@
 	naver_id_login.get_naver_userprofile("naverSignInCallback()");
 	
 	function naverSignInCallback() { 
-		naverCheckEmail(naver_id_login.getProfileData('email'), naver_id_login.getProfileData('nickname'))
-		 
-		self.opener = self;
-		window.close();
-	}
-	
-	function naverCheckEmail(email, nickname){ 
-		$.post('/user/check_email',{
-				email: email
-				}, function(data, status){
-					if(status == 'success'){ 
-						if(data == 'isCommonJoined'){
-							alert('이미 ES로 가입하셨습니다.');
-						}else if(data == 'isKakaoJoined'){
-							alert('이미 Kakao로 가입하셨습니다.');
-						}else if(data == 'isNotDuplicateEmail') { 
-							naverJoin(email, nickname);
-						}else if(data == 'isNaverJoined'){
-							naverLogin(email);
-						}
-					}else{
-							alert('다시 시도해 주세요');
-					}
-		});  
-	}  
-	
-	function naverLogin(nemail){
-		$.post("/user/naverlogin",
-			    {
-			        email: nemail,
-			        password: ''
-			    },
-			    function(data, status){
-					if(status == 'success'){
-			        		if(data == 'validError'){ 
-			        			alert('유효하지 않은 데이터를 입력하셨네요');   
-			        		}else if(data == "invalid Email or Pwd"){
-			        			alert('유효하지 않은 이메일 또는 비밀번호입니다');   
-			        		}else if(data == 'loginComplete') {  
-			        			//complete
-			        			location.href='/'; 
-			        		}
-			        }else{
-			        		alert('다시 시도해 주세요');
-			        }
-					 
-			    }); 
-	}
-	
-	function naverJoin(email, nickname){
-		console.log("email:"+email);
-		$.post("/user/naverjoin",
-			    {
-			        email: email,
-			        password: '',
-			        nickname: nickname,
-			        joinDate: now(),
-			        joinType: 'NAVER'
-			    },
-			    function(data, status){ 
-					if(status == 'success'){
-			        		if(data == 'validError'){ 
-			        			alert('유효하지 않은 데이터를 입력하셨네요');  
-			        		}else if(data == 'databaseError'){
-			        			alert('database error'); 
-			        		}else if(data == 'joinUserComplete') {  
-			        			//complete
-			        			location.href='/';
-			        		}
-			        }else{
-			        		alert('다시 시도해 주세요');
-			        }
-					 
-			    });
+		checkEmail('NAVER', naver_id_login.getProfileData('email'), naver_id_login.getProfileData('nickname'))
+		   
+	/* 	self.opener = self;
+		window.close(); */
 	}
 </script>
  
@@ -224,9 +237,8 @@
 	
 	$('#kakao_login').click(function(){ 
 		requestKakao();
-	});
-	 
-	
+	}); 
+
 	function requestKakao(){ 
 		  Kakao.Auth.login({
 				success: function(authObj) {
@@ -242,86 +254,15 @@
 		Kakao.API.request({
 			url: '/v1/user/me',
 			success: function(res) {
-				 
-				kakaoCheckEmail(JSON.parse(JSON.stringify(res))); 
-				
+				var jo = JSON.parse(JSON.stringify(res));  
+				checkEmail('KAKAO', jo.kaccount_email, jo.properties.nickname);  
 			},
 			fail: function(error) {
 				console.log(error);
 			}
 		});
 	}
-	
-	function kakaoCheckEmail(jo){ 
-		$.post('/user/check_email',{
-				email: jo.kaccount_email
-				}
-				, function(data, status){
-				if(status == 'success'){ 
-						if(data == 'isCommonJoined'){
-							alert('이미 ES로 가입하셨습니다.');
-						}else if(data == 'isNaverJoined'){
-							alert('이미 Naver로 가입하셨습니다.');
-						}else if(data == 'isNotDuplicateEmail') { 
-							kakaoJoin(jo);
-						}else if(data == 'isKakaoJoined'){
-							kakaoLogin(jo.kaccount_email);
-						}
-				}else{
-						alert('다시 시도해 주세요');
-				}
-		});  
-	}  
-	
-	function kakaoLogin(kemail){
-		$.post("/user/kakaologin",
-			    {
-			        email: kemail,
-			        password: ''
-			    },
-			    function(data, status){
-					if(status == 'success'){
-			        		if(data == 'validError'){ 
-			        			alert('유효하지 않은 데이터를 입력하셨네요');   
-			        		}else if(data == "invalid Email or Pwd"){
-			        			alert('유효하지 않은 이메일 또는 비밀번호입니다');   
-			        		}else if(data == 'loginComplete') {  
-			        			//complete
-			        			location.href='/'; 
-			        		}
-			        }else{
-			        		alert('다시 시도해 주세요');
-			        }
-					 
-			    }); 
-	}
-	
-	function kakaoJoin(jo){
-		$.post("/user/kakaojoin",
-			    {
-			        email: jo.kaccount_email,
-			        password: '',
-			        nickname: jo.properties.nickname,
-			        joinDate: now(),
-			        joinType: 'KAKAO'
-			    },
-			    function(data, status){ 
-					if(status == 'success'){
-			        		if(data == 'validError'){ 
-			        			alert('유효하지 않은 데이터를 입력하셨네요');  
-			        		}else if(data == 'databaseError'){
-			        			alert('database error'); 
-			        		}else if(data == 'joinUserComplete') {  
-			        			//complete
-			        			location.href='/';
-			        		}
-			        }else{
-			        		alert('다시 시도해 주세요');
-			        }
-					 
-			    });
-	}
-	
+	 
 	$('#kakao_img').mouseenter(function(){
 		$('#kakao_img').attr('src', '/resources/img/kakao_v.png');
 	}).mouseleave(function(){

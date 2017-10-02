@@ -43,15 +43,18 @@
 							<ul class="dropdown-menu list-inline">
 								<li><a href="/user/update/"><span class="glyphicon glyphicon-pencil"></span> 정보수정</a></li> 
 								<c:choose>
-							       <c:when test="${user.joinType == 'COMMON'}">
-							          <li><a id ="common" href="#"><span class="glyphicon glyphicon-user"></span> es 로그아웃</a> </li>
-							       </c:when>
-							       <c:when test="${user.joinType == 'KAKAO'}">
-							           <li><a id="kakao" href="#"><span class="glyphicon glyphicon-user"></span> kakao 로그아웃</a> </li>
-							       </c:when>
-							       <c:when test="${user.joinType == 'NAVER'}">
-							           <li><a id="naver" href="#"><span class="glyphicon glyphicon-user"></span> naver 로그아웃</a> </li>
-							       </c:when> 
+									<c:when test="${user.joinType == 'MANAGER'}">
+								  		<li><a id ="manager" href="#"><span class="glyphicon glyphicon-user"></span> 관리자 로그아웃</a> </li>
+								   	</c:when>
+									<c:when test="${user.joinType == 'COMMON'}">
+								  		<li><a id ="common" href="#"><span class="glyphicon glyphicon-user"></span> es 로그아웃</a> </li>
+								   	</c:when>
+								   	<c:when test="${user.joinType == 'KAKAO'}">
+										<li><a id="kakao" href="#"><span class="glyphicon glyphicon-user"></span> kakao 로그아웃</a> </li>
+									</c:when>
+								    	<c:when test="${user.joinType == 'NAVER'}">
+										<li><a id="naver" href="#"><span class="glyphicon glyphicon-user"></span> naver 로그아웃</a> </li>
+								   	</c:when> 
 							   	</c:choose>  
 							</ul>
 						</li>
@@ -66,6 +69,10 @@
 </nav> 
 
 <script>
+$("#manager").click(function(){ 
+	location.href='/user/logout/';
+}); 
+
 $("#common").click(function(){ 
 	location.href='/user/logout/';
 }); 

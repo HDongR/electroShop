@@ -98,7 +98,13 @@ public class UserController {
 
 		return "redirect:/";
 	}
-
+	// join page
+		@RequestMapping(value = "login/naver_callback", method = RequestMethod.GET)
+		public String loginnaver_callback() {
+			return "user/naver_callback";
+		}
+	
+	
 	// join page
 	@RequestMapping(value = "join", method = RequestMethod.GET)
 	public String join() {

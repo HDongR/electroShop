@@ -4,7 +4,7 @@
 <script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script>
 <script type="text/javascript" src="/resources/js/date_utils.js/"></script>
-
+ 
 <div ng-app="myApp" class="container" ng-controller="validateCtrl">
 
 	<form name="myForm" class="form-horizontal">
@@ -196,6 +196,7 @@ function snsJoin(_joinType, _email, _nickname){
 		        			alert('database error'); 
 		        		}else if(data == 'joinUserComplete') {  
 		        			//complete
+		        			alert("가입을 완료하였습니다")
 		        			location.href='/';
 		        		}
 		        }else{
@@ -210,22 +211,13 @@ function snsJoin(_joinType, _email, _nickname){
 <!-- naver -->
 <script type="text/javascript">  
 	var id = '<spring:eval expression="@config.getProperty('naverclientkey')" />';
-	var naver_id_login = new naver_id_login(id, "http://localhost:8080/user/login/");
+	var naver_id_login = new naver_id_login(id, "http://localhost:8080/user/login/naver_callback");
 	var state = naver_id_login.getUniqState();
 	naver_id_login.setButton("green", 3, 36);
 	naver_id_login.setDomain("http://localhost:8080");
 	naver_id_login.setState(state);
 	naver_id_login.setPopup();
-	naver_id_login.init_naver_id_login();
-	
-	naver_id_login.get_naver_userprofile("naverSignInCallback()");
-	
-	function naverSignInCallback() { 
-		checkEmail('NAVER', naver_id_login.getProfileData('email'), naver_id_login.getProfileData('nickname'))
-		   
-	/* 	self.opener = self;
-		window.close(); */
-	}
+	naver_id_login.init_naver_id_login();  
 </script>
  
  

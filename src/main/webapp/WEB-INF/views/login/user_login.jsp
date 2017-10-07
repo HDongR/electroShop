@@ -41,12 +41,16 @@
  		<div class="form-group">
 			<label class="control-label col-sm-2"></label>
 			<div class="col-sm-10" style="text-align: center;">
-				<button type="button" class="btn btn-md btn-link" onclick="location.href='/user/join';">
+				<button type="button" class="btn btn-md btn-link" onclick="location.href='/user/join_page';">
 		 			ElectroShop 회원가입
 			  	</button>  
 			  	
 			  	<button type="button" class="btn btn-md btn-link">
 		 			ElectroShop 비밀번호 찾기
+			  	</button>  
+			  	
+			  	<button id="manager" type="button" class="btn btn-md btn-link" onclick="location.href='/manager/login_page'">
+		 			 관리자
 			  	</button>  
 		  	</div>  
  		</div>
@@ -56,7 +60,7 @@
 </div>
 
 <!-- validaeCtrl -->
-<script> 
+<script>   
 	var app = angular.module('myApp', []);
 	app.controller('validateCtrl',
 			function($scope) {  
@@ -106,9 +110,11 @@
 								if(status == 'success'){
 						        		if(data == 'validError'){ 
 						        			alert('유효하지 않은 데이터를 입력하셨네요');   
-						        		}else if(data == "invalid Email or Pwd"){
+						        		}else if(data == 'invalid Email or Pwd'){
 						        			alert('유효하지 않은 이메일 또는 비밀번호입니다');   
-						        		}else if(data == 'loginComplete') {  
+						        		}else if(data == 'validManager'){
+						        			alert('관리자로 로그인 해주세요');   
+						        		}else if(data == 'loginComplete'){
 						        			//complete
 						        			location.href='/'; 
 						        		}

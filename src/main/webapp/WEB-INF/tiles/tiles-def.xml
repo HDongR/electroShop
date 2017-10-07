@@ -10,7 +10,10 @@
 	</definition>
 	
 	<definition name="user/*" extends="main">
-		<put-attribute name="body" value="/WEB-INF/views/login/{1}.jsp"/>
-		
+		<put-attribute name="body" value="/WEB-INF/views/login/{1}.jsp"/> 
+	</definition>
+	
+	<definition name="manager/*" extends="main">
+		<put-attribute name="body" value="/WEB-INF/views/manager/{1}.jsp"/> 
 	</definition>
 </tiles-definitions>

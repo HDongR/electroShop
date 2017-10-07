@@ -10,9 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,7 +31,7 @@ public class UserController {
 
 	@Autowired
 	private UserService service;
-	
+
 	@Autowired
 	private SecurityUtils securityUtils;
 
@@ -45,9 +43,9 @@ public class UserController {
 		UserVO user = service.findUser(email);
 
 		if (user == null) {
-			logger.info("checkEmail: null");
+			logger.info(email + " checkEmail result is null");
 			response.getWriter().print("isNotDuplicateEmail");
-		} else if( user.getJoinType() == JoinType.MANAGER) {
+		} else if (user.getJoinType() == JoinType.MANAGER) {
 			logger.info("checkEmail: MANAGER");
 			response.getWriter().print("isManagerJoined");
 		} else if (user.getJoinType() == JoinType.COMMON) {
@@ -63,8 +61,8 @@ public class UserController {
 	}
 
 	// login page
-	@RequestMapping(value = "login", method = RequestMethod.GET)
-	public String login() {
+	@RequestMapping(value = "login_page", method = RequestMethod.GET)
+	public String loginPage() {
 		return "user/user_login";
 	}
 
@@ -72,6 +70,7 @@ public class UserController {
 	@RequestMapping(value = "eslogin", method = RequestMethod.POST)
 	public void esLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse res) throws IOException {
+		logger.info("esLogin");
 		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
 			logger.info("valid error");
 			res.getWriter().print("validError");
@@ -80,6 +79,8 @@ public class UserController {
 			UserVO userVO = service.loginUser(user);
 			if (userVO == null) {
 				res.getWriter().print("invalid Email or Pwd");
+			} else if (userVO.getJoinType() == JoinType.MANAGER) {
+				res.getWriter().print("validManager");
 			} else {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("user", userVO);
@@ -98,17 +99,17 @@ public class UserController {
 
 		return "redirect:/";
 	}
+
 	// join page
-		@RequestMapping(value = "login/naver_callback", method = RequestMethod.GET)
-		public String loginnaver_callback() {
-			return "user/naver_callback";
-		}
-	
-	
+	@RequestMapping(value = "login/naver_callback", method = RequestMethod.GET)
+	public String loginnaver_callback() {
+		return "user/naver_callback";
+	}
+
 	// join page
-	@RequestMapping(value = "join", method = RequestMethod.GET)
-	public String join() {
-		return "user/join_user";
+	@RequestMapping(value = "join_page", method = RequestMethod.GET)
+	public String joinPage() {
+		return "user/user_join";
 	}
 
 	// es join
@@ -179,5 +180,5 @@ public class UserController {
 			}
 		}
 	}
- 
+
 }

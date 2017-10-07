@@ -32,14 +32,23 @@
 			
 			<ul class="nav navbar-nav navbar-right">
 				 
-					<c:if test="${null eq user}"><li><a href="/user/login/"><span class="glyphicon glyphicon-user"></span> 로그인</a> 
+					<c:if test="${null eq user}">
+						<li><a href="/user/login_page"><span class="glyphicon glyphicon-user"></span> 로그인</a> 
 						</li>
 					</c:if>
-					<c:if test="${null ne user}">
-						<li>
-						</li>
+					<c:if test="${null ne user}"> 
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${user.nickname} 
 						
-						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${user.nickname} 회원님<span class="caret"></span></a>
+						<c:choose>
+							<c:when test="${user.joinType == 'MANAGER'}">
+									관리자님
+							</c:when>
+									<c:otherwise>
+									회원님
+							</c:otherwise>
+						</c:choose>
+						
+						<span class="caret"></span></a>
 							<ul class="dropdown-menu list-inline">
 								<li><a href="/user/update/"><span class="glyphicon glyphicon-pencil"></span> 정보수정</a></li> 
 								<c:choose>

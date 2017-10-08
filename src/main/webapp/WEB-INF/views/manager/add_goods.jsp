@@ -7,6 +7,18 @@
  <textarea class="form-control" name="noticeContent" id="noticeContent" cols="50" rows="15"></textarea>
  <script>
  CKEDITOR.replace('noticeContent', {'filebrowserUploadUrl' : '/manager/upload_img'});
+ CKEDITOR.on('dialogDefinition', function( ev ){
+     var dialogName = ev.data.name;
+     var dialogDefinition = ev.data.definition;
+   
+     switch (dialogName) {
+         case 'image': //Image Properties dialog
+             //dialogDefinition.removeContents('info');
+             dialogDefinition.removeContents('Link');
+             dialogDefinition.removeContents('advanced');
+             break;
+     }
+ }); 
  </script>
 </div>
 

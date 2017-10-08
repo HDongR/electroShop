@@ -1,7 +1,7 @@
 package ryu.park.shop.controller;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.File; 
+import java.io.IOException; 
 import java.util.Date;
 
 import javax.servlet.ServletRequest;
@@ -32,10 +32,15 @@ public class ManagerController {
 	private static final Logger logger = LoggerFactory.getLogger(ManagerController.class);
 	
 	@Autowired
-	private ManagerService service;
-	
+	private ManagerService service; 
 	@Autowired
 	private SecurityUtils securityUtils;
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String manager_home(Model model) { 
+		model.addAttribute("condition", "manager_main");
+		return "manager_main";
+	}
 	
 	@RequestMapping(value = "join", method = RequestMethod.POST)
 	public void joinManager(@Valid UserVO manager, BindingResult bindingResult, ServletRequest req, ServletResponse res) {
@@ -75,14 +80,15 @@ public class ManagerController {
 	}
 	
 	@RequestMapping(value = "add_goods", method = RequestMethod.GET)
-	public String addGoodsPage() {
+	public String addGoodsPage(Model model) {
+		model.addAttribute("condition", "add_goods");
 		return "manager/add_goods";
 	}
 	
 	@RequestMapping(value = "upload_img", method = RequestMethod.POST)
-	public String uploadImg(HttpServletRequest req, @RequestParam MultipartFile upload, Model model, String CKEditorFuncNum) {
-		logger.info("uploadImg");
-		logger.info(upload.toString());
+	public void uploadImg(HttpServletRequest req, HttpServletResponse res, @RequestParam MultipartFile upload) {
+		logger.info("uploadImg"); 
+		
 		Date date = new Date();
 		int year = date.getYear() + 1900;
 		int month = date.getMonth();
@@ -90,39 +96,33 @@ public class ManagerController {
 		
 		if(month < 10 ) monthStr = "0" + month;
 		else monthStr = "" + month;
-		String defaultPath = req.getRealPath("/");
-		String contextPath = req.getSession().getServletContext().getContextPath();
-		String fileUploadPathTail = "ckeImage/" + year + "" +monthStr;
-		String fileUploadPath = defaultPath + "/" + fileUploadPathTail;
-		
-		try {
-			if(upload != null) {
-				String fileName = upload.getOriginalFilename();
-				String fileNameExt = fileName.substring(fileName.indexOf(".") + 1);
-				
-				if(! "".equals(fileName)) {
-					File destD = new File(fileUploadPath);
-					
-					if(!destD.exists()) {
-						destD.mkdirs();
-					}
-					
-					File destination = File.createTempFile("ckeditor_", "." + fileNameExt, destD);
-					upload.transferTo(destination); 
-				
-					model.addAttribute("CKEditorFuncNum", CKEditorFuncNum);
-					model.addAttribute("imageUrl", contextPath + "/" + fileUploadPathTail + "/" + destination.getName());
-					
-				}
-			}
-		}catch(Exception ve) {
-			
-		}
-	
-		
-		
-		
-		return "ckeditorImageUpload";
+		   
+        res.setCharacterEncoding("utf-8");
+        res.setContentType("text/html;charset=utf-8");
+ 
+        try{
+  
+            String root_path = req.getSession().getServletContext().getRealPath("/");
+            String attach_path = "resources/uploadImg/";
+            String fileName = "ckeImg_" + year + monthStr + "_" + upload.getOriginalFilename();
+             
+            upload.transferTo(new File(root_path + attach_path + fileName));
+            
+            String callback = req.getParameter("CKEditorFuncNum");
+            String fileUrl = "http://" + req.getServerName() + ":" + req.getServerPort() + "/" + attach_path + fileName;
+             
+            logger.info(fileUrl);
+ 
+            res.getWriter().println("<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction("
+                    + callback
+                    + ",'"
+                    + fileUrl
+                    + "','이미지를 업로드 하였습니다.'"
+                    + ")</script>"); 
+ 
+        }catch(IOException e){
+            e.printStackTrace(); 
+        }
 	}
 	
 }

@@ -53,6 +53,7 @@
 								<li><a href="/user/update/"><span class="glyphicon glyphicon-pencil"></span> 정보수정</a></li> 
 								<c:choose>
 									<c:when test="${user.joinType == 'MANAGER'}">
+										<li><a href="manager/"><span class="glyphicon glyphicon-cog"></span> 관리자 페이지</a> </li>
 								  		<li><a id ="manager" href="#"><span class="glyphicon glyphicon-user"></span> 관리자 로그아웃</a> </li>
 								   	</c:when>
 									<c:when test="${user.joinType == 'COMMON'}">
@@ -70,8 +71,9 @@
 					
 					</c:if>
 					 
-  
-				<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> 장바구니</a></li>
+  				<c:if test="${user.joinType != 'MANAGER'}">
+					<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> 장바구니</a></li>
+				</c:if>
 			</ul>
 		</div>
 	</div>
@@ -79,22 +81,22 @@
 
 <script>
 $("#manager").click(function(){ 
-	location.href='/user/logout/';
+	location.href='/user/logout';
 }); 
 
 $("#common").click(function(){ 
-	location.href='/user/logout/';
+	location.href='/user/logout';
 }); 
 
 $("#kakao").click(function(){
 	var id = '<spring:eval expression="@config.getProperty('kakao')" />'; 
 	Kakao.init(id);
 	Kakao.Auth.logout();
-	location.href='/user/logout/';
+	location.href='/user/logout';
 }); 
 
 $("#naver").click(function(){
-	location.href='/user/logout/';
+	location.href='/user/logout';
 });
  
 </script> 

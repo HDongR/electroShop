@@ -1,5 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<div class="jumbotron">
+  <div class="container text-center">
+    <h1>ElectroShop</h1>      
+    <p>Metal, Future & Values</p>
+    <h3>Manager Page Login</h3>
+  </div>
+</div>
  
  
  <div ng-app="myApp" class="container" ng-controller="validateCtrl">
@@ -29,9 +37,7 @@
 			  	</button>  
 			</div>
 		</div>
-	</form>
-		
-		
+	</form> 
 </div>
 		
 		
@@ -90,7 +96,7 @@
 						        			alert('유효하지 않은 이메일 또는 비밀번호입니다');   
 						        		}else if(data == 'loginComplete') {  
 						        			//complete
-						        			location.href='/'; 
+						        			location.href='/manager/'; 
 						        		}
 						        }else{
 						        		alert('다시 시도해 주세요');

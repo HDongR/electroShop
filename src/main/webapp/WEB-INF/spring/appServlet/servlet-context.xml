@@ -18,19 +18,19 @@
 		up static resources in the ${webappRoot}/resources directory -->
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 
-	<!-- Interceptor 설정 -->
-	<beans:bean id="loginInterceptor" class="ryu.park.shop.interceptor.LoginInterceptor">
-	</beans:bean>
-
+	<!-- Interceptor 설정 -->  
 	<mvc:interceptors>
-		<mvc:interceptor>
-
-			<mvc:mapping path="/user/join" />
-			<mvc:mapping path="/user/join/" />
-			<mvc:mapping path="/user/login" />
-			<mvc:mapping path="/user/login/" />
-			<beans:ref bean="loginInterceptor" />
-
+		<mvc:interceptor> 
+			<mvc:mapping path="/user/**" />  
+			<mvc:exclude-mapping path="/user/logout"/>
+			<beans:bean name="loginInterceptor" class="ryu.park.shop.interceptor.LoginInterceptor"/> 
+		</mvc:interceptor>
+		
+		<mvc:interceptor>  
+			<mvc:mapping path="/manager/**" />
+			<mvc:exclude-mapping path="/manager/login_page"/>
+			<mvc:exclude-mapping path="/manager/login"/>
+			<beans:bean name="managerInterceptor" class="ryu.park.shop.interceptor.ManagerInterceptor"/> 
 		</mvc:interceptor>
 	</mvc:interceptors>
 

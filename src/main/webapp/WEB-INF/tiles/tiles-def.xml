@@ -17,9 +17,14 @@
 		<put-attribute name="manager_header" value="/WEB-INF/views/manager/manager_header.jsp"/>
 		<put-attribute name="manager_menu" value="/WEB-INF/views/manager/manager_menu.jsp"/> 
 		<put-attribute name="manager_body" value="/WEB-INF/views/manager/manager_body.jsp"/> 
+	</definition> 
+	
+	<definition name="manager/*/*" extends="manager_main"> 
+		<put-attribute name="manager_body" value="/WEB-INF/views/manager/{1}/{2}.jsp"/> 
 	</definition>
 	
 	<definition name="manager/*" extends="manager_main">
-		<put-attribute name="manager_body" value="/WEB-INF/views/manager/{1}.jsp"/> 
+		<put-attribute name="manager_body" value="/WEB-INF/views/manager/{1}.jsp"/>
 	</definition>
+	 
 </tiles-definitions>

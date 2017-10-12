@@ -13,7 +13,7 @@
 <c:if test="${null ne user}">
 <c:if test="${user.joinType == 'MANAGER'}">
  
-    <div class="col-sm-9">
+    <div class="col-sm-10">
       <div class="well">
         <h4>Dashboard</h4>
         <p>Some text..</p>

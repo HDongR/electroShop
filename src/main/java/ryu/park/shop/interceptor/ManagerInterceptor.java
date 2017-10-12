@@ -13,6 +13,7 @@ import ryu.park.shop.vo.UserVO;
 
 public class ManagerInterceptor extends HandlerInterceptorAdapter {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	public static boolean isDEBUG = true;
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -34,6 +35,12 @@ public class ManagerInterceptor extends HandlerInterceptorAdapter {
 				return false;
 			} 
 		} else {
+			logger.info("user is null");
+			if(isDEBUG) { 
+				UserVO userVO = new UserVO();
+				userVO.setJoinType(JoinType.MANAGER);
+				session.setAttribute("user", userVO); 
+			}
 			response.sendRedirect(request.getContextPath() + "/manager/login_page");
 			return false;
 		}

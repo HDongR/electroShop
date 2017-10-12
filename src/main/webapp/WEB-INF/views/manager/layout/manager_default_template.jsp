@@ -38,8 +38,7 @@
 		<tiles:insertAttribute name="manager_menu"/> 
 		<tiles:insertAttribute name="manager_body" />  
 	  </div>
-	</div>
-
+	</div> 
 </body>
 </html>
 

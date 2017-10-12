@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ryu.park.shop.dao.ManagerDAOImpl; 
+import ryu.park.shop.dao.ManagerDAOImpl;
+import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
 
 @Service
@@ -49,6 +50,32 @@ public class ManagerServiceImpl implements ManagerService{
 	@Override
 	public void deleteUsers(List<UserVO> users) {
 		dao.deleteUsers(users);
+	}
+
+	@Transactional
+	@Override
+	public int addGoods(GoodsVO goodsVO) { 
+		return dao.addGoods(goodsVO);
+	}
+
+	@Override
+	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword) { 
+		return dao.getGoodsList(start, end, searchOption, keyword);
+	}
+
+	@Override
+	public GoodsVO getGoodsOne(int goodsSeq) { 
+		return dao.getGoodsOne(goodsSeq);
+	}
+
+	@Override
+	public void updateGoodsOne(GoodsVO goodsVO) {
+		dao.updateGoodsOne(goodsVO);
+	}
+
+	@Override
+	public int goodsTotalCount() { 
+		return dao.goodsTotalCount();
 	}
 
 }

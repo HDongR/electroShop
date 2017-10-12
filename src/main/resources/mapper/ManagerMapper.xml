@@ -1,21 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?> 
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 맵핑될 DAO 인터페이스의 Full name 을 줍니다. -->
-<mapper namespace="ManagerMapper"> 
-	<select id="findManager" resultType="UserVO"> 
-		SELECT user_id, email, phone_num, password, addr_city, addr_area, addr_detail, name, nickname, join_date, join_type
+<mapper namespace="ManagerMapper">
+	<select id="findManager" resultType="UserVO">
+		SELECT *
 		FROM USER_T
-		WHERE email = #{email} and join_type = 'MANAGER'
+		WHERE
+		email = #{email} and join_type = 'MANAGER'
 	</select>
-	
+
 	<select id="loginManager" resultType="UserVO">
-		SELECT * 
+		SELECT *
 		FROM USER_T
-		WHERE email = #{email} and password = #{password}
+		WHERE
+		email = #{email} and password = #{password}
 	</select>
-	
+
 	<insert id="addManager" parameterType="UserVO">
-		INSERT INTO USER_T (email, password, nickname, join_date, join_type)
-		VALUES (#{email}, #{password}, #{nickname}, #{joinDate}, #{joinType})
+		INSERT INTO USER_T (email,
+		password, nickname, join_date, join_type)
+		VALUES (#{email},
+		#{password}, #{nickname}, #{joinDate}, #{joinType})
 	</insert>
+
+	<insert id="addGoods" parameterType="GoodsVO">
+		INSERT INTO GOODS_T (goods_seq, subject, main_pic_url, cost, contents,
+		join_date)
+		VALUES (GOODS_SEQUENCE.NEXTVAL, #{subject}, #{mainPicUrl},
+		#{cost},
+		#{contents}, #{joinDate})
+		<selectKey keyProperty="goodsSeq" resultType="Integer"
+			order="AFTER">
+			SELECT GOODS_SEQUENCE.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+
+
+	<resultMap id="getGoodsListResult" type="GoodsVO">
+		<id column="goods_seq" property="goodsSeq" />
+		<result column="subject" property="subject" />
+		<result column="cost" property="cost" />
+		<result column="main_pic_url" property="mainPicUrl" />
+		<result column="contents" jdbcType="CLOB" property="contents"
+			javaType="java.lang.String" />
+		<result column="join_date" property="joinDate" />
+	</resultMap>
+ 
+	<select id="getGoodsOne" resultMap="getGoodsListResult">
+		SELECT *
+		FROM GOODS_T
+		WHERE
+		goods_seq = #{goodsSeq}
+	</select>
+
+	<update id="updateGoodsOne" parameterType="GoodsVO">
+		UPDATE GOODS_T
+		SET
+		subject = #{subject},
+		cost = #{cost},
+		main_pic_url = #{mainPicUrl},
+		contents = #{contents}
+		WHERE goods_seq = #{goodsSeq}
+	</update>
+
+	<select id="goodsTotalCount" resultType="int">
+		SELECT COUNT(*)
+		FROM
+		GOODS_T
+	</select> 
+	
+	<!-- 게시글 전체 목록 조회 및 검색조회까지 -->
+	<select id="getGoodsList" resultMap="getGoodsListResult">
+		<!-- 목록 조회 및 페이징 전체 쿼리 -->
+		<include refid="pagingHeader"></include>
+		SELECT *
+		FROM GOODS_T
+		<include refid="search"></include>
+		ORDER BY goods_seq DESC
+		<include refid="pagingFooter"></include>
+	</select>
+
+	<!-- 검색 조건 sql -->
+	<sql id="search">
+		<choose>
+			<!-- 검색옵션이 전체 검색일 경우 -->
+			<when test="searchOption == 'all'">
+				WHERE
+				(subject like '%'||#{keyword}||'%' 
+				OR contents LIKE '%'||#{keyword}||'%')
+			</when>
+			<!-- 전체 검색이 아닐 경우 -->
+			<otherwise>
+				WHERE 
+				${searchOption} LIKE '%'||#{keyword}||'%'
+			</otherwise>
+		</choose>
+	</sql>
+
+	<!-- 페이징 sql -->
+	<sql id="pagingHeader">
+		SELECT X.* FROM (
+		SELECT ROWNUM AS rnum, A.* FROM (
+	</sql>
+	<sql id="pagingFooter">
+		) A
+		<![CDATA[
+		WHERE ROWNUM <= #{end} ) X
+		WHERE X.rnum >= #{start}
+		]]>
+	</sql>
+
 </mapper>

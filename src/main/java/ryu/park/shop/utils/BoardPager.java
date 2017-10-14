@@ -2,9 +2,9 @@ package ryu.park.shop.utils;
 
 public class BoardPager {
 	// 페이지당 게시물 수
-	public static final int PAGE_SCALE = 2;
+	public static final int PAGE_SCALE = 10;
     // 화면당 페이지 수
-    public static final int BLOCK_SCALE = 5;
+    public static final int BLOCK_SCALE = 10;
     private int curPage; // 현재 페이수
     private int prevPage; // 이전 페이지
     private int nextPage; // 다음 페이지
@@ -56,7 +56,7 @@ public class BoardPager {
         // 끝번호 = 시작번호+페이지당 게시물수 -1
         pageEnd = pageBegin+PAGE_SCALE-1;
     }
-    
+     
     // Getter/Setter
     public int getCurPage() {
         return curPage;

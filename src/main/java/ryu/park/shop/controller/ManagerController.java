@@ -173,15 +173,23 @@ public class ManagerController {
 		logger.info("goods_manage_page");
 		model.addAttribute("condition", "goods_manage_page");
 
-		int count = service.goodsTotalCount();
-
+		int count = service.goodsTotalCount(searchOption, keyword);
+		logger.info("count:" + count);  
 		// 페이지 나누기 관련 처리
 		BoardPager boardPager = new BoardPager(count, curPage);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
+		logger.info("start: " + start);
+		logger.info("end: " + end);
 
 		List<GoodsVO> list = service.getGoodsList(start, end, searchOption, keyword);
- 
+		
+		logger.info("result Size:" + list.size());  
+		logger.info("totpage : " + boardPager.getTotPage());
+		logger.info("block start: " + boardPager.getBlockBegin());
+		logger.info("block end: " + boardPager.getBlockEnd());
+		
+		
 		model.addAttribute("list", list); // list
 		model.addAttribute("count", count); // 레코드의 갯수
 		model.addAttribute("searchOption", searchOption); // 검색옵션

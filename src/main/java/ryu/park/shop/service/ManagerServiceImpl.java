@@ -74,8 +74,22 @@ public class ManagerServiceImpl implements ManagerService{
 	}
 
 	@Override
-	public int goodsTotalCount() { 
-		return dao.goodsTotalCount();
+	public int goodsTotalCount(String searchOption, String keyword) { 
+		return dao.goodsTotalCount(searchOption, keyword);
 	}
+
+	@Transactional
+	@Override
+	public int deleteGoods(int goodsSeq) { 
+		return dao.deleteGoods(goodsSeq);
+	}
+
+	@Transactional
+	@Override
+	public int deleteGoodsList(List<Integer> goodsSeqList) { 
+		return dao.deleteGoodsList(goodsSeqList);
+	}
+	
+	
 
 }

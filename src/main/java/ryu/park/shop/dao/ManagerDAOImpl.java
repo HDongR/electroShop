@@ -8,8 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DuplicateKeyException;
+import org.springframework.beans.factory.annotation.Qualifier; 
 import org.springframework.stereotype.Repository;
 
 import ryu.park.shop.vo.GoodsVO;
@@ -92,8 +91,21 @@ public class ManagerDAOImpl implements ManagerDAO {
 	}
 
 	@Override
-	public int goodsTotalCount() {
-		return session.selectOne(NAMESPACE + "goodsTotalCount");
+	public int goodsTotalCount(String searchOption, String keyword) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchOption", searchOption);
+		map.put("keyword", keyword); 
+		return session.selectOne(NAMESPACE + "goodsTotalCount", map);
+	}
+
+	@Override
+	public int deleteGoods(int goodsSeq) {
+		return session.delete(NAMESPACE + "deleteGoods", goodsSeq);
+	}
+
+	@Override
+	public int deleteGoodsList(List<Integer> goodsSeqList) {
+		return session.delete(NAMESPACE + "deleteGoodsLIST", goodsSeqList);
 	}
 
 }

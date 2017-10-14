@@ -2,31 +2,39 @@
 	pageEncoding="UTF-8"%> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
 <div class="container col-sm-10">
 
-	<h2>등록된 상품 리스트 </h2> 
-	<h5>총 ${count}개의 상품이 있습니다.</h5>
-	
+	<h2>등록된 상품 리스트 </h2>  
 	 <form name="form1" method="post" action="/manager/goods/goods_manage_page">
-        <select name="searchOption">
+	 
+        <select class="selectpicker" name="searchOption">
             <!-- 검색조건을 검색처리후 결과화면에 보여주기위해  c:out 출력태그 사용, 삼항연산자 -->
             <option value="all" <c:out value="${searchOption == 'all'?'selected':''}"/> >제목+내용</option>
             <option value="subject" <c:out value="${searchOption == 'subject'?'selected':''}"/> >이름</option>
             <option value="contents" <c:out value="${searchOption == 'contents'?'selected':''}"/> >내용</option>
         </select>
-        <input name="keyword" value="${keyword}">
-        <input type="submit" value="조회"> 
+        <div class="input-group col-sm-6">
+	      <input type="text" class="form-control" placeholder="제목이나 내용을 검색하세요" name="keyword" value="${keyword}">
+	      <div class="input-group-btn">
+	        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+	      </div>
+	    </div>
     </form>
-    
+    <h5> ${count}개의 상품이 있습니다.</h5>
    
-    
+    <button id="goodsDelete" class="btn btn-danger btn-md">삭제하기</button>
 	<br/>
 	   <div class="text-center">  
 		<table class="table">
 	    <thead>
 	      <tr>
-	        <th class="text-center "><input type="checkbox"></th>
+	        <th class="text-center "><input id="allCheck" type="checkbox"></th>
 	        <th class="text-center ">번호</th>
 	        <th class="text-center ">이미지</th>
 	        <th class="text-center ">이름</th>
@@ -38,7 +46,7 @@
 	    <tbody>
 	    	  <c:forEach items="${list}" var="goods">  
 	    	    <tr>
-	    	    	  <td style="vertical-align:middle"><input type="checkbox"></td>
+	    	    	  <td style="vertical-align:middle"><input name="isChecked" type="checkbox" value="${goods.goodsSeq}"></td>
 		 	  <td style="vertical-align:middle">${goods.goodsSeq}</td>
 		 	  <td style="vertical-align:middle"><img src="${goods.mainPicUrl}" width="100"></img></td>
 		 	  <td style="vertical-align:middle">${goods.subject}</td>
@@ -105,10 +113,58 @@
       </ul>
 	</nav>
 </div> 
-	 
 	
+<!-- 페이지처리 -->
 <script type="text/javascript">
 	function list(page){
-	    location.href="/manager/goods/goods_manage_page?curPage="+page+"&searchOption-${searchOption}"+"&keyword=${keyword}";
+	    location.href="/manager/goods/goods_manage_page?curPage="+page+"&searchOption=${searchOption}"+"&keyword=${keyword}";
+	} 
+</script>
+
+<script type="text/javascript">
+	$("#goodsDelete").hide();
+	
+	$("input[type=checkbox]").click(function(event){
+		 
+		if(event.target.id == 'allCheck'){
+			if($("#allCheck").prop("checked")){ 
+				$("input[type=checkbox]").prop("checked", true);
+			}else{
+				$("input[type=checkbox]").prop("checked", false);
+			}
+		}else{
+			if($("#allCheck").prop("checked")){ 
+				$("#allCheck").prop("checked", false);
+			}
+		}
+		
+		if(isCheckedAllComponent()){
+			$("#goodsDelete").show();
+		}else{
+			$("#goodsDelete").hide();
+		}
+	});
+	
+	function isCheckedAllComponent(){ 
+		var checkBoxs = $("input[type=checkbox]");
+		for(i=0; i<checkBoxs.length; i++){
+			if(checkBoxs.get(i).checked){
+				return true;	
+			} 
+		} 
+		return false;
 	}
+	
+	$("#goodsDelete").click(function(event){
+		//$("#goodsDelete").prop("disabled", true);
+		
+		var checkBoxs = $("input[type=checkbox]");
+		for(i=0; i<checkBoxs.length; i++){
+			if(checkBoxs.get(i).checked && checkBoxs.get(i).id != 'allCheck'){
+				 console.log(checkBoxs.get(i).value);
+			} 
+		}
+		 
+	});
+
 </script>

@@ -12,8 +12,10 @@ public interface ManagerDAO {
 	public void updateManager(UserVO userVO);
 	public void deleteManager(UserVO userVO); 
 	public void deleteUsers(List<UserVO> users); 
-	public int goodsTotalCount();
+	public int goodsTotalCount(String searchOption, String keyword);
 	public int addGoods(GoodsVO goodsVO);
+	public int deleteGoods(int goodsSeq);
+	public int deleteGoodsList(List<Integer> goodsSeqList);
 	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword);
 	public GoodsVO getGoodsOne(int goodsSeq);
 	public void updateGoodsOne(GoodsVO goodsVO);

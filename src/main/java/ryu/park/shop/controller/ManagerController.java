@@ -39,7 +39,7 @@ import ryu.park.shop.vo.UserVO;
 @Controller
 public class ManagerController {
 	private static final Logger logger = LoggerFactory.getLogger(ManagerController.class);
-
+	int k;
 	@Autowired
 	private ManagerService service;
 	@Autowired

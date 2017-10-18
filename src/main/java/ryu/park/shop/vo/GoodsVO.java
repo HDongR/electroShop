@@ -23,7 +23,10 @@ public class GoodsVO {
 	@NotEmpty
 	private String contents;
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") 
-	private Date joinDate;
+	private Date crtDate;
+	@NotNull
+	@Range(min=0)
+	private Integer stock;
 	
 	public GoodsVO() {
 		
@@ -58,13 +61,24 @@ public class GoodsVO {
 	}
 	public void setContents(String contents) {
 		this.contents = contents;
-	} 
-	public Date getJoinDate() {
-		return joinDate;
-	} 
-	public void setJoinDate(Date joinDate) {
-		this.joinDate = joinDate;
 	}
+
+	public Date getCrtDate() {
+		return crtDate;
+	}
+
+	public void setCrtDate(Date crtDate) {
+		this.crtDate = crtDate;
+	}
+
+	public Integer getStock() {
+		return stock;
+	}
+
+	public void setStock(Integer stock) {
+		this.stock = stock;
+	} 
+	  
 	
 	
 }

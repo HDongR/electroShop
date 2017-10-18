@@ -13,21 +13,32 @@
 				data-target="#myNavbar">
 				<span class="icon-bar"></span> <span class="icon-bar"></span> <span
 					class="icon-bar"></span>
-			</button> 
+			</button>
 			<a class="navbar-brand" href="/">ES</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
-			<ul class="nav navbar-nav">
-				<li class="active"><a href="#">Home</a></li>
+			<ul class="nav navbar-nav"> 
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+					data-toggle="dropdown" href="#">SamSung<span class="caret"></span></a>
 					<ul class="dropdown-menu list-inline">
-						<li><a href="#">Page 1-1</a></li>
-						<li><a href="#">Page 1-2</a></li>
-						<li><a href="#">Page 1-3</a></li>
+						<li><a href="#">TV</a></li>
+						<li><a href="#">NoteBook</a></li>
+						<li><a href="#">Refrigerator</a></li>
 					</ul></li>
-				<li><a href="#">Page 2</a></li>
-				<li><a href="#">Page 3</a></li>
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#">LG<span class="caret"></span></a>
+					<ul class="dropdown-menu list-inline">
+						<li><a href="#">TV</a></li>
+						<li><a href="#">NoteBook</a></li>
+						<li><a href="#">Refrigerator</a></li>
+					</ul></li>
+				
+				<li class="dropdown"><a class="dropdown-toggle"
+					data-toggle="dropdown" href="#">Comunity<span class="caret"></span></a>
+					<ul class="dropdown-menu list-inline">
+						<li><a href="#">자유게시판</a></li>
+						<li><a href="#">질문게시판</a></li> 
+					</ul></li>
 			</ul>
 			
 			<ul class="nav navbar-nav navbar-right">

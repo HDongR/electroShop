@@ -2,6 +2,7 @@ package ryu.park.shop.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +27,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import ryu.park.shop.service.ManagerService;
-import ryu.park.shop.type.JoinType;
 import ryu.park.shop.utils.BoardPager;
+import ryu.park.shop.utils.DateUtils;
+import ryu.park.shop.utils.ImgStore;
+import ryu.park.shop.utils.ImgStore.IMG_STORE_TYPE;
 import ryu.park.shop.utils.SecurityUtils;
 import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
@@ -39,7 +42,7 @@ import ryu.park.shop.vo.UserVO;
 @Controller
 public class ManagerController {
 	private static final Logger logger = LoggerFactory.getLogger(ManagerController.class);
-	int k;
+
 	@Autowired
 	private ManagerService service;
 	@Autowired
@@ -103,12 +106,12 @@ public class ManagerController {
 			HttpServletResponse res, Model model, @RequestParam MultipartFile mainPic) throws IOException {
 		logger.info("addGoods");
 
-		String root_path = req.getSession().getServletContext().getRealPath("/");
-		String attach_path = "/resources/uploadImg/";
-		String fileName = "mainImg_" + "_" + mainPic.getOriginalFilename();
+		String fileUrl = new ImgStore()
+				.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+				.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
+				.setFileName(mainPic)
+				.build();
 
-		mainPic.transferTo(new File(root_path + attach_path + fileName));
-		String fileUrl = attach_path + fileName;
 		goodsVO.setMainPicUrl(fileUrl);
 
 		if (bindingResult.hasErrors()) {
@@ -129,67 +132,43 @@ public class ManagerController {
 	}
 
 	@RequestMapping(value = "upload_img", method = RequestMethod.POST)
-	public void uploadImg(HttpServletRequest req, HttpServletResponse res, @RequestParam MultipartFile upload) {
+	public void uploadImg(HttpServletRequest req, HttpServletResponse res, @RequestParam MultipartFile upload) throws IllegalStateException, IOException {
 		logger.info("uploadImg");
 
-		Date date = new Date();
-		int year = date.getYear() + 1900;
-		int month = date.getMonth();
-		String monthStr = "";
-
-		if (month < 10)
-			monthStr = "0" + month;
-		else
-			monthStr = "" + month;
-
+		String fileUrl = new ImgStore()
+				.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+				.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_CONTENTS)
+				.setFileName(upload)
+				.build();
+		
 		res.setCharacterEncoding("utf-8");
-		res.setContentType("text/html;charset=utf-8");
+		res.setContentType("text/html;charset=utf-8"); 
+		String callback = req.getParameter("CKEditorFuncNum");
+		
+		res.getWriter().println("<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction(" 
+				+ callback
+				+ ",'" 
+				+ fileUrl 
+				+ "','이미지를 업로드 하였습니다.'" 
+				+ ")</script>");
 
-		try {
-
-			String root_path = req.getSession().getServletContext().getRealPath("/");
-			String attach_path = "/resources/uploadImg/";
-			String fileName = "ckeImg_" + year + monthStr + "_" + upload.getOriginalFilename();
-
-			upload.transferTo(new File(root_path + attach_path + fileName));
-
-			String callback = req.getParameter("CKEditorFuncNum");
-			String fileUrl = attach_path + fileName;
-
-			logger.info(fileUrl);
-
-			res.getWriter().println("<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction("
-					+ callback + ",'" + fileUrl + "','이미지를 업로드 하였습니다.'" + ")</script>");
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
-	@RequestMapping(value = "goods/goods_manage_page", method = {RequestMethod.GET, RequestMethod.POST})
-	public String goodsManagePage(@RequestParam(defaultValue = "all") String searchOption,
+	@RequestMapping(value = "goods/goods_manage_page", method = { RequestMethod.GET, RequestMethod.POST })
+	public String goodsManagePage(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
 			Model model) {
 		logger.info("goods_manage_page");
 		model.addAttribute("condition", "goods_manage_page");
 
 		int count = service.goodsTotalCount(searchOption, keyword);
-		logger.info("count:" + count);  
 		// 페이지 나누기 관련 처리
 		BoardPager boardPager = new BoardPager(count, curPage);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
-		logger.info("start: " + start);
-		logger.info("end: " + end);
 
 		List<GoodsVO> list = service.getGoodsList(start, end, searchOption, keyword);
-		
-		logger.info("result Size:" + list.size());  
-		logger.info("totpage : " + boardPager.getTotPage());
-		logger.info("block start: " + boardPager.getBlockBegin());
-		logger.info("block end: " + boardPager.getBlockEnd());
-		
-		
+
 		model.addAttribute("list", list); // list
 		model.addAttribute("count", count); // 레코드의 갯수
 		model.addAttribute("searchOption", searchOption); // 검색옵션
@@ -215,12 +194,12 @@ public class ManagerController {
 		if (mainPic.getSize() < 1) {
 			logger.info("mainPic is NuLl");
 		} else {
-			String root_path = req.getSession().getServletContext().getRealPath("/");
-			String attach_path = "/resources/uploadImg/";
-			String fileName = "mainImg_" + "_" + mainPic.getOriginalFilename();
-
-			mainPic.transferTo(new File(root_path + attach_path + fileName));
-			String fileUrl = attach_path + fileName;
+			String fileUrl = new ImgStore()
+					.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+					.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
+					.setFileName(mainPic)
+					.build();
+			
 			goodsVO.setMainPicUrl(fileUrl);
 		}
 
@@ -233,4 +212,54 @@ public class ManagerController {
 		}
 	}
 
+	@RequestMapping(value = "goods/delete_goods", method = RequestMethod.POST)
+	public void goodsDelete(@RequestParam("goodsSeqList[]") List<Integer> goodsSeqList, HttpServletResponse res)
+			throws IOException {
+		logger.info("goodsDelete");
+		int result = service.deleteGoodsList(goodsSeqList);
+		if (goodsSeqList.size() == result) {
+			res.getWriter().print("completeDeleteGoods");
+		} else if (result == -1) {
+			res.getWriter().print("databaseError");
+		} else {
+			res.getWriter().print("retryPlz");
+		}
+
+	}
+
+	@RequestMapping(value = "user/user_manage_page", method = { RequestMethod.GET, RequestMethod.POST })
+	public String userManagePage(@RequestParam(defaultValue = "allUser") String searchOption,
+			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
+			Model model) {
+		logger.info("user_manage_page");
+
+		model.addAttribute("condition", "user_manage_page");
+
+		int count = service.userTotalCount(searchOption, keyword);
+		// 페이지 나누기 관련 처리
+		BoardPager boardPager = new BoardPager(count, curPage);
+		int start = boardPager.getPageBegin();
+		int end = boardPager.getPageEnd();
+
+		List<UserVO> list = service.getUserList(start, end, searchOption, keyword);
+
+		model.addAttribute("list", list); // list
+		model.addAttribute("count", count); // 레코드의 갯수
+		model.addAttribute("searchOption", searchOption); // 검색옵션
+		model.addAttribute("keyword", keyword); // 검색키워드
+		model.addAttribute("boardPager", boardPager);
+
+		return "manager/user/user_manage";
+	}
+
+	@RequestMapping(value = "user/modify_user_page", method = RequestMethod.POST)
+	public String userModifyPage(@RequestParam("email") String email, Model model) {
+		logger.info("user_modify_page");
+		logger.info("email : " + email);
+
+		UserVO userVO = service.getUserOne(email);
+		logger.info("email2 : " + userVO.getEmail());
+		model.addAttribute("userVO", userVO);
+		return "manager/user/modify_user";
+	}
 }

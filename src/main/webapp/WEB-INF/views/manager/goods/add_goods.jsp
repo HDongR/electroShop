@@ -21,6 +21,14 @@
 					step="1000" min="0"> <label class="col-sm-2">원</label>
 			</div>
 		</div>
+		
+		<div class="form-group">
+			<label class="control-label bg-primary" for="stock">판매가</label>
+			<div class="container row">
+				<input class="col-sm-8" type="number" id="stock" name="stock"
+					step="1" min="0"> <label class="col-sm-2">개</label>
+			</div>
+		</div>
 
 		<div class="form-group">
 			<label class="control-label bg-primary" for="mainPic">메인사진</label> <input
@@ -100,7 +108,7 @@
 		var data = new FormData(form);
 
 		// If you want to add an extra field for the FormData
-		data.append("joinDate", now());
+		data.append("crtDate", now());
 
 		// disabled the submit button
 		$("#uploadBtn").prop("disabled", true);

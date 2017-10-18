@@ -11,13 +11,13 @@
 <div class="container col-sm-10">
 
 	<h2>등록된 상품 리스트 </h2>  
-	 <form name="form1" method="post" action="/manager/goods/goods_manage_page">
+	<form name="form1" method="post" action="/manager/goods/goods_manage_page">
 	 
         <select class="selectpicker" name="searchOption">
             <!-- 검색조건을 검색처리후 결과화면에 보여주기위해  c:out 출력태그 사용, 삼항연산자 -->
-            <option value="all" <c:out value="${searchOption == 'all'?'selected':''}"/> >제목+내용</option>
-            <option value="subject" <c:out value="${searchOption == 'subject'?'selected':''}"/> >이름</option>
-            <option value="contents" <c:out value="${searchOption == 'contents'?'selected':''}"/> >내용</option>
+            <option value="allGoods" <c:out value="${searchOption == 'allGoods'?'selected':''}"/> >제목+내용</option>
+            <option value="subject" <c:out value="${searchOption == 'goods_subject'?'selected':''}"/> >이름</option>
+            <option value="contents" <c:out value="${searchOption == 'goods_contents'?'selected':''}"/> >내용</option>
         </select>
         <div class="input-group col-sm-6">
 	      <input type="text" class="form-control" placeholder="제목이나 내용을 검색하세요" name="keyword" value="${keyword}">
@@ -28,9 +28,34 @@
     </form>
     <h5> ${count}개의 상품이 있습니다.</h5>
    
-    <button id="goodsDelete" class="btn btn-danger btn-md">삭제하기</button>
+    <button id="goodsDelete" class="btn btn-danger btn-md" data-toggle="modal" data-target="#deleteModal">삭제하기</button>
+    
+    <!-- Modal -->
+ 	<div class="modal fade" id="deleteModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">상품삭제</h4>
+	        </div>
+	        <div class="modal-body">
+	          <p>정말 삭품(들)을 삭제하시겠습니까</p>
+	        </div>
+	       
+	        <div class="modal-footer">
+	          <button id="goodsDeleteOK" type="button" class="btn btn-default" data-dismiss="modal">삭제</button>
+	          <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+    </div>
+  
+    
 	<br/>
-	   <div class="text-center">  
+	<div class="text-center">  
 		<table class="table">
 	    <thead>
 	      <tr>
@@ -51,7 +76,7 @@
 		 	  <td style="vertical-align:middle"><img src="${goods.mainPicUrl}" width="100"></img></td>
 		 	  <td style="vertical-align:middle">${goods.subject}</td>
 		 	  <td style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${goods.cost}"/> 원</td>
-		 	  <td style="vertical-align:middle"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${goods.joinDate}"/></td>
+		 	  <td style="vertical-align:middle"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${goods.crtDate}"/></td>
 		 	  <td style="vertical-align:middle"><a href="/manager/goods/modify_goods_page/${goods.goodsSeq}"  class="btn btn-link">수정</a></td>
 		 	</tr>
 		  </c:forEach>  
@@ -121,6 +146,7 @@
 	} 
 </script>
 
+<!-- 체크박스 및 삭제처리 -->
 <script type="text/javascript">
 	$("#goodsDelete").hide();
 	
@@ -155,16 +181,39 @@
 		return false;
 	}
 	
-	$("#goodsDelete").click(function(event){
-		//$("#goodsDelete").prop("disabled", true);
+	$("#goodsDeleteOK").click(function(event){
+		$("#goodsDelete").prop("disabled", true);
 		
 		var checkBoxs = $("input[type=checkbox]");
+		var goodsSeqList = [];
 		for(i=0; i<checkBoxs.length; i++){
-			if(checkBoxs.get(i).checked && checkBoxs.get(i).id != 'allCheck'){
-				 console.log(checkBoxs.get(i).value);
+			if(checkBoxs.get(i).checked && checkBoxs.get(i).id != 'allCheck'){ 
+				goodsSeqList.push(checkBoxs.get(i).value); 
 			} 
-		}
+		} 
+		
+		deletePost(goodsSeqList);
 		 
 	});
+	
+	function deletePost(_goodsSeqList){
+		$.post('/manager/goods/delete_goods', 
+				{goodsSeqList : _goodsSeqList},
+				function(data, status){ 
+					if(status == 'success'){ 
+						if(data == 'completeDeleteGoods'){ 
+							window.location.reload();
+						} else if(data == 'databaseError'){
+						 	alert("databaseError")
+						} else if(data == 'retryPlz'){
+							alert("다시 시도하세요");
+						}
+					}else{
+						alert("다시 시도하세요");
+					} 
+					
+					$("#goodsDelete").prop("disabled", false);
+		}); 
+	}
 
 </script>

@@ -96,16 +96,47 @@ public class ManagerDAOImpl implements ManagerDAO {
 		map.put("searchOption", searchOption);
 		map.put("keyword", keyword); 
 		return session.selectOne(NAMESPACE + "goodsTotalCount", map);
-	}
-
-	@Override
-	public int deleteGoods(int goodsSeq) {
-		return session.delete(NAMESPACE + "deleteGoods", goodsSeq);
-	}
+	} 
 
 	@Override
 	public int deleteGoodsList(List<Integer> goodsSeqList) {
-		return session.delete(NAMESPACE + "deleteGoodsLIST", goodsSeqList);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("goodsSeqList", goodsSeqList);
+		try {
+			return session.delete(NAMESPACE + "deleteGoodsList", map);
+		} catch (Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return -1;
+		} 
+	}
+
+	@Override
+	public List<UserVO> getUserList(int start, int end, String searchOption, String keyword) { 
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchOption", searchOption);
+		map.put("keyword", keyword); 
+		map.put("start", start);
+		map.put("end", end);
+
+		return session.selectList(NAMESPACE + "getUserList", map);
+	}
+
+	@Override
+	public int userTotalCount(String searchOption, String keyword) { 
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("searchOption", searchOption);
+		map.put("keyword", keyword); 
+		return session.selectOne(NAMESPACE + "userTotalCount", map);
+	}
+
+	@Override
+	public UserVO getUserOne(String email) {
+		return session.selectOne(NAMESPACE + "getUserOne", email);
+	}
+
+	@Override
+	public void updateUserOne(UserVO userVO) {
+		session.update(NAMESPACE + "updateUserOne", userVO);
 	}
 
 }

@@ -69,7 +69,7 @@
  
 
 <!-- validaeCtrl -->
-<script>
+<script type="text/javascript">
 //timer
 /* setTimeout(function() {
 }, 3000); */

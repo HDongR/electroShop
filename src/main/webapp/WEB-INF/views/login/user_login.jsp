@@ -186,7 +186,7 @@ function snsLogin(_email){
 
 // sns join
 function snsJoin(_joinType, _email, _nickname){
-	$.post("/user/snsjoin",
+	$.post('/user/snsjoin',
 		    {
 		        email: _email, 
 		        password: '',

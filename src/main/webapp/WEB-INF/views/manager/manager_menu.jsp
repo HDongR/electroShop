@@ -20,11 +20,11 @@
 					<ul class="dropdown-menu">
 						<li class="${condition eq 'goods_manage_page' ? 'active' : ''}"><a href="/manager/goods/goods_manage_page">상품현황</a></li>
 						<li class="${condition eq 'add_goods_page' ? 'active' : ''}"><a href="/manager/goods/add_goods_page">상품등록</a></li>
-						<li><a href="#">Page 1-3</a></li>
+						 
 					</ul>
 				</li> 
 						
-				<li><a href="#section3">Gender</a></li>
+				<li class="${condition eq 'user_manage_page' ? 'active' : ''}"><a href="/manager/user/user_manage_page">유저관리</a></li>
 				<li><a href="#section3">Geo</a></li>
 						
 			</ul>

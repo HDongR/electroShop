@@ -77,17 +77,32 @@ public class ManagerServiceImpl implements ManagerService{
 	public int goodsTotalCount(String searchOption, String keyword) { 
 		return dao.goodsTotalCount(searchOption, keyword);
 	}
-
-	@Transactional
-	@Override
-	public int deleteGoods(int goodsSeq) { 
-		return dao.deleteGoods(goodsSeq);
-	}
-
+  
 	@Transactional
 	@Override
 	public int deleteGoodsList(List<Integer> goodsSeqList) { 
 		return dao.deleteGoodsList(goodsSeqList);
+	}
+
+	@Override
+	public List<UserVO> getUserList(int start, int end, String searchOption, String keyword) {
+		return dao.getUserList(start, end, searchOption, keyword);
+	}
+
+	@Override
+	public int userTotalCount(String searchOption, String keyword) { 
+		return dao.userTotalCount(searchOption, keyword);
+	}
+
+	@Override
+	public UserVO getUserOne(String email) {
+		return dao.getUserOne(email);
+	}
+
+	@Transactional
+	@Override
+	public void updateUserOne(UserVO userVO) {
+		dao.updateUserOne(userVO);
 	}
 	
 	

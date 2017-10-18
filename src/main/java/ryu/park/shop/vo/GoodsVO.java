@@ -15,70 +15,78 @@ public class GoodsVO {
 	private Integer goodsSeq;
 	@NotEmpty
 	@Size(min=0, max=100)
-	private String subject;
+	private String goodsSubject;
 	@NotNull
 	@Range(min=0)
-	private Integer cost;
-	private String mainPicUrl;
+	private Integer goodsCost;
+	private String goodsMainPicUrl;
 	@NotEmpty
-	private String contents;
+	private String goodsContents;
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") 
-	private Date crtDate;
+	private Date goodsCrtDate;
 	@NotNull
 	@Range(min=0)
-	private Integer stock;
+	private Integer goodsStock;
 	
 	public GoodsVO() {
 		
 	}
-	
-	public void setGoodsSeq(Integer goodsSeq) {
-		this.goodsSeq = goodsSeq;
-	} 
+
 	public Integer getGoodsSeq() {
 		return goodsSeq;
-	}  
-	public String getSubject() {
-		return subject;
-	}
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-	public Integer getCost() {
-		return cost;
-	}
-	public void setCost(Integer cost) {
-		this.cost = cost;
-	}
-	public String getMainPicUrl() {
-		return mainPicUrl;
-	}
-	public void setMainPicUrl(String mainPicUrl) {
-		this.mainPicUrl = mainPicUrl;
-	}
-	public String getContents() {
-		return contents;
-	}
-	public void setContents(String contents) {
-		this.contents = contents;
 	}
 
-	public Date getCrtDate() {
-		return crtDate;
+	public void setGoodsSeq(Integer goodsSeq) {
+		this.goodsSeq = goodsSeq;
 	}
 
-	public void setCrtDate(Date crtDate) {
-		this.crtDate = crtDate;
+	public String getGoodsSubject() {
+		return goodsSubject;
 	}
 
-	public Integer getStock() {
-		return stock;
+	public void setGoodsSubject(String goodsSubject) {
+		this.goodsSubject = goodsSubject;
 	}
 
-	public void setStock(Integer stock) {
-		this.stock = stock;
-	} 
-	  
+	public Integer getGoodsCost() {
+		return goodsCost;
+	}
+
+	public void setGoodsCost(Integer goodsCost) {
+		this.goodsCost = goodsCost;
+	}
+
+	public String getGoodsMainPicUrl() {
+		return goodsMainPicUrl;
+	}
+
+	public void setGoodsMainPicUrl(String goodsMainPicUrl) {
+		this.goodsMainPicUrl = goodsMainPicUrl;
+	}
+
+	public String getGoodsContents() {
+		return goodsContents;
+	}
+
+	public void setGoodsContents(String goodsContents) {
+		this.goodsContents = goodsContents;
+	}
+
+	public Date getGoodsCrtDate() {
+		return goodsCrtDate;
+	}
+
+	public void setGoodsCrtDate(Date goodsCrtDate) {
+		this.goodsCrtDate = goodsCrtDate;
+	}
+
+	public Integer getGoodsStock() {
+		return goodsStock;
+	}
+
+	public void setGoodsStock(Integer goodsStock) {
+		this.goodsStock = goodsStock;
+	}
 	
 	
 }

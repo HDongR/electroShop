@@ -3,7 +3,7 @@ package ryu.park.shop.service;
 import ryu.park.shop.vo.UserVO;
 
 public interface UserService {
-	public UserVO findUser(String userId);
+	public UserVO findUser(String email);
 	public UserVO loginUser(UserVO userVO);
 	public int addUser(UserVO userVO);
 	public void updateUser(UserVO userVO);

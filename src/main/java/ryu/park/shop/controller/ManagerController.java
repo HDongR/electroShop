@@ -77,7 +77,7 @@ public class ManagerController {
 			logger.info("valid error");
 			res.getWriter().print("validError");
 		} else {
-			manager.setPassword(securityUtils.getHash(manager.getPassword()));
+			manager.setUserPassword(securityUtils.getHash(manager.getUserPassword()));
 			UserVO managerResult = service.loginManager(manager);
 
 			if (managerResult == null) {
@@ -103,21 +103,23 @@ public class ManagerController {
 
 	@RequestMapping(value = "add_goods", method = RequestMethod.POST)
 	public void addGoods(@Valid GoodsVO goodsVO, BindingResult bindingResult, HttpServletRequest req,
-			HttpServletResponse res, Model model, @RequestParam MultipartFile mainPic) throws IOException {
-		logger.info("addGoods");
-
-		String fileUrl = new ImgStore()
-				.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
-				.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
-				.setFileName(mainPic.getOriginalFilename())
-				.build(mainPic)[0];
-
-		goodsVO.setMainPicUrl(fileUrl);
-
-		if (bindingResult.hasErrors()) {
+			HttpServletResponse res, Model model, @RequestParam MultipartFile goodsMainPic) throws IOException {
+		logger.info("addGoods"); 
+		
+		if (bindingResult.hasErrors() || goodsMainPic.getSize() < 1) {
 			logger.info("valid error" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
 		} else {
+			
+			String fileUrl = new ImgStore()
+					.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+					.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
+					.setFileName(goodsMainPic.getOriginalFilename())
+					.build(goodsMainPic)[0];
+
+			goodsVO.setGoodsMainPicUrl(fileUrl);
+			
+			
 			int r = service.addGoods(goodsVO);
 			logger.info("result:" + r);
 			if (r > 0) {
@@ -188,25 +190,25 @@ public class ManagerController {
 
 	@RequestMapping(value = "goods/modify_goods", method = RequestMethod.POST)
 	public void modifyGoods(@Valid GoodsVO goodsVO, BindingResult bindingResult, HttpServletRequest req,
-			HttpServletResponse res, @RequestParam MultipartFile mainPic) throws Exception, IOException {
+			HttpServletResponse res, @RequestParam MultipartFile goodsMainPic) throws Exception, IOException {
 		logger.info("modifyGoods");
-
-		if (mainPic.getSize() < 1) {
-			logger.info("mainPic is NuLl");
-		} else {
-			String fileUrl = new ImgStore()
-					.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
-					.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
-					.setFileName(mainPic.getOriginalFilename())
-					.build(mainPic)[0];
-			
-			goodsVO.setMainPicUrl(fileUrl);
-		}
-
+ 
 		if (bindingResult.hasErrors()) {
 			logger.info("valid error" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
 		} else {
+			if (goodsMainPic.getSize() < 1) {
+				logger.info("mainPic is NuLl");
+			} else {
+				String fileUrl = new ImgStore()
+						.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+						.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
+						.setFileName(goodsMainPic.getOriginalFilename())
+						.build(goodsMainPic)[0];
+				
+				goodsVO.setGoodsMainPicUrl(fileUrl);
+			}
+
 			service.updateGoodsOne(goodsVO);
 			res.getWriter().print("completeUpdatedGoods");
 		}
@@ -253,12 +255,12 @@ public class ManagerController {
 	}
 
 	@RequestMapping(value = "user/modify_user_page", method = RequestMethod.POST)
-	public String userModifyPage(@RequestParam("email") String email, Model model) {
+	public String userModifyPage(@RequestParam("userEmail") String email, Model model) {
 		logger.info("user_modify_page");
 		logger.info("email : " + email);
 
 		UserVO userVO = service.getUserOne(email);
-		logger.info("email2 : " + userVO.getEmail());
+		logger.info("email2 : " + userVO.getUserEmail());
 		model.addAttribute("userVO", userVO);
 		return "manager/user/modify_user";
 	}

@@ -20,8 +20,8 @@
 			<url>http://maven.jahia.org/maven2</url>
 		</repository>
 	</repositories>
-	<dependencies>
-
+	<dependencies> 
+		
 		<!-- FileUpload -->
 		<dependency>
 			<groupId>commons-fileupload</groupId>

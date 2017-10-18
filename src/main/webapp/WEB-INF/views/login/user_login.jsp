@@ -103,8 +103,8 @@
 					$('#es_login').prop('disabled', true);
 					$.post("/user/eslogin",
 						    {
-						        email: $scope.email,
-						        password: $scope.pwd
+						        userEmail: $scope.email,
+						       	userPassword: $scope.pwd
 						    },
 						    function(data, status){ 
 								if(status == 'success'){
@@ -135,7 +135,7 @@
 
 function checkEmail(_joinType, _email, _nickname){ 
 		$.post('/user/check_email',{
-				email: _email
+				userEmail: _email
 				}
 				, function(data, status){
 				if(status == 'success'){ 
@@ -164,8 +164,8 @@ function checkEmail(_joinType, _email, _nickname){
 function snsLogin(_email){
 	$.post("/user/snslogin",
 		    {
-		        email: _email,
-		        password: ''
+		        userEmail: _email,
+		        userPassword: ''
 		    },
 		    function(data, status){
 				if(status == 'success'){
@@ -188,11 +188,11 @@ function snsLogin(_email){
 function snsJoin(_joinType, _email, _nickname){
 	$.post('/user/snsjoin',
 		    {
-		        email: _email, 
-		        password: '',
-		        nickname: _nickname,
-		        joinDate: now(),
-		        joinType: _joinType
+		        userEmail: _email, 
+		        userPassword: '',
+		        userNickname: _nickname,
+		        userJoinDate: now(),
+		        userJoinType: _joinType
 		    },
 		    function(data, status){ 
 				if(status == 'success'){

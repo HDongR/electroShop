@@ -28,7 +28,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter{
 		
 		//로그인 되었을 경우 /user/** 페이지 접근 제한
 		if(user != null) {
-			logger.info("user email is " + user.getEmail());
+			logger.info("user email is " + user.getUserEmail());
 			response.sendRedirect(request.getContextPath()+"/");
 			return false;
 		}

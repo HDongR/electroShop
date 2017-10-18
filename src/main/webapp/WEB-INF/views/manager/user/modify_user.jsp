@@ -7,9 +7,9 @@
 
 	<form name="myForm" class="form-horizontal">
 		<div id="formGroupEmail" class="form-group has-feedback">
-			<label class="control-label col-sm-2" for="inputEmail">Email:</label>
+			<label class="control-label col-sm-2" for="userEmail">Email:</label>
 			<div class="col-sm-8">
-				<input class="form-control" type="email" name="email" value="${userVO.email}" disabled>
+				<input class="form-control" type="email" name="userEmail" id="userEmail" value="${userVO.userEmail}" disabled>
 			</div>
 		</div> 
 	 
@@ -17,7 +17,7 @@
 	 	<div id="formGroupNickname" class="form-group has-feedback">
 			<label class="control-label col-sm-2" for="nickname">닉네임:</label>
 			<div class="col-sm-8"> 
-				<input id="nickname" class="form-control" name="nickname"  pattern="/^[0-9가-힣a-zA-Z]{2,10}$/" value="${userVO.nickname}"  title="'-'를 뺀 휴대전화 번호 10~11자리를 입력해주세요.">
+				<input id="nickname" class="form-control" name="nickname"  pattern="/^[0-9가-힣a-zA-Z]{2,10}$/" value="${userVO.userNickname}"  title="'-'를 뺀 휴대전화 번호 10~11자리를 입력해주세요.">
 			</div>
 			<div class="col-sm-2">
 				<h6>

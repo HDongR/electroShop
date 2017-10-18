@@ -48,10 +48,10 @@
 						</li>
 					</c:if>
 					<c:if test="${null ne user}"> 
-						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${user.nickname} 
+						<li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">${user.userNickname} 
 						
 						<c:choose>
-							<c:when test="${user.joinType == 'MANAGER'}">
+							<c:when test="${user.userJoinType == 'MANAGER'}">
 									관리자님
 							</c:when>
 									<c:otherwise>
@@ -63,17 +63,17 @@
 							<ul class="dropdown-menu list-inline">
 								<li><a href="/user/update/"><span class="glyphicon glyphicon-pencil"></span> 정보수정</a></li> 
 								<c:choose>
-									<c:when test="${user.joinType == 'MANAGER'}">
+									<c:when test="${user.userJoinType == 'MANAGER'}">
 										<li><a href="manager/"><span class="glyphicon glyphicon-cog"></span> 관리자 페이지</a> </li>
 								  		<li><a id ="manager" href="#"><span class="glyphicon glyphicon-user"></span> 관리자 로그아웃</a> </li>
 								   	</c:when>
-									<c:when test="${user.joinType == 'COMMON'}">
+									<c:when test="${user.userJoinType == 'COMMON'}">
 								  		<li><a id ="common" href="#"><span class="glyphicon glyphicon-user"></span> es 로그아웃</a> </li>
 								   	</c:when>
-								   	<c:when test="${user.joinType == 'KAKAO'}">
+								   	<c:when test="${user.userJoinType == 'KAKAO'}">
 										<li><a id="kakao" href="#"><span class="glyphicon glyphicon-user"></span> kakao 로그아웃</a> </li>
 									</c:when>
-								    	<c:when test="${user.joinType == 'NAVER'}">
+								    	<c:when test="${user.userJoinType == 'NAVER'}">
 										<li><a id="naver" href="#"><span class="glyphicon glyphicon-user"></span> naver 로그아웃</a> </li>
 								   	</c:when> 
 							   	</c:choose>  
@@ -82,7 +82,7 @@
 					
 					</c:if>
 					 
-  				<c:if test="${user.joinType != 'MANAGER'}">
+  				<c:if test="${user.userJoinType != 'MANAGER'}">
 					<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> 장바구니</a></li>
 				</c:if>
 			</ul>

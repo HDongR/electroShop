@@ -163,7 +163,7 @@
 					
 					
 					$.post('/user/check_email',{
-				        			email: $scope.email
+				        			userEmail: $scope.email
 				        			}
 					, function(data, status){
 					        if(status == 'success'){
@@ -203,11 +203,11 @@
 					$('#join_complete').prop('disabled', true);
 					$.post("/user/esjoin",
 						    {
-						        email: $scope.email,
-						        password: $scope.pwd,
-						        nickname: $scope.nickname,
-						        joinDate: now(),
-						        joinType: 'COMMON'
+						        userEmail: $scope.email,
+						        userPassword: $scope.pwd,
+						        userNickname: $scope.nickname,
+						        userJoinDate: now(),
+						        userJoinType: 'COMMON'
 						    },
 						    function(data, status){ 
 								if(status == 'success'){

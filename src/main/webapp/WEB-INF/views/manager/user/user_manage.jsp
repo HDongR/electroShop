@@ -16,8 +16,8 @@
         <select class="selectpicker" name="searchOption">
             <!-- 검색조건을 검색처리후 결과화면에 보여주기위해  c:out 출력태그 사용, 삼항연산자 -->
             <option value="allUser" <c:out value="${searchOption == 'all'?'selected':''}"/> >이메일+닉네임</option>
-            <option value="email" <c:out value="${searchOption == 'user_email'?'selected':''}"/> >이메일</option>
-            <option value="nickname" <c:out value="${searchOption == 'user_nickname'?'selected':''}"/> >닉네임</option>
+            <option value="userEmail" <c:out value="${searchOption == 'user_email'?'selected':''}"/> >이메일</option>
+            <option value="userNickname" <c:out value="${searchOption == 'user_nickname'?'selected':''}"/> >닉네임</option>
         </select>
         <div class="input-group col-sm-6">
 	      <input type="text" class="form-control" placeholder="이메일이나 닉네임을 검색하세요" name="keyword" value="${keyword}">
@@ -47,14 +47,14 @@
 	    <tbody>
 	    	  <c:forEach items="${list}" var="user">  
 	    	    <tr> 
-		 	  <td style="vertical-align:middle">${user.email}</td>
-		 	  <td style="vertical-align:middle">${user.phoneNum}</td>
-		 	  <td style="vertical-align:middle">${user.addrCity} ${user.addrArea} ${user.addrDetail}</td>
-		 	  <td style="vertical-align:middle">${user.name}</td>
-		 	  <td style="vertical-align:middle">${user.nickname}</td>
-		 	  <td style="vertical-align:middle">${user.joinType}</td>
-		 	  <td style="vertical-align:middle"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${user.joinDate}"/></td>
-		 	  <td style="vertical-align:middle"><a href="javascript:page_move('/manager/user/modify_user_page', '${user.email}');"  class="btn btn-link">수정</a>
+		 	  <td style="vertical-align:middle">${user.userEmail}</td>
+		 	  <td style="vertical-align:middle">${user.userPhoneNum}</td>
+		 	  <td style="vertical-align:middle">${user.userAddrCity} ${user.userAddrArea} ${user.userAddrDetail}</td>
+		 	  <td style="vertical-align:middle">${user.userName}</td>
+		 	  <td style="vertical-align:middle">${user.userNickname}</td>
+		 	  <td style="vertical-align:middle">${user.userJoinType}</td>
+		 	  <td style="vertical-align:middle"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${user.userJoinDate}"/></td>
+		 	  <td style="vertical-align:middle"><a href="javascript:page_move('/manager/user/modify_user_page', '${user.userEmail}');"  class="btn btn-link">수정</a>
 		
 		 	  
 		 	  </td>
@@ -65,7 +65,7 @@
 	</div>
 	
 	 	  <form name="goLink">
-		 	  	<input type="hidden" name="email"/>
+		 	  	<input type="hidden" name="userEmail"/>
 		 	  </form>
 	
     <nav aria-label="Page navigation">
@@ -137,7 +137,7 @@
 	function page_move(s_page,s_email){
 		  var f=document.goLink;  //폼 name
 		  console.log(f);
-		  f.email.value = s_email;
+		  f.userEmail.value = s_email;
 		  f.action=s_page;  //이동할 페이지
 		  f.method="post";  //POST방식
 		  f.submit(); 

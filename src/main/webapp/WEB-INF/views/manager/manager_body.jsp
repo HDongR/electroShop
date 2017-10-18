@@ -6,12 +6,12 @@
 
 <c:set var="user" value="${sessionScope.user}"/> 
 					
-<c:if test="${user.joinType != 'MANAGER' || null eq user}">
+<c:if test="${user.userJoinType != 'MANAGER' || null eq user}">
 	<script>location.href='login_page'</script>
 </c:if>
 
 <c:if test="${null ne user}">
-<c:if test="${user.joinType == 'MANAGER'}">
+<c:if test="${user.userJoinType == 'MANAGER'}">
  
     <div class="col-sm-10">
       <div class="well">

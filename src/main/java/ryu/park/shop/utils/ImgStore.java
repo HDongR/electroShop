@@ -7,9 +7,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 public class ImgStore {
+	private static final Logger logger = LoggerFactory.getLogger(ImgStore.class);
+	
 	final private static String IMG_STORE_PATH = "/resources/uploadImg/";
 	final private static String IMG_MAIN_NAME_HEADER = "mainImg_";
 	final private static String IMG_CONTENTS_NAME_HEADER = "ckeImg_";
@@ -54,8 +58,8 @@ public class ImgStore {
 	}
 
 	public String[] build(MultipartFile... multipartFiles) throws IllegalStateException, IOException {
-		if(validParam(fileNames, multipartFiles, rootPath, fileNameHeader)) {
-			throw new IllegalArgumentException("check in->" + " rootPath:" + rootPath + " fileNameHeader:" + fileNameHeader + " fileName size:" + fileNames.size());
+		if(!validParam(fileNames, multipartFiles, rootPath, fileNameHeader)) {
+			throw new IllegalArgumentException("check in->\r\n" + "rootPath:" + rootPath + "\n\rfileNameHeader:" + fileNameHeader + "\n\rfileName size:" + fileNames.size() + "\n\rfile size:" + multipartFiles.length + "\r\r");
 		}
 		
 		for(int i=0; i<multipartFiles.length; i++) {
@@ -66,19 +70,19 @@ public class ImgStore {
 			rtn.add(IMG_STORE_PATH + fileNameHeader + fileNames.get(i));
 		}
 		 
-		return (String[])rtn.toArray();
+		return rtn.toArray(new String[rtn.size()]);
 	}
 	
 	private boolean validParam(List<String> fileNames, MultipartFile[] multipartFiles, String... parms) { 
-		if(fileNames.size() == 0 || multipartFiles.length == 0) return false;
-		if(fileNames.size() !=  multipartFiles.length) return false;
+		if(fileNames.size() == 0 || multipartFiles.length == 0) {return false;}
+		if(fileNames.size() !=  multipartFiles.length) {return false;}
 		for(String parm : parms) {
-			if(parm == null){
+			if(parm == null){ 
 				return false;
-			}else if(parm.equals("") || parm.length() == 0){
+			}else if(parm.equals("") || parm.length() == 0){ 
 				return false;
 			}
-		}
+		} 
 		return true;
 	}
 

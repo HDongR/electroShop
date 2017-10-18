@@ -16,8 +16,8 @@
         <select class="selectpicker" name="searchOption">
             <!-- 검색조건을 검색처리후 결과화면에 보여주기위해  c:out 출력태그 사용, 삼항연산자 -->
             <option value="allGoods" <c:out value="${searchOption == 'allGoods'?'selected':''}"/> >제목+내용</option>
-            <option value="subject" <c:out value="${searchOption == 'goods_subject'?'selected':''}"/> >이름</option>
-            <option value="contents" <c:out value="${searchOption == 'goods_contents'?'selected':''}"/> >내용</option>
+            <option value="goodsSubject" <c:out value="${searchOption == 'goods_subject'?'selected':''}"/> >이름</option>
+            <option value="goodsContents" <c:out value="${searchOption == 'goods_contents'?'selected':''}"/> >내용</option>
         </select>
         <div class="input-group col-sm-6">
 	      <input type="text" class="form-control" placeholder="제목이나 내용을 검색하세요" name="keyword" value="${keyword}">
@@ -73,10 +73,10 @@
 	    	    <tr>
 	    	    	  <td style="vertical-align:middle"><input name="isChecked" type="checkbox" value="${goods.goodsSeq}"></td>
 		 	  <td style="vertical-align:middle">${goods.goodsSeq}</td>
-		 	  <td style="vertical-align:middle"><img src="${goods.mainPicUrl}" width="100"></img></td>
-		 	  <td style="vertical-align:middle">${goods.subject}</td>
-		 	  <td style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${goods.cost}"/> 원</td>
-		 	  <td style="vertical-align:middle"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${goods.crtDate}"/></td>
+		 	  <td style="vertical-align:middle"><img src="${goods.goodsMainPicUrl}" width="100"></img></td>
+		 	  <td style="vertical-align:middle">${goods.goodsSubject}</td>
+		 	  <td style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${goods.goodsCost}"/> 원</td>
+		 	  <td style="vertical-align:middle"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${goods.goodsCrtDate}"/></td>
 		 	  <td style="vertical-align:middle"><a href="/manager/goods/modify_goods_page/${goods.goodsSeq}"  class="btn btn-link">수정</a></td>
 		 	</tr>
 		  </c:forEach>  

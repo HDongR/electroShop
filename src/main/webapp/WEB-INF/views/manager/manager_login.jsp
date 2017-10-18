@@ -85,8 +85,8 @@
 					$('#manager_login').prop('disabled', true);
 					$.post("/manager/login",
 						    {
-						        email: $scope.email,
-						        password: $scope.pwd
+						        userEmail: $scope.email,
+						        userPassword: $scope.pwd
 						    },
 						    function(data, status){ 
 								if(status == 'success'){

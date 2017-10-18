@@ -10,35 +10,35 @@
 	<form id="addGoodsForm" method="post" enctype="multipart/form-data">
 
 		<div class="form-group">
-			<label class="control-label bg-primary" for="subject">상품명</label> <input
-				type="text" id="subject" class="form-control" name="subject">
+			<label class="control-label bg-primary" for="goodsSubject">상품명</label> <input
+				type="text" id="goodsSubject" class="form-control" name="goodsSubject">
 		</div>
 
 		<div class="form-group">
-			<label class="control-label bg-primary" for="cost">판매가</label>
+			<label class="control-label bg-primary" for="goodsCost">판매가</label>
 			<div class="container row">
-				<input class="col-sm-8" type="number" id="cost" name="cost"
+				<input class="col-sm-8" type="number" id="goodsCost" name="goodsCost"
 					step="1000" min="0"> <label class="col-sm-2">원</label>
 			</div>
 		</div>
 		
 		<div class="form-group">
-			<label class="control-label bg-primary" for="stock">판매가</label>
+			<label class="control-label bg-primary" for="goodsStock">재고량</label>
 			<div class="container row">
-				<input class="col-sm-8" type="number" id="stock" name="stock"
+				<input class="col-sm-8" type="number" id="goodsStock" name="goodsStock"
 					step="1" min="0"> <label class="col-sm-2">개</label>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="control-label bg-primary" for="mainPic">메인사진</label> <input
-				id="mainPic" type="file" name="mainPic" accept="image/*" /> <img
+			<label class="control-label bg-primary" for="goodsMainPic">메인사진</label> <input
+				id="goodsMainPic" type="file" name="goodsMainPic" accept="image/*" /> <img
 				id="mainPicPreview" src="#" alt="" width=100/>
 		</div>
 
 		<div class="form-group">
-			<label class="control-label bg-primary" for="contents">제품상세입력</label>
-			<textarea class="form-control" name="contents" id="contents"></textarea>
+			<label class="control-label bg-primary" for="goodsContents">제품상세입력</label>
+			<textarea class="form-control" name="goodsContents" id="goodsContents"></textarea>
 
 		</div>
 		<input id="uploadBtn" class="btn btn-primary btn-md" type="submit"
@@ -70,7 +70,7 @@
 <!-- 메인이미지 프리뷰 -->
 <script type="text/javascript">
 	$(function() {
-		$("#mainPic").on('change', function() {
+		$("#goodsMainPic").on('change', function() {
 			readURL(this);
 		});
 	});
@@ -108,14 +108,14 @@
 		var data = new FormData(form);
 
 		// If you want to add an extra field for the FormData
-		data.append("crtDate", now());
+		data.append("goodsCrtDate", now());
 
 		// disabled the submit button
 		$("#uploadBtn").prop("disabled", true);
 		$.ajax({
 			type : "POST",
 			enctype : 'multipart/form-data',
-			url : "/manager/add_goods",
+			url : '/manager/add_goods',
 			data : data,
 			processData : false,
 			contentType : false,
@@ -125,7 +125,7 @@
 				if(data == 'completeAddedGoods'){
 					location.href = '/manager/';
 				}else if(data == 'validError'){
-					alert('모두 입력해주세요')
+					alert('알맞게 모두 입력하세요')
 				}else if(data == 'databaseError'){
 					alert('databaseError')
 				}

@@ -7,7 +7,7 @@
 <c:set var="user" value="${sessionScope.user}" />  
  
 <c:if test="${null ne user}">
-	<c:if test="${user.joinType == 'MANAGER'}">
+	<c:if test="${user.userJoinType == 'MANAGER'}">
 
 
 		<div class="col-sm-2 hidden-xs">

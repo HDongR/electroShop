@@ -29,8 +29,8 @@ public class ManagerInterceptor extends HandlerInterceptorAdapter {
 		
 		// 관리자가 아닌 로그인 되었을 경우 /manager/** 페이지 접근 제한
 		if (user != null) {
-			if (user.getJoinType() != JoinType.MANAGER) {
-				logger.info("user'email is " + user.getEmail() + " not authorization");
+			if (user.getUserJoinType() != JoinType.MANAGER) {
+				logger.info("user'email is " + user.getUserEmail() + " not authorization");
 				response.sendRedirect(request.getContextPath() + "/");
 				return false;
 			} 
@@ -38,7 +38,7 @@ public class ManagerInterceptor extends HandlerInterceptorAdapter {
 			logger.info("user is null");
 			if(isDEBUG) { 
 				UserVO userVO = new UserVO();
-				userVO.setJoinType(JoinType.MANAGER);
+				userVO.setUserJoinType(JoinType.MANAGER);
 				session.setAttribute("user", userVO); 
 			}
 			response.sendRedirect(request.getContextPath() + "/manager/login_page");

@@ -18,8 +18,8 @@ public class UserServiceImpl implements UserService{
 	private UserDAOImpl dao;
 	
 	@Override
-	public UserVO findUser(String userId) { 
-		return dao.findUser(userId);
+	public UserVO findUser(String email) { 
+		return dao.findUser(email);
 	}
 
 	

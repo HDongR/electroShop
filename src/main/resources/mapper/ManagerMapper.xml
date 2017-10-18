@@ -6,24 +6,24 @@
 		SELECT *
 		FROM USER_T
 		WHERE
-		user_email = #{email} and user_join_type = 'MANAGER'
+		user_email = #{userEmail} and user_join_type = 'MANAGER'
 	</select>
 
 	<select id="loginManager" resultType="UserVO">
 		SELECT *
 		FROM USER_T
 		WHERE
-		user_email = #{email} and user_password = #{password}
+		user_email = #{userEmail} and user_password = #{userPassword}
 	</select>
 
 	<insert id="addManager" parameterType="UserVO">
 		INSERT INTO USER_T (user_email, user_password, user_nickname, user_join_date, user_join_type)
-		VALUES (#{email}, #{password}, #{nickname}, #{joinDate}, #{joinType})
+		VALUES (#{userEmail}, #{userPassword}, #{userNickname}, #{userJoinDate}, #{userJoinType})
 	</insert>
 
 	<insert id="addGoods" parameterType="GoodsVO">
-		INSERT INTO GOODS_T (goods_seq, goods_cost, goods_stock, goods_crt_date, coods_contents, goods_subject, goods_main_pic_url)
-		VALUES (GOODS_SEQUENCE.NEXTVAL, #{cost}, #{stock}, #{crtDate}, #{contents}, #{subject}, #{mainPicUrl})
+		INSERT INTO GOODS_T (goods_seq, goods_cost, goods_stock, goods_crt_date, goods_contents, goods_subject, goods_main_pic_url)
+		VALUES (GOODS_SEQUENCE.NEXTVAL, #{goodsCost}, #{goodsStock}, #{goodsCrtDate}, #{goodsContents}, #{goodsSubject}, #{goodsMainPicUrl})
 		<selectKey keyProperty="goodsSeq" resultType="Integer"
 			order="AFTER">
 			SELECT GOODS_SEQUENCE.CURRVAL FROM DUAL
@@ -33,12 +33,12 @@
 
 	<resultMap id="getGoodsListResult" type="GoodsVO">
 		<id column="goods_seq" property="goodsSeq" />
-		<result column="goods_subject" property="subject" />
-		<result column="goods_cost" property="cost" />
-		<result column="goods_stock" property="stock" />
-		<result column="goods_main_pic_url" property="mainPicUrl" />
-		<result column="goods_contents" jdbcType="CLOB" property="contents" javaType="java.lang.String" />
-		<result column="goods_crt_date" property="crtDate" />
+		<result column="goods_subject" property="goodsSubject" />
+		<result column="goods_cost" property="goodsCost" />
+		<result column="goods_stock" property="goodsStock" />
+		<result column="goods_main_pic_url" property="goodsMainPicUrl" />
+		<result column="goods_contents" jdbcType="CLOB" property="goodsContents" javaType="java.lang.String" />
+		<result column="goods_crt_date" property="goodsCrtDate" />
 	</resultMap>
 
 	<select id="getGoodsOne" resultMap="getGoodsListResult">
@@ -51,11 +51,11 @@
 	<update id="updateGoodsOne" parameterType="GoodsVO">
 		UPDATE GOODS_T
 		SET
-			goods_subject = #{subject},
-			goods_cost = #{cost},
-			goods_stock = #{stock},
-			goods_main_pic_url = #{mainPicUrl},
-			goods_contents = #{contents}
+			goods_subject = #{goodsSubject},
+			goods_cost = #{goodsCost},
+			goods_stock = #{goodsStock},
+			goods_main_pic_url = #{goodsMainPicUrl},
+			goods_contents = #{goodsContents}
 		WHERE goods_seq = #{goodsSeq}
 	</update>
 	
@@ -63,19 +63,19 @@
 		SELECT *
 		FROM USER_T
 		WHERE
-		user_email = #{email}
+		user_email = #{userEmail}
 	</select>
 
 	<update id="updateUserOne" parameterType="UserVO">
 		UPDATE USER_T
 		SET
-			user_phone_num = #{phonNum},
-			user_addr_city = #{addrCity},
-			user_addr_area = #{addrArea},
-			user_addr_detail = #{addrDetail},
-			user_name = #{name},
-		 	user_nickname = #{nickname}
-		WHERE user_email = #{email}
+			user_phone_num = #{userPhonNum},
+			user_addr_city = #{userAddrCity},
+			user_addr_area = #{userAddrArea},
+			user_addr_detail = #{userAddrDetail},
+			user_name = #{userName},
+		 	user_nickname = #{userNickname}
+		WHERE user_email = #{userEmail}
 	</update>
 
 	<select id="goodsTotalCount" resultType="int">
@@ -110,7 +110,7 @@
 		SELECT *
 		FROM USER_T
 		<include refid="search"></include>
-		ORDER BY join_date DESC
+		ORDER BY user_join_date DESC
 		<include refid="pagingFooter"></include>
 	</select>
 

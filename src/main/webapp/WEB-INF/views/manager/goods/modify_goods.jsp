@@ -13,27 +13,36 @@
 	<form id="modifyGoodsForm" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="goodsSeq" value="${goodsVO.goodsSeq}">
 		<div class="form-group">
-			<label class="control-label bg-primary" for="subject">상품명</label> 
-			<input type="text" id="subject" class="form-control" name="subject" value="${goodsVO.subject}">
+			<label class="control-label bg-primary" for="goodsSubject">상품명</label> 
+			<input type="text" id="goodsSubject" class="form-control" name="goodsSubject" value="${goodsVO.goodsSubject}">
 		</div>
 
 		<div class="form-group">
-			<label class="control-label bg-primary" for="cost">판매가</label>
+			<label class="control-label bg-primary" for="goodsCost">판매가</label>
 			<div class="container row">
-				<input class="col-sm-8" type="number" id="cost" name="cost"
-					  min="0" value="${goodsVO.cost}"> <label class="col-sm-2">원</label>
+				<input class="col-sm-8" type="number" id="goodsCost" name="goodsCost"
+					  min="0" value="${goodsVO.goodsCost}"> <label class="col-sm-2">원</label>
 			</div>
 		</div>
+		
+		<div class="form-group">
+			<label class="control-label bg-primary" for="goodsStock">재고량</label>
+			<div class="container row">
+				<input class="col-sm-8" type="number" id="goodsStock" name="goodsStock"
+					step="1" min="0" value="${goodsVO.goodsStock}"> <label class="col-sm-2">개</label>
+			</div>
+		</div>
+		
 
 		<div class="form-group">
-			<label class="control-label bg-primary" for="mainPic">메인사진</label> <input
-				id="mainPic" type="file" name="mainPic" accept="image/*" value="${goodsVO.mainPicUrl}"> <img
-				id="mainPicPreview" src="${goodsVO.mainPicUrl}" alt="" width=100/>
+			<label class="control-label bg-primary" for="goodsMainPic">메인사진</label> <input
+				id="goodsMainPic" type="file" name="goodsMainPic" accept="image/*" value="${goodsVO.goodsMainPicUrl}"> <img
+				id="mainPicPreview" src="${goodsVO.goodsMainPicUrl}" alt="" width=100/>
 		</div>
 
 		<div class="form-group">
-			<label class="control-label bg-primary" for="contents">제품상세입력</label>
-			<textarea class="form-control" name="contents" id="contents" >${goodsVO.contents}</textarea>
+			<label class="control-label bg-primary" for="goodsContents">제품상세입력</label>
+			<textarea class="form-control" name="goodsContents" id="goodsContents" >${goodsVO.goodsContents}</textarea>
 
 		</div>
 		<input id="modifyBtn" class="btn btn-primary btn-md" type="submit" value="상품수정 완료">
@@ -65,7 +74,7 @@
 <!-- 메인이미지 프리뷰 -->
 <script type="text/javascript">
 	$(function() {
-		$("#mainPic").on('change', function() {
+		$("#goodsMainPic").on('change', function() {
 			readURL(this);
 		});
 	});
@@ -101,7 +110,7 @@
 
 		// Create an FormData object
 		var data = new FormData(form);  
-		data.append("mainPicUrl", "${goodsVO.mainPicUrl}");
+		data.append("goodsMainPicUrl", "${goodsVO.goodsMainPicUrl}");
 		
 		// disabled the submit button
 		$("#modifyBtn").prop("disabled", true);
@@ -118,7 +127,7 @@
 				if(data == 'completeUpdatedGoods'){
 					location.href = '/manager/';
 				}else if(data == 'validError'){
-					alert('모두 입력해주세요')
+					alert('알맞게 모두 입력하세요')
 				} 
 				$("#modifyBtn").prop("disabled", false); 
 			},

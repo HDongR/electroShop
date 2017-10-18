@@ -6,7 +6,7 @@
 <c:set var="user" value="${sessionScope.user}"/>
  
 <c:if test="${null ne user}"> 	 
-<c:if test="${user.joinType == 'MANAGER'}">
+<c:if test="${user.userJoinType == 'MANAGER'}">
 
 <nav class="navbar navbar-inverse visible-xs">
   <div class="container-fluid">

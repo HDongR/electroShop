@@ -37,24 +37,24 @@ public class UserController {
 
 	// check Email
 	@RequestMapping(value = "check_email", method = RequestMethod.POST)
-	public void checkEmail(@RequestParam("email") String email, HttpSession session, HttpServletResponse response)
+	public void checkEmail(@RequestParam("userEmail") String email, HttpSession session, HttpServletResponse response)
 			throws IOException {
 		logger.info("checkEmail: " + email);
 		UserVO user = service.findUser(email);
-
+		 
 		if (user == null) {
 			logger.info(email + " checkEmail result is null");
 			response.getWriter().print("isNotDuplicateEmail");
-		} else if (user.getJoinType() == JoinType.MANAGER) {
+		} else if (user.getUserJoinType() == JoinType.MANAGER) {
 			logger.info("checkEmail: MANAGER");
 			response.getWriter().print("isManagerJoined");
-		} else if (user.getJoinType() == JoinType.COMMON) {
+		} else if (user.getUserJoinType() == JoinType.COMMON) {
 			logger.info("checkEmail: COMMON");
 			response.getWriter().print("isCommonJoined");
-		} else if (user.getJoinType() == JoinType.KAKAO) {
+		} else if (user.getUserJoinType() == JoinType.KAKAO) {
 			logger.info("checkEmail: KAKAO");
 			response.getWriter().print("isKakaoJoined");
-		} else if (user.getJoinType() == JoinType.NAVER) {
+		} else if (user.getUserJoinType() == JoinType.NAVER) {
 			logger.info("checkEmail: NAVER");
 			response.getWriter().print("isNaverJoined");
 		}
@@ -75,11 +75,11 @@ public class UserController {
 			logger.info("valid error");
 			res.getWriter().print("validError");
 		} else {
-			user.setPassword(securityUtils.getHash(user.getPassword()));
+			user.setUserPassword(securityUtils.getHash(user.getUserPassword()));
 			UserVO userVO = service.loginUser(user);
 			if (userVO == null) {
 				res.getWriter().print("invalid Email or Pwd");
-			} else if (userVO.getJoinType() == JoinType.MANAGER) {
+			} else if (userVO.getUserJoinType() == JoinType.MANAGER) {
 				res.getWriter().print("validManager");
 			} else {
 				HttpSession session = request.getSession(true);
@@ -121,8 +121,8 @@ public class UserController {
 			logger.info("valid error");
 			response.getWriter().print("validError");
 		} else {
-			user.setPassword(securityUtils.getHash(user.getPassword()));
-			logger.info(user.getPassword());
+			user.setUserPassword(securityUtils.getHash(user.getUserPassword()));
+			logger.info(user.getUserPassword());
 			int r = service.addUser(user);
 			logger.info("result:" + r);
 			if (r > 0) { // database 에러처리
@@ -144,8 +144,8 @@ public class UserController {
 			logger.info("valid error");
 			response.getWriter().print("validError");
 		} else {
-			user.setPassword(securityUtils.getHash(user.getEmail()));
-			logger.info(user.getPassword());
+			user.setUserPassword(securityUtils.getHash(user.getUserEmail()));
+			logger.info(user.getUserEmail());
 			int r = service.addUser(user);
 			logger.info("result:" + r);
 			if (r > 0) { // database 에러처리
@@ -164,10 +164,10 @@ public class UserController {
 			HttpServletResponse res) throws IOException {
 		logger.info("snsLogin");
 		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
-			logger.info("valid error");
+			logger.info("valid error:" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
 		} else {
-			user.setPassword(securityUtils.getHash(user.getEmail()));
+			user.setUserPassword(securityUtils.getHash(user.getUserEmail()));
 			UserVO userVO = service.loginUser(user);
 
 			if (userVO == null) {

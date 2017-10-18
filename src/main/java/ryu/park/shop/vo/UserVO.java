@@ -14,114 +14,104 @@ import ryu.park.shop.type.JoinType;
 
 @Alias("UserVO")
 public class UserVO {
-	private String userId;
 	@NotEmpty
 	@Email
-	private String email;
-	private String phoneNum; 
-	private String password;
-	private String addrCity;
-	private String addrArea;
-	private String addrDetail;
-	private String name; 
+	private String userEmail;
+	private String userPhoneNum; 
+	private String userPassword;
+	private String userAddrCity;
+	private String userAddrArea;
+	private String userAddrDetail;
+	private String userName; 
 	@Pattern(regexp="[0-9가-힣a-zA-Z]{2,10}")
-	private String nickname;
+	private String userNickname;
 	@DateTimeFormat(pattern="yyyy-MM-dd HH:mm:ss") 
-	private Date joinDate; 
-	private JoinType joinType; 
+	private Date userJoinDate; 
+	private JoinType userJoinType; 
 	
 	public UserVO() {  
 	}
 
-	public String getName() {
-		return name;
+	public String getUserEmail() {
+		return userEmail;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
 	}
 
-	public String getUserId() {
-		return userId;
+	public String getUserPhoneNum() {
+		return userPhoneNum;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	
-	
-	public String getEmail() {
-		return email;
+	public void setUserPhoneNum(String userPhoneNum) {
+		this.userPhoneNum = userPhoneNum;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public String getUserPassword() {
+		return userPassword;
 	}
 
-	public String getPhoneNum() {
-		return phoneNum;
+	public void setUserPassword(String userPassword) {
+		this.userPassword = userPassword;
 	}
 
-	public void setPhoneNum(String phoneNum) {
-		this.phoneNum = phoneNum;
+	public String getUserAddrCity() {
+		return userAddrCity;
 	}
 
-	public String getPassword() {
-		return password;
+	public void setUserAddrCity(String userAddrCity) {
+		this.userAddrCity = userAddrCity;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public String getUserAddrArea() {
+		return userAddrArea;
 	}
 
-	public String getAddrCity() {
-		return addrCity;
+	public void setUserAddrArea(String userAddrArea) {
+		this.userAddrArea = userAddrArea;
 	}
 
-	public void setAddrCity(String addrCity) {
-		this.addrCity = addrCity;
+	public String getUserAddrDetail() {
+		return userAddrDetail;
 	}
 
-	public String getAddrArea() {
-		return addrArea;
+	public void setUserAddrDetail(String userAddrDetail) {
+		this.userAddrDetail = userAddrDetail;
 	}
 
-	public void setAddrArea(String addrArea) {
-		this.addrArea = addrArea;
+	public String getUserName() {
+		return userName;
 	}
 
-	public String getAddrDetail() {
-		return addrDetail;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
-	public void setAddrDetail(String addrDetail) {
-		this.addrDetail = addrDetail;
+	public String getUserNickname() {
+		return userNickname;
 	}
 
-	public String getNickname() {
-		return nickname;
+	public void setUserNickname(String userNickname) {
+		this.userNickname = userNickname;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public Date getUserJoinDate() {
+		return userJoinDate;
 	}
 
-	public Date getJoinDate() {
-		return joinDate;
+	public void setUserJoinDate(Date userJoinDate) {
+		this.userJoinDate = userJoinDate;
 	}
 
-	public void setJoinDate(Date joinDate) {
-		this.joinDate = joinDate;
+	public JoinType getUserJoinType() {
+		return userJoinType;
 	}
 
-	public JoinType getJoinType() {
-		return joinType;
+	public void setUserJoinType(JoinType userJoinType) {
+		this.userJoinType = userJoinType;
 	}
 
-	public void setJoinType(JoinType joinType) {
-		this.joinType = joinType;
-	}
-	
 	
 	
 }

@@ -109,8 +109,8 @@ public class ManagerController {
 		String fileUrl = new ImgStore()
 				.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
 				.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
-				.setFileName(mainPic)
-				.build();
+				.setFileName(mainPic.getOriginalFilename())
+				.build(mainPic)[0];
 
 		goodsVO.setMainPicUrl(fileUrl);
 
@@ -138,8 +138,8 @@ public class ManagerController {
 		String fileUrl = new ImgStore()
 				.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
 				.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_CONTENTS)
-				.setFileName(upload)
-				.build();
+				.setFileName(upload.getOriginalFilename())
+				.build(upload)[0];
 		
 		res.setCharacterEncoding("utf-8");
 		res.setContentType("text/html;charset=utf-8"); 
@@ -197,8 +197,8 @@ public class ManagerController {
 			String fileUrl = new ImgStore()
 					.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
 					.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
-					.setFileName(mainPic)
-					.build();
+					.setFileName(mainPic.getOriginalFilename())
+					.build(mainPic)[0];
 			
 			goodsVO.setMainPicUrl(fileUrl);
 		}

@@ -2,6 +2,8 @@ package ryu.park.shop.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,25 +16,25 @@ public class ImgStore {
 
 	private String rootPath;
 	private String fileNameHeader;
-	private String fileName;
+	private List<String> fileNames;
 	
-	private MultipartFile multipartFile;
+	public ImgStore() {
+		fileNames = new ArrayList<String>();
+	}
 
 	public enum IMG_STORE_TYPE {
 		IMG_GOODS_MAIN, IMG_GOODS_CONTENTS
 	}
 
-	public ImgStore setRealRootPath(String realRootPath) {
-		this.rootPath = realRootPath;
+	public ImgStore setRealRootPath(String rootPath) {
+		this.rootPath = rootPath;
 		return this;
 	}
 
-	public ImgStore setFileName(MultipartFile multipartFile) {
-		if(multipartFile == null) {
-			throw new IllegalArgumentException("multipartFile is Null");
+	public ImgStore setFileName(String... fileNames) {  
+		for(String fileName : fileNames) {  
+			this.fileNames.add(DateUtils.getInstance().now() + "_" + fileName);
 		}
-		this.multipartFile = multipartFile;
-		this.fileName = DateUtils.getInstance().now() + "_" + this.multipartFile.getOriginalFilename();
 		return this;
 	}
 
@@ -51,19 +53,29 @@ public class ImgStore {
 		return this;
 	}
 
-	public String build() throws IllegalStateException, IOException {
-		if(validParam(rootPath, fileNameHeader, fileName)) {
-			throw new IllegalArgumentException("check in->" + " rootPath:" + rootPath + " fileNameHeader:" + fileNameHeader + " fileName:" + fileName);
+	public String[] build(MultipartFile... multipartFiles) throws IllegalStateException, IOException {
+		if(validParam(fileNames, multipartFiles, rootPath, fileNameHeader)) {
+			throw new IllegalArgumentException("check in->" + " rootPath:" + rootPath + " fileNameHeader:" + fileNameHeader + " fileName size:" + fileNames.size());
 		}
-		multipartFile.transferTo(new File(rootPath + IMG_STORE_PATH + fileNameHeader + fileName));
-		return IMG_STORE_PATH + fileNameHeader + fileName;
+		
+		for(int i=0; i<multipartFiles.length; i++) {
+			multipartFiles[i].transferTo(new File(rootPath + IMG_STORE_PATH + fileNameHeader + fileNames.get(i)));
+		}
+		List<String> rtn = new ArrayList<String>();
+		for(int i=0; i<fileNames.size(); i++) {
+			rtn.add(IMG_STORE_PATH + fileNameHeader + fileNames.get(i));
+		}
+		 
+		return (String[])rtn.toArray();
 	}
 	
-	private boolean validParam(String... strNames) {
-		for(String str : strNames) {
-			if(str == null){
+	private boolean validParam(List<String> fileNames, MultipartFile[] multipartFiles, String... parms) { 
+		if(fileNames.size() == 0 || multipartFiles.length == 0) return false;
+		if(fileNames.size() !=  multipartFiles.length) return false;
+		for(String parm : parms) {
+			if(parm == null){
 				return false;
-			}else if(str.equals("") || str.length() == 0){
+			}else if(parm.equals("") || parm.length() == 0){
 				return false;
 			}
 		}

@@ -27,6 +27,9 @@ public class GoodsVO {
 	@NotNull
 	@Range(min=0)
 	private Integer goodsStock;
+	@NotNull
+	@Range(min=0)
+	private Integer goodsCatMidSeq;
 	
 	public GoodsVO() {
 		
@@ -87,6 +90,15 @@ public class GoodsVO {
 	public void setGoodsStock(Integer goodsStock) {
 		this.goodsStock = goodsStock;
 	}
+
+	public Integer getGoodsCatMidSeq() {
+		return goodsCatMidSeq;
+	}
+
+	public void setGoodsCatMidSeq(Integer goodsCatMidSeq) {
+		this.goodsCatMidSeq = goodsCatMidSeq;
+	}
+ 
 	
 	
 }

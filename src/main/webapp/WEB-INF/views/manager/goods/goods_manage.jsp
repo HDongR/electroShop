@@ -2,11 +2,6 @@
 	pageEncoding="UTF-8"%> 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
 
 <div class="container col-sm-10">
 
@@ -16,9 +11,14 @@
         <select class="selectpicker" name="searchOption">
             <!-- 검색조건을 검색처리후 결과화면에 보여주기위해  c:out 출력태그 사용, 삼항연산자 -->
             <option value="allGoods" <c:out value="${searchOption == 'allGoods'?'selected':''}"/> >제목+내용</option>
-            <option value="goodsSubject" <c:out value="${searchOption == 'goods_subject'?'selected':''}"/> >이름</option>
-            <option value="goodsContents" <c:out value="${searchOption == 'goods_contents'?'selected':''}"/> >내용</option>
+            <option value="goods_subject" <c:out value="${searchOption == 'goods_subject'?'selected':''}"/> >이름</option>
+            <option value="goods_contents" <c:out value="${searchOption == 'goods_contents'?'selected':''}"/> >내용</option>
         </select>
+        
+        <select id="catHighSelect" class="selectpicker" name="goodsCatHighSeq" onchange="set_selectbox();">  
+        </select>
+	   	<select id="catMidSelect" class="selectpicker" name="goodsCatMidSeq">  
+	   	</select>
         <div class="input-group col-sm-6">
 	      <input type="text" class="form-control" placeholder="제목이나 내용을 검색하세요" name="keyword" value="${keyword}">
 	      <div class="input-group-btn">
@@ -61,6 +61,7 @@
 	      <tr>
 	        <th class="text-center "><input id="allCheck" type="checkbox"></th>
 	        <th class="text-center ">번호</th>
+	        <th class="text-center ">카테고리</th>
 	        <th class="text-center ">이미지</th>
 	        <th class="text-center ">이름</th>
 	        <th class="text-center ">가격</th> 
@@ -69,10 +70,11 @@
 	      </tr>
 	    </thead>
 	    <tbody>
-	    	  <c:forEach items="${list}" var="goods">  
+	    	  <c:forEach items="${list}" var="goods" varStatus="status">  
 	    	    <tr>
 	    	    	  <td style="vertical-align:middle"><input name="isChecked" type="checkbox" value="${goods.goodsSeq}"></td>
 		 	  <td style="vertical-align:middle">${goods.goodsSeq}</td>
+		 	  <td id="catName${status.index}" style="vertical-align:middle">${goods.goodsCatMidSeq}</td>
 		 	  <td style="vertical-align:middle"><img src="${goods.goodsMainPicUrl}" width="100"></img></td>
 		 	  <td style="vertical-align:middle">${goods.goodsSubject}</td>
 		 	  <td style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${goods.goodsCost}"/> 원</td>
@@ -138,7 +140,56 @@
       </ul>
 	</nav>
 </div> 
+
+<!-- 카테고리 선택 -->
+<script type="text/javascript"> 
+
+	var jsonData = <c:out value="${categoryJson}" escapeXml="false"/>;
+	$(document).ready(function () {
+		make_selectbox(Object.keys(jsonData)[0]);
+	});
 	
+	$(document).ready(function(){
+		for(key in jsonData){
+			$('#catHighSelect').append('<option value="'+ key +'">' + jsonData[key].catHighName + '</option>');
+		}
+		$("#catHighSelect").selectpicker("refresh");
+	});
+	
+	function make_selectbox(highSeq){ 
+		$('#catMidSelect').empty();
+	   	var midList = jsonData[highSeq].categoryMidList; 
+	   	for(i=0; i< midList.length; i++){
+	   		$('#catMidSelect').append('<option value="'+ midList[i].catMidSeq +'">' + midList[i].catMidName + '</option>');
+	   	}	 
+	   	$("#catMidSelect").selectpicker("refresh"); 
+	}   
+	
+	function setCatMidNameOrHighName(catMidSeq){
+		for(key in jsonData){
+			var midList = jsonData[key].categoryMidList; 
+		   	for(var i=0; i< midList.length; i++){
+		   		if(catMidSeq == midList[i].catMidSeq){  
+		   			return {"catHighName": jsonData[key].catHighName, "catMidName": midList[i].catMidName};
+	   			}
+		   	}	
+		}
+	}
+	
+	$(document).ready(function () {
+		for(var i=0; i<${count}; i++){ 
+			var midSeq = $("#catName" + i).text(); 
+			var rsult = setCatMidNameOrHighName(midSeq); 
+			$("#catName" + i).text( rsult.catHighName + '-' + rsult.catMidName);  
+		} 
+	}); 
+	 
+	function set_selectbox(){
+ 		var catHighSeq = $("#catHighSelect option:selected").val();
+ 		make_selectbox(catHighSeq);
+	}
+</script>
+
 <!-- 페이지처리 -->
 <script type="text/javascript">
 	function list(page){
@@ -217,3 +268,5 @@
 	}
 
 </script>
+
+	

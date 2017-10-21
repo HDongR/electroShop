@@ -7,7 +7,9 @@
 		<!-- 오라클 필드 속성이 READ_COUNT 처럼 언더 스코어가 있을 때 VO 의 readCount 처럼 카멜 케이스로 변환 되게 합니다. -->
 		<setting name="mapUnderscoreToCamelCase" value="true"/> 
 	</settings>
+	<!--  
 	<typeAliases>
 		<package name="ryu.park.shop.vo"/>
 	</typeAliases>
+	-->
 </configuration>

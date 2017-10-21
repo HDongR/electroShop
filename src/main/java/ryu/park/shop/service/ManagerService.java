@@ -1,7 +1,9 @@
 package ryu.park.shop.service;
 
 import java.util.List;
+import java.util.Map;
 
+import ryu.park.shop.vo.CategoryHighVO; 
 import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
 
@@ -16,10 +18,11 @@ public interface ManagerService {
 	public List<UserVO> getUserList(int start, int end, String searchOption, String keyword); 
 	public UserVO getUserOne(String email);
 	public void updateUserOne(UserVO userVO);
-	public int goodsTotalCount(String searchOption, String keyword);
+	public int goodsTotalCount(String searchOption, String keyword, int goodsCatHighSeq, int goodsCatMidSeq);
 	public int addGoods(GoodsVO goodsVO); 
 	public int deleteGoodsList(List<Integer> goodsSeqList);
-	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword);
+	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword, int goodsCatHighSeq, int goodsCatMidSeq);
 	public GoodsVO getGoodsOne(int goodsSeq);
 	public void updateGoodsOne(GoodsVO goodsVO);
+	public Map<Integer, CategoryHighVO> getGoodsCat(boolean seachMode); 
 }

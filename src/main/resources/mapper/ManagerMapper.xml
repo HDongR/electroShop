@@ -2,36 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- 맵핑될 DAO 인터페이스의 Full name 을 줍니다. -->
 <mapper namespace="ManagerMapper">
-	<select id="findManager" resultType="UserVO">
+	<select id="findManager" resultType="ryu.park.shop.vo.UserVO">
 		SELECT *
-		FROM USER_T
+		FROM user_t
 		WHERE
 		user_email = #{userEmail} and user_join_type = 'MANAGER'
 	</select>
 
-	<select id="loginManager" resultType="UserVO">
+	<select id="loginManager" resultType="ryu.park.shop.vo.UserVO">
 		SELECT *
-		FROM USER_T
+		FROM user_t
 		WHERE
 		user_email = #{userEmail} and user_password = #{userPassword}
 	</select>
 
-	<insert id="addManager" parameterType="UserVO">
-		INSERT INTO USER_T (user_email, user_password, user_nickname, user_join_date, user_join_type)
+	<insert id="addManager" parameterType="ryu.park.shop.vo.UserVO">
+		INSERT INTO user_t (user_email, user_password, user_nickname, user_join_date, user_join_type)
 		VALUES (#{userEmail}, #{userPassword}, #{userNickname}, #{userJoinDate}, #{userJoinType})
 	</insert>
 
-	<insert id="addGoods" parameterType="GoodsVO">
-		INSERT INTO GOODS_T (goods_seq, goods_cost, goods_stock, goods_crt_date, goods_contents, goods_subject, goods_main_pic_url)
-		VALUES (GOODS_SEQUENCE.NEXTVAL, #{goodsCost}, #{goodsStock}, #{goodsCrtDate}, #{goodsContents}, #{goodsSubject}, #{goodsMainPicUrl})
+	<insert id="addGoods" parameterType="ryu.park.shop.vo.GoodsVO">
+		INSERT INTO goods_t (goods_seq, goods_cost, goods_stock, goods_crt_date, goods_contents, goods_subject, goods_main_pic_url, goods_cat_mid_seq)
+		VALUES (GOODS_SEQUENCE.NEXTVAL, #{goodsCost}, #{goodsStock}, #{goodsCrtDate}, #{goodsContents}, #{goodsSubject}, #{goodsMainPicUrl}, #{goodsCatMidSeq})
 		<selectKey keyProperty="goodsSeq" resultType="Integer"
 			order="AFTER">
 			SELECT GOODS_SEQUENCE.CURRVAL FROM DUAL
 		</selectKey>
 	</insert>
-
-
-	<resultMap id="getGoodsListResult" type="GoodsVO">
+ 
+	<resultMap id="getGoodsListResult" type="ryu.park.shop.vo.GoodsVO">
 		<id column="goods_seq" property="goodsSeq" />
 		<result column="goods_subject" property="goodsSubject" />
 		<result column="goods_cost" property="goodsCost" />
@@ -39,35 +38,37 @@
 		<result column="goods_main_pic_url" property="goodsMainPicUrl" />
 		<result column="goods_contents" jdbcType="CLOB" property="goodsContents" javaType="java.lang.String" />
 		<result column="goods_crt_date" property="goodsCrtDate" />
+		<result column="goods_cat_mid_seq" property="goodsCatMidSeq"/>
 	</resultMap>
 
 	<select id="getGoodsOne" resultMap="getGoodsListResult">
 		SELECT *
-		FROM GOODS_T
+		FROM goods_t
 		WHERE
 		goods_seq = #{goodsSeq}
 	</select>
 
-	<update id="updateGoodsOne" parameterType="GoodsVO">
-		UPDATE GOODS_T
+	<update id="updateGoodsOne" parameterType="ryu.park.shop.vo.GoodsVO">
+		UPDATE goods_t
 		SET
 			goods_subject = #{goodsSubject},
 			goods_cost = #{goodsCost},
 			goods_stock = #{goodsStock},
 			goods_main_pic_url = #{goodsMainPicUrl},
-			goods_contents = #{goodsContents}
+			goods_contents = #{goodsContents},
+			goods_cat_mid_seq = #{goodsCatMidSeq}
 		WHERE goods_seq = #{goodsSeq}
 	</update>
 	
-	<select id="getUserOne" resultType="UserVO">
+	<select id="getUserOne" resultType="ryu.park.shop.vo.UserVO">
 		SELECT *
-		FROM USER_T
+		FROM user_t
 		WHERE
 		user_email = #{userEmail}
 	</select>
 
-	<update id="updateUserOne" parameterType="UserVO">
-		UPDATE USER_T
+	<update id="updateUserOne" parameterType="ryu.park.shop.vo.UserVO">
+		UPDATE user_t
 		SET
 			user_phone_num = #{userPhonNum},
 			user_addr_city = #{userAddrCity},
@@ -81,14 +82,14 @@
 	<select id="goodsTotalCount" resultType="int">
 		SELECT COUNT(*)
 		FROM
-		GOODS_T
+		goods_t G,goods_cat_mid_t M, goods_cat_high_t H
 		<include refid="search"></include>
 	</select>
 	
 	<select id="userTotalCount" resultType="int">
 		SELECT COUNT(*)
 		FROM
-		USER_T
+		user_t
 		<include refid="search"></include>
 	</select>
 	 
@@ -97,38 +98,70 @@
 	<select id="getGoodsList" resultMap="getGoodsListResult">
 		<!-- 목록 조회 및 페이징 전체 쿼리 -->
 		<include refid="pagingHeader"></include>
-		SELECT *
-		FROM GOODS_T
+		SELECT 
+			G.* 
+		FROM goods_t G, goods_cat_high_t H, goods_cat_mid_t M
 		<include refid="search"></include>
 		ORDER BY goods_seq DESC
 		<include refid="pagingFooter"></include>
 	</select>
 	
-	<select id="getUserList" resultType="UserVO">
+	<select id="getUserList" resultType="ryu.park.shop.vo.UserVO">
 		<!-- 목록 조회 및 페이징 전체 쿼리 -->
 		<include refid="pagingHeader"></include>
 		SELECT *
-		FROM USER_T
+		FROM user_t
 		<include refid="search"></include>
 		ORDER BY user_join_date DESC
 		<include refid="pagingFooter"></include>
 	</select>
+
 
 	<!-- 검색 조건 sql -->
 	<sql id="search">
 		<choose>
 			<!-- 검색옵션이 전체 검색일 경우 -->
 			<when test="searchOption == 'allGoods'">
+				<!-- 상중 카테고리 모두 전체일 경우 -->
 				WHERE
-				(goods_subject like '%'||#{keyword}||'%'
-				OR goods_contents LIKE '%'||#{keyword}||'%')
-			</when>
+					(goods_subject like '%'||#{keyword}||'%'
+					OR goods_contents LIKE '%'||#{keyword}||'%')
+				 	AND (G.goods_cat_mid_seq = M.cat_mid_seq 
+				 	AND M.cat_high_seq = H.cat_high_seq)
+				<!-- 상 카테고리 선택, 중 카테고리만 전체일 경우 -->
+				<if test="goodsCatHighSeq != 0 and goodsCatMidSeq == 0">
+					AND H.cat_high_seq = #{goodsCatHighSeq}
+				</if> 
+				<!-- 모든 카테고리 선택 -->
+				<if test="goodsCatHighSeq != 0 and goodsCatMidSeq != 0">
+					AND (H.cat_high_seq = #{goodsCatHighSeq}
+					AND M.cat_mid_seq = #{goodsCatMidSeq})
+				</if> 
+			</when>  
+			<!-- 모든 유저 검색 -->
 			<when test="searchOption == 'allUser'">
 				WHERE
 				(user_email like '%'||#{keyword}||'%'
 				OR user_nickname LIKE '%'||#{keyword}||'%')
 			</when>
-			<!-- 전체 검색이 아닐 경우 -->
+			<!-- 전체 검색이 아닐 경우 상품검색 -->
+			<when test="searchOption == 'goods_subject' or searchOption == 'goods_contents'">
+				WHERE
+				( ${searchOption} LIKE '%'||#{keyword}||'%' )
+				AND (G.goods_cat_mid_seq = M.cat_mid_seq 
+				AND M.cat_high_seq = H.cat_high_seq)
+				<!-- 상 카테고리 선택, 중 카테고리만 전체일 경우 -->
+				<if test="goodsCatHighSeq != 0 and goodsCatMidSeq == 0">
+					AND H.cat_high_seq = #{goodsCatHighSeq}
+				</if> 
+				<!-- 모든 카테고리 선택 -->
+				<if test="goodsCatHighSeq != 0 and goodsCatMidSeq != 0">
+					AND (H.cat_high_seq = #{goodsCatHighSeq}
+					AND M.cat_mid_seq = #{goodsCatMidSeq})
+				</if> 
+			</when>
+			
+			<!-- 전체 검색이 아닐 경우 유저검색-->
 			<otherwise>
 				WHERE
 				${searchOption} LIKE '%'||#{keyword}||'%'
@@ -151,11 +184,33 @@
 
 	<delete id="deleteGoodsList" parameterType="java.util.Map">
 		DELETE
-		FROM GOODS_T
+		FROM goods_t
 		WHERE
 		<foreach collection="goodsSeqList" item="goodsSeq" separator="or" open="(" close=")">
 			goods_seq = #{goodsSeq}
 		</foreach> 
 	</delete>
+	
+	
+	<select id="getGoodsCat" resultMap="CategoryResult" resultType="java.util.HashMap">
+		SELECT H.cat_high_seq,
+			   H.cat_high_name,
+			   M.cat_mid_seq,
+			   M.cat_mid_name
+		FROM goods_cat_high_t H
+		LEFT OUTER JOIN goods_cat_mid_t M on H.cat_high_seq = M.cat_high_seq
+		ORDER BY cat_high_seq ASC
+	</select>
+	
+	<resultMap type="ryu.park.shop.vo.CategoryHighVO" id="CategoryResult">
+		<id column="cat_high_seq" property="catHighSeq"/>
+		<result column="cat_high_name" property="catHighName"/>
+		<collection property="categoryMidList" ofType="ryu.park.shop.vo.CategoryHighVO$CategoryMidVO">  
+	      	<id column="cat_mid_seq" property="catMidSeq"/>
+			<result column="cat_high_seq" property="catHighSeq"/>
+			<result column="cat_mid_name" property="catMidName"/> 
+		</collection> 
+	</resultMap> 
+	
 
 </mapper>

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,12 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
-import org.apache.commons.io.FileUtils;
+ 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,12 +28,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import ryu.park.shop.service.ManagerService;
-import ryu.park.shop.utils.BoardPager;
-import ryu.park.shop.utils.DateUtils;
+import ryu.park.shop.utils.BoardPager; 
 import ryu.park.shop.utils.ImgStore;
 import ryu.park.shop.utils.ImgStore.IMG_STORE_TYPE;
+import ryu.park.shop.utils.JsonFormatter;
 import ryu.park.shop.utils.SecurityUtils;
+import ryu.park.shop.vo.CategoryHighVO;
+import ryu.park.shop.vo.CategoryHighVO.CategoryMidVO;
 import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
 
@@ -96,8 +100,14 @@ public class ManagerController {
 	}
 
 	@RequestMapping(value = "goods/add_goods_page", method = RequestMethod.GET)
-	public String addGoodsPage(Model model) {
+	public String addGoodsPage(Model model) throws JsonProcessingException {
+		logger.info("add_goods_page"); 
 		model.addAttribute("condition", "add_goods_page");
+		Map<Integer, CategoryHighVO> category = service.getGoodsCat(false);
+  
+		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
+		model.addAttribute("categoryJson",jsonCategory);
+	 
 		return "manager/goods/add_goods";
 	}
 
@@ -159,23 +169,29 @@ public class ManagerController {
 	@RequestMapping(value = "goods/goods_manage_page", method = { RequestMethod.GET, RequestMethod.POST })
 	public String goodsManagePage(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
-			Model model) {
+			@RequestParam(defaultValue = "0") int goodsCatHighSeq, @RequestParam(defaultValue = "0") int goodsCatMidSeq,
+			Model model) throws JsonProcessingException {
 		logger.info("goods_manage_page");
 		model.addAttribute("condition", "goods_manage_page");
 
-		int count = service.goodsTotalCount(searchOption, keyword);
+		int count = service.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
 		// 페이지 나누기 관련 처리
 		BoardPager boardPager = new BoardPager(count, curPage);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
 
-		List<GoodsVO> list = service.getGoodsList(start, end, searchOption, keyword);
+		List<GoodsVO> list = service.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
 
 		model.addAttribute("list", list); // list
 		model.addAttribute("count", count); // 레코드의 갯수
 		model.addAttribute("searchOption", searchOption); // 검색옵션
 		model.addAttribute("keyword", keyword); // 검색키워드
 		model.addAttribute("boardPager", boardPager);
+		
+		Map<Integer,CategoryHighVO> category = service.getGoodsCat(true);
+		
+		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
+		model.addAttribute("categoryJson",jsonCategory);
 
 		return "manager/goods/goods_manage";
 	}

@@ -1,13 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
-
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
  
 <div class="container col-sm-10">
 	<h2>등록된 유저 리스트</h2>  
@@ -16,8 +10,8 @@
         <select class="selectpicker" name="searchOption">
             <!-- 검색조건을 검색처리후 결과화면에 보여주기위해  c:out 출력태그 사용, 삼항연산자 -->
             <option value="allUser" <c:out value="${searchOption == 'all'?'selected':''}"/> >이메일+닉네임</option>
-            <option value="userEmail" <c:out value="${searchOption == 'user_email'?'selected':''}"/> >이메일</option>
-            <option value="userNickname" <c:out value="${searchOption == 'user_nickname'?'selected':''}"/> >닉네임</option>
+            <option value="user_email" <c:out value="${searchOption == 'user_email'?'selected':''}"/> >이메일</option>
+            <option value="user_nickname" <c:out value="${searchOption == 'user_nickname'?'selected':''}"/> >닉네임</option>
         </select>
         <div class="input-group col-sm-6">
 	      <input type="text" class="form-control" placeholder="이메일이나 닉네임을 검색하세요" name="keyword" value="${keyword}">

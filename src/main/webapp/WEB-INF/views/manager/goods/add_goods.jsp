@@ -1,14 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<script type="text/javascript" src="/resources/ckeditor4/ckeditor.js"></script>
-<script type="text/javascript" src="/resources/js/date_utils.js/"></script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+   
 
 <div class="container col-sm-10">
 	<h2>상품등록</h2>
-	<br/>
-
+	<br/> 
+    
 	<form id="addGoodsForm" method="post" enctype="multipart/form-data">
-
+		<div class="form-group">
+			<label class="control-label bg-primary">카테고리</label><br/>
+			<select id="catHighSelect" class="selectpicker" name="catHighName" onchange="set_selectbox();">
+	        </select>
+	        <select id="catMidSelect" class="selectpicker" name="goodsCatMidSeq"> 
+	        </select>  
+		</div>
+		
 		<div class="form-group">
 			<label class="control-label bg-primary" for="goodsSubject">상품명</label> <input
 				type="text" id="goodsSubject" class="form-control" name="goodsSubject">
@@ -33,7 +40,7 @@
 		<div class="form-group">
 			<label class="control-label bg-primary" for="goodsMainPic">메인사진</label> <input
 				id="goodsMainPic" type="file" name="goodsMainPic" accept="image/*" /> <img
-				id="mainPicPreview" src="#" alt="" width=100/>
+				id="mainPicPreview"  alt="add image" width=100/>
 		</div>
 
 		<div class="form-group">
@@ -48,9 +55,39 @@
 	
 </div>
 
+<!-- 카테고리 선택 -->
+<script type="text/javascript">
+	var jsonData = <c:out value="${categoryJson}" escapeXml="false"/>;
+	$(document).ready(function () { 
+		make_selectbox(Object.keys(jsonData)[0]);
+	});
+	
+	$(document).ready(function(){
+		for(key in jsonData){
+			$('#catHighSelect').append('<option value="'+ key +'">' + jsonData[key].catHighName + '</option>');
+		}
+		$("#catHighSelect").selectpicker("refresh");
+	});
+  
+	
+	function make_selectbox(highSeq){ 
+		$('#catMidSelect').empty();
+	   	var midList = jsonData[highSeq].categoryMidList; 
+	   	for(i=0; i< midList.length; i++){
+	   		$('#catMidSelect').append('<option value="'+ midList[i].catMidSeq +'">' + midList[i].catMidName + '</option>');
+	   	}	 
+	   	$("#catMidSelect").selectpicker("refresh"); 
+	}  
+	 
+	function set_selectbox(){
+ 		var catHighSeq = $("#catHighSelect option:selected").val();
+ 		make_selectbox(catHighSeq);
+	}
+</script>
+
 <!-- ckeditor설정 -->
 <script>
-	CKEDITOR.replace('contents', {
+	CKEDITOR.replace('goodsContents', {
 		'filebrowserUploadUrl' : '/manager/upload_img'
 	});
 	CKEDITOR.on('dialogDefinition', function(ev) {

@@ -1,10 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
-
-<script type="text/javascript" src="/resources/ckeditor4/ckeditor.js"></script>
-<script type="text/javascript" src="/resources/js/date_utils.js/"></script>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
 
 <div class="container col-sm-10">
 	<h2>상품수정</h2>
@@ -53,7 +50,7 @@
 
 <!-- ckeditor설정 -->
 <script>
-	CKEDITOR.replace('contents', {
+	CKEDITOR.replace('goodsContents', {
 		'filebrowserUploadUrl' : '/manager/upload_img'
 	});  
 	

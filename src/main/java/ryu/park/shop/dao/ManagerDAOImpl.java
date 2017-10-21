@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier; 
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import ryu.park.shop.utils.JsonFormatter;
+import ryu.park.shop.vo.CategoryHighVO; 
 import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
 
@@ -70,13 +75,14 @@ public class ManagerDAOImpl implements ManagerDAO {
 	}
 
 	@Override
-	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword) {
+	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword, int goodsCatHighSeq, int goodsCatMidSeq) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchOption", searchOption);
 		map.put("keyword", keyword); 
 		map.put("start", start);
 		map.put("end", end);
-
+		map.put("goodsCatHighSeq", goodsCatHighSeq);
+		map.put("goodsCatMidSeq", goodsCatMidSeq); 
 		return session.selectList(NAMESPACE + "getGoodsList", map);
 	}
 
@@ -91,10 +97,13 @@ public class ManagerDAOImpl implements ManagerDAO {
 	}
 
 	@Override
-	public int goodsTotalCount(String searchOption, String keyword) {
+	public int goodsTotalCount(String searchOption, String keyword, int goodsCatHighSeq, int goodsCatMidSeq) {
 		Map<String, Object> map = new HashMap<String, Object>();
+		
 		map.put("searchOption", searchOption);
 		map.put("keyword", keyword); 
+		map.put("goodsCatHighSeq", goodsCatHighSeq);
+		map.put("goodsCatMidSeq", goodsCatMidSeq);
 		return session.selectOne(NAMESPACE + "goodsTotalCount", map);
 	} 
 
@@ -120,7 +129,7 @@ public class ManagerDAOImpl implements ManagerDAO {
 
 		return session.selectList(NAMESPACE + "getUserList", map);
 	}
-
+ 
 	@Override
 	public int userTotalCount(String searchOption, String keyword) { 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -137,6 +146,11 @@ public class ManagerDAOImpl implements ManagerDAO {
 	@Override
 	public void updateUserOne(UserVO userVO) {
 		session.update(NAMESPACE + "updateUserOne", userVO);
+	}
+
+	@Override
+	public Map<Integer, CategoryHighVO> getGoodsCat(){
+		return session.selectMap(NAMESPACE + "getGoodsCat", "catHighSeq");
 	}
 
 }

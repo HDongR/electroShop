@@ -15,7 +15,7 @@
             <option value="goods_contents" <c:out value="${searchOption == 'goods_contents'?'selected':''}"/> >내용</option>
         </select>
         
-        <select id="catHighSelect" class="selectpicker" name="goodsCatHighSeq" onchange="set_selectbox();">  
+        <select id="catHighSelect" class="selectpicker" name="goodsCatHighSeq" onchange="selectMidbox();">  
         </select>
 	   	<select id="catMidSelect" class="selectpicker" name="goodsCatMidSeq">  
 	   	</select>
@@ -146,7 +146,7 @@
 
 	var jsonData = <c:out value="${categoryJson}" escapeXml="false"/>;
 	$(document).ready(function () {
-		make_selectbox(Object.keys(jsonData)[0]);
+		makeSelectMidbox(Object.keys(jsonData)[0]);
 	});
 	
 	$(document).ready(function(){
@@ -156,7 +156,7 @@
 		$("#catHighSelect").selectpicker("refresh");
 	});
 	
-	function make_selectbox(highSeq){ 
+	function makeSelectMidbox(highSeq){ 
 		$('#catMidSelect').empty();
 	   	var midList = jsonData[highSeq].categoryMidList; 
 	   	for(i=0; i< midList.length; i++){
@@ -184,9 +184,9 @@
 		} 
 	}); 
 	 
-	function set_selectbox(){
+	function selectMidbox(){
  		var catHighSeq = $("#catHighSelect option:selected").val();
- 		make_selectbox(catHighSeq);
+ 		makeSelectMidbox(catHighSeq);
 	}
 </script>
 

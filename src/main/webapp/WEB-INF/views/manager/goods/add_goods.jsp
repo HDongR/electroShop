@@ -10,7 +10,7 @@
 	<form id="addGoodsForm" method="post" enctype="multipart/form-data">
 		<div class="form-group">
 			<label class="control-label bg-primary">카테고리</label><br/>
-			<select id="catHighSelect" class="selectpicker" name="catHighName" onchange="set_selectbox();">
+			<select id="catHighSelect" class="selectpicker" name="catHighName" onchange="selectMidbox();">
 	        </select>
 	        <select id="catMidSelect" class="selectpicker" name="goodsCatMidSeq"> 
 	        </select>  
@@ -59,7 +59,7 @@
 <script type="text/javascript">
 	var jsonData = <c:out value="${categoryJson}" escapeXml="false"/>;
 	$(document).ready(function () { 
-		make_selectbox(Object.keys(jsonData)[0]);
+		makeSelectMidbox(Object.keys(jsonData)[0]);
 	});
 	
 	$(document).ready(function(){
@@ -70,7 +70,7 @@
 	});
   
 	
-	function make_selectbox(highSeq){ 
+	function makeSelectMidbox(highSeq){ 
 		$('#catMidSelect').empty();
 	   	var midList = jsonData[highSeq].categoryMidList; 
 	   	for(i=0; i< midList.length; i++){
@@ -79,9 +79,9 @@
 	   	$("#catMidSelect").selectpicker("refresh"); 
 	}  
 	 
-	function set_selectbox(){
+	function selectMidbox(){
  		var catHighSeq = $("#catHighSelect option:selected").val();
- 		make_selectbox(catHighSeq);
+ 		makeSelectMidbox(catHighSeq);
 	}
 </script>
 

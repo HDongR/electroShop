@@ -103,8 +103,8 @@ public class ManagerController {
 	public String addGoodsPage(Model model) throws JsonProcessingException {
 		logger.info("add_goods_page"); 
 		model.addAttribute("condition", "add_goods_page");
-		Map<Integer, CategoryHighVO> category = service.getGoodsCat(false);
-  
+		
+		Map<Integer, CategoryHighVO> category = service.getGoodsCat(false); 
 		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
 		model.addAttribute("categoryJson",jsonCategory);
 	 
@@ -197,10 +197,15 @@ public class ManagerController {
 	}
 
 	@RequestMapping(value = "goods/modify_goods_page/{goodsSeq}", method = RequestMethod.GET)
-	public String goodsModifyPage(@PathVariable("goodsSeq") int goodsSeq, Model model) {
+	public String goodsModifyPage(@PathVariable("goodsSeq") int goodsSeq, Model model) throws JsonProcessingException {
 		logger.info("goods_modify_page");
 		GoodsVO goodsVO = service.getGoodsOne(goodsSeq);
 		model.addAttribute("goodsVO", goodsVO);
+		
+		Map<Integer, CategoryHighVO> category = service.getGoodsCat(false); 
+		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
+		model.addAttribute("categoryJson",jsonCategory);
+		
 		return "manager/goods/modify_goods";
 	}
 

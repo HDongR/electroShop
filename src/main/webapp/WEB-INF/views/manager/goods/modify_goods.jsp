@@ -6,9 +6,18 @@
 <div class="container col-sm-10">
 	<h2>상품수정</h2>
 	<br/> 
-
+	
 	<form id="modifyGoodsForm" method="post" enctype="multipart/form-data">
 		<input type="hidden" name="goodsSeq" value="${goodsVO.goodsSeq}">
+		
+		<div class="form-group">
+			<label class="control-label bg-primary">카테고리</label><br/>
+			<select id="catHighSelect" class="selectpicker" name="catHighName" onchange="selectMidbox();">
+	        </select>
+	        <select id="catMidSelect" class="selectpicker" name="goodsCatMidSeq"> 
+	        </select>  
+		</div>
+		
 		<div class="form-group">
 			<label class="control-label bg-primary" for="goodsSubject">상품명</label> 
 			<input type="text" id="goodsSubject" class="form-control" name="goodsSubject" value="${goodsVO.goodsSubject}">
@@ -47,6 +56,63 @@
 	<br/>
 	
 </div>
+
+
+<!-- 카테고리 선택 -->
+<script type="text/javascript">
+	var jsonData = <c:out value="${categoryJson}" escapeXml="false"/>;
+	var resultNames = getCatSelectValue(${goodsVO.goodsCatMidSeq});
+	
+	$(document).ready(function () {  
+		makeSelectMidbox(resultNames.catHighSeq);
+	});
+	
+	$(document).ready(function(){
+		
+		for(key in jsonData){
+			if(resultNames.catHighName == jsonData[key].catHighName){
+				$('#catHighSelect').append('<option value="'+ key +'"selected>' + jsonData[key].catHighName + '</option>');
+			}else{
+				$('#catHighSelect').append('<option value="'+ key +'">' + jsonData[key].catHighName + '</option>'); 
+			}
+		}
+		$("#catHighSelect").selectpicker("refresh");
+	});
+  
+	
+	function makeSelectMidbox(highSeq){ 
+		$('#catMidSelect').empty();
+	   	var midList = jsonData[highSeq].categoryMidList; 
+	   	for(i=0; i< midList.length; i++){
+	   		if(resultNames.catMidName == midList[i].catMidName){
+	   			$('#catMidSelect').append('<option value="'+ midList[i].catMidSeq +'" selected>' + midList[i].catMidName + '</option>');
+	   		}else{
+	   			$('#catMidSelect').append('<option value="'+ midList[i].catMidSeq +'">' + midList[i].catMidName + '</option>');
+	   		}
+	   	}
+	   	$("#catMidSelect").selectpicker("refresh"); 
+	}  
+	
+	function getCatSelectValue(catMidSeq){
+		for(key in jsonData){
+			var midList = jsonData[key].categoryMidList; 
+		   	for(var i=0; i< midList.length; i++){
+		   		if(catMidSeq == midList[i].catMidSeq){  
+		   			return {"catHighSeq": jsonData[key].catHighSeq
+		   				, "catHighName": jsonData[key].catHighName
+		   				, "catMidSeq": midList[i].catMidSeq
+		   				, "catMidName": midList[i].catMidName};
+	   			}
+		   	}	
+		}
+	}
+	 
+	function selectMidbox(){
+ 		var catHighSeq = $("#catHighSelect option:selected").val();
+ 		makeSelectMidbox(catHighSeq);
+	}
+</script>
+
 
 <!-- ckeditor설정 -->
 <script>

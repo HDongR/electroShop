@@ -1,11 +1,6 @@
 package ryu.park.shop.controller;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -15,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
- 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,16 +24,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ryu.park.shop.service.GoodsService;
 import ryu.park.shop.service.ManagerService;
-import ryu.park.shop.utils.BoardPager; 
+import ryu.park.shop.utils.BoardPager;
 import ryu.park.shop.utils.ImgStore;
 import ryu.park.shop.utils.ImgStore.IMG_STORE_TYPE;
 import ryu.park.shop.utils.JsonFormatter;
 import ryu.park.shop.utils.SecurityUtils;
 import ryu.park.shop.vo.CategoryHighVO;
-import ryu.park.shop.vo.CategoryHighVO.CategoryMidVO;
 import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
 
@@ -48,7 +42,9 @@ public class ManagerController {
 	private static final Logger logger = LoggerFactory.getLogger(ManagerController.class);
 
 	@Autowired
-	private ManagerService service;
+	private ManagerService managerService;
+	@Autowired
+	private GoodsService goodsService;
 	@Autowired
 	private SecurityUtils securityUtils;
 
@@ -82,7 +78,7 @@ public class ManagerController {
 			res.getWriter().print("validError");
 		} else {
 			manager.setUserPassword(securityUtils.getHash(manager.getUserPassword()));
-			UserVO managerResult = service.loginManager(manager);
+			UserVO managerResult = managerService.loginManager(manager);
 
 			if (managerResult == null) {
 				res.getWriter().print("invalid Email or Pwd");
@@ -104,7 +100,7 @@ public class ManagerController {
 		logger.info("add_goods_page"); 
 		model.addAttribute("condition", "add_goods_page");
 		
-		Map<Integer, CategoryHighVO> category = service.getGoodsCat(false); 
+		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(false); 
 		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
 		model.addAttribute("categoryJson",jsonCategory);
 	 
@@ -130,7 +126,7 @@ public class ManagerController {
 			goodsVO.setGoodsMainPicUrl(fileUrl);
 			
 			
-			int r = service.addGoods(goodsVO);
+			int r = goodsService.addGoods(goodsVO);
 			logger.info("result:" + r);
 			if (r > 0) {
 				res.getWriter().print("completeAddedGoods");
@@ -174,13 +170,13 @@ public class ManagerController {
 		logger.info("goods_manage_page");
 		model.addAttribute("condition", "goods_manage_page");
 
-		int count = service.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
+		int count = goodsService.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
 		// 페이지 나누기 관련 처리
 		BoardPager boardPager = new BoardPager(count, curPage);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
 
-		List<GoodsVO> list = service.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
+		List<GoodsVO> list = goodsService.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
 
 		model.addAttribute("list", list); // list
 		model.addAttribute("count", count); // 레코드의 갯수
@@ -188,7 +184,7 @@ public class ManagerController {
 		model.addAttribute("keyword", keyword); // 검색키워드
 		model.addAttribute("boardPager", boardPager);
 		
-		Map<Integer,CategoryHighVO> category = service.getGoodsCat(true);
+		Map<Integer,CategoryHighVO> category = goodsService.getGoodsCat(true);
 		
 		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
 		model.addAttribute("categoryJson",jsonCategory);
@@ -199,10 +195,10 @@ public class ManagerController {
 	@RequestMapping(value = "goods/modify_goods_page/{goodsSeq}", method = RequestMethod.GET)
 	public String goodsModifyPage(@PathVariable("goodsSeq") int goodsSeq, Model model) throws JsonProcessingException {
 		logger.info("goods_modify_page");
-		GoodsVO goodsVO = service.getGoodsOne(goodsSeq);
+		GoodsVO goodsVO = goodsService.getGoodsOne(goodsSeq);
 		model.addAttribute("goodsVO", goodsVO);
 		
-		Map<Integer, CategoryHighVO> category = service.getGoodsCat(false); 
+		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(false); 
 		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
 		model.addAttribute("categoryJson",jsonCategory);
 		
@@ -230,7 +226,7 @@ public class ManagerController {
 				goodsVO.setGoodsMainPicUrl(fileUrl);
 			}
 
-			service.updateGoodsOne(goodsVO);
+			goodsService.updateGoodsOne(goodsVO);
 			res.getWriter().print("completeUpdatedGoods");
 		}
 	}
@@ -239,7 +235,7 @@ public class ManagerController {
 	public void goodsDelete(@RequestParam("goodsSeqList[]") List<Integer> goodsSeqList, HttpServletResponse res)
 			throws IOException {
 		logger.info("goodsDelete");
-		int result = service.deleteGoodsList(goodsSeqList);
+		int result = goodsService.deleteGoodsList(goodsSeqList);
 		if (goodsSeqList.size() == result) {
 			res.getWriter().print("completeDeleteGoods");
 		} else if (result == -1) {
@@ -258,13 +254,13 @@ public class ManagerController {
 
 		model.addAttribute("condition", "user_manage_page");
 
-		int count = service.userTotalCount(searchOption, keyword);
+		int count = managerService.userTotalCount(searchOption, keyword);
 		// 페이지 나누기 관련 처리
 		BoardPager boardPager = new BoardPager(count, curPage);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
 
-		List<UserVO> list = service.getUserList(start, end, searchOption, keyword);
+		List<UserVO> list = managerService.getUserList(start, end, searchOption, keyword);
 
 		model.addAttribute("list", list); // list
 		model.addAttribute("count", count); // 레코드의 갯수
@@ -277,12 +273,29 @@ public class ManagerController {
 
 	@RequestMapping(value = "user/modify_user_page", method = RequestMethod.POST)
 	public String userModifyPage(@RequestParam("userEmail") String email, Model model) {
-		logger.info("user_modify_page");
-		logger.info("email : " + email);
-
-		UserVO userVO = service.getUserOne(email);
-		logger.info("email2 : " + userVO.getUserEmail());
+		logger.info("user_modify_page");  
+		UserVO userVO = managerService.getUserOne(email); 
 		model.addAttribute("userVO", userVO);
 		return "manager/user/modify_user";
+	}
+	
+	
+	
+	@RequestMapping(value = "user/modify_user", method = RequestMethod.POST)
+	public void modifyUser(@Valid UserVO userVO, BindingResult bindingResult, HttpServletRequest req,
+			HttpServletResponse res) throws Exception, IOException {
+		logger.info("modifyUser");
+ 
+		if (bindingResult.hasErrors()) {
+			logger.info("valid error" + bindingResult.getFieldError());
+			res.getWriter().print("validError");
+		} else { 
+			int r = managerService.updateUserOne(userVO);
+			if(r > 0)
+				res.getWriter().print("completeUpdatedUser");
+			else {
+				res.getWriter().print("error");
+			}
+		}
 	}
 }

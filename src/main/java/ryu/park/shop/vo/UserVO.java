@@ -2,14 +2,14 @@ package ryu.park.shop.vo;
 
 
 import java.util.Date;
- 
-import javax.validation.constraints.Pattern; 
+
+import javax.validation.constraints.Pattern;
 
 import org.apache.ibatis.type.Alias;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.format.annotation.DateTimeFormat; 
- 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import ryu.park.shop.type.JoinType; 
 
 @Alias("UserVO")
@@ -19,8 +19,7 @@ public class UserVO {
 	private String userEmail;
 	private String userPhoneNum; 
 	private String userPassword;
-	private String userAddrCity;
-	private String userAddrArea;
+	private String userAddr;
 	private String userAddrDetail;
 	private String userName; 
 	@Pattern(regexp="[0-9가-힣a-zA-Z]{2,10}")
@@ -29,7 +28,7 @@ public class UserVO {
 	private Date userJoinDate; 
 	private JoinType userJoinType; 
 	
-	public UserVO() {  
+	public UserVO() {   
 	}
 
 	public String getUserEmail() {
@@ -56,20 +55,12 @@ public class UserVO {
 		this.userPassword = userPassword;
 	}
 
-	public String getUserAddrCity() {
-		return userAddrCity;
+	public String getUserAddr() {
+		return userAddr;
 	}
 
-	public void setUserAddrCity(String userAddrCity) {
-		this.userAddrCity = userAddrCity;
-	}
-
-	public String getUserAddrArea() {
-		return userAddrArea;
-	}
-
-	public void setUserAddrArea(String userAddrArea) {
-		this.userAddrArea = userAddrArea;
+	public void setUserAddr(String userAddr) {
+		this.userAddr = userAddr;
 	}
 
 	public String getUserAddrDetail() {

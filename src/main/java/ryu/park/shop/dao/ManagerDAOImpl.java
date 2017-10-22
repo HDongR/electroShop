@@ -4,19 +4,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier; 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import ryu.park.shop.utils.JsonFormatter;
-import ryu.park.shop.vo.CategoryHighVO; 
-import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
 
 @Repository
@@ -47,77 +41,23 @@ public class ManagerDAOImpl implements ManagerDAO {
 	}
 
 	@Override
-	public void updateManager(UserVO userVO) {
+	public int updateManager(UserVO userVO) {
 		// TODO Auto-generated method stub
-
+		return 0;
 	}
 
 	@Override
-	public void deleteManager(UserVO userVO) {
+	public int deleteManager(UserVO userVO) {
 		// TODO Auto-generated method stub
-
+		return 0;
 	}
 
 	@Override
-	public void deleteUsers(List<UserVO> users) {
+	public int deleteUsers(List<UserVO> users) {
 		// TODO Auto-generated method stub
-
+		return 0;
 	}
-
-	@Override
-	public int addGoods(GoodsVO goodsVO) {
-		try {
-			return session.insert(NAMESPACE + "addGoods", goodsVO);
-		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return -1;
-		}
-	}
-
-	@Override
-	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword, int goodsCatHighSeq, int goodsCatMidSeq) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("searchOption", searchOption);
-		map.put("keyword", keyword); 
-		map.put("start", start);
-		map.put("end", end);
-		map.put("goodsCatHighSeq", goodsCatHighSeq);
-		map.put("goodsCatMidSeq", goodsCatMidSeq); 
-		return session.selectList(NAMESPACE + "getGoodsList", map);
-	}
-
-	@Override
-	public GoodsVO getGoodsOne(int goodsSeq) {
-		return session.selectOne(NAMESPACE + "getGoodsOne", goodsSeq);
-	}
-
-	@Override
-	public void updateGoodsOne(GoodsVO goodsVO) {
-		session.update(NAMESPACE + "updateGoodsOne", goodsVO);
-	}
-
-	@Override
-	public int goodsTotalCount(String searchOption, String keyword, int goodsCatHighSeq, int goodsCatMidSeq) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("searchOption", searchOption);
-		map.put("keyword", keyword); 
-		map.put("goodsCatHighSeq", goodsCatHighSeq);
-		map.put("goodsCatMidSeq", goodsCatMidSeq);
-		return session.selectOne(NAMESPACE + "goodsTotalCount", map);
-	} 
-
-	@Override
-	public int deleteGoodsList(List<Integer> goodsSeqList) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("goodsSeqList", goodsSeqList);
-		try {
-			return session.delete(NAMESPACE + "deleteGoodsList", map);
-		} catch (Exception e) {
-			logger.error(e.getLocalizedMessage(), e);
-			return -1;
-		} 
-	}
+ 
 
 	@Override
 	public List<UserVO> getUserList(int start, int end, String searchOption, String keyword) { 
@@ -144,13 +84,19 @@ public class ManagerDAOImpl implements ManagerDAO {
 	}
 
 	@Override
-	public void updateUserOne(UserVO userVO) {
-		session.update(NAMESPACE + "updateUserOne", userVO);
+	public int updateUserOne(UserVO userVO) {
+		try {
+			logger.info("phonenum:"+userVO.getUserPhoneNum());
+			logger.info("email:"+userVO.getUserEmail());
+			logger.info("addr:"+userVO.getUserAddr());
+			logger.info("nick:"+userVO.getUserNickname());
+			
+			return session.update(NAMESPACE + "updateUserOne", userVO);
+		}catch(Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return -1;
+		}
 	}
-
-	@Override
-	public Map<Integer, CategoryHighVO> getGoodsCat(){
-		return session.selectMap(NAMESPACE + "getGoodsCat", "catHighSeq");
-	}
+ 
 
 }

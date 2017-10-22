@@ -16,6 +16,7 @@
 		<property name="locations">
 		<list>
 			<value>classpath:/properties/database.properties</value>
+			<value>classpath:/properties/config.properties</value>
 		</list> 
 		</property>
 		<property name="fileEncoding" value="UTF-8"/>
@@ -35,7 +36,7 @@
 		<property name="dataSource" ref="dataSource"/>
 		
 		<!-- MyBatis 설정 파일의 위치를 지정 -->
-		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
+		<property name="configLocation" value="classpath:/mybatis-config.xml"/> 
 		
 		<!-- SQL 파일의 위치를 지정 -->
 		<property name="mapperLocations" value="classpath:/mapper/*.xml"/>

@@ -43,24 +43,21 @@
 	    	    <tr> 
 		 	  <td style="vertical-align:middle">${user.userEmail}</td>
 		 	  <td style="vertical-align:middle">${user.userPhoneNum}</td>
-		 	  <td style="vertical-align:middle">${user.userAddrCity} ${user.userAddrArea} ${user.userAddrDetail}</td>
+		 	  <td style="vertical-align:middle">${user.userAddr}  ${user.userAddrDetail}</td>
 		 	  <td style="vertical-align:middle">${user.userName}</td>
 		 	  <td style="vertical-align:middle">${user.userNickname}</td>
 		 	  <td style="vertical-align:middle">${user.userJoinType}</td>
 		 	  <td style="vertical-align:middle"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${user.userJoinDate}"/></td>
-		 	  <td style="vertical-align:middle"><a href="javascript:page_move('/manager/user/modify_user_page', '${user.userEmail}');"  class="btn btn-link">수정</a>
-		
-		 	  
-		 	  </td>
+		 	  <td style="vertical-align:middle"><a href="javascript:page_move('/manager/user/modify_user_page', '${user.userEmail}');"  class="btn btn-link">수정</a></td>
 		 	</tr>
 		  </c:forEach>  
 	    </tbody>
 	    </table> 
 	</div>
 	
-	 	  <form name="goLink">
-		 	  	<input type="hidden" name="userEmail"/>
-		 	  </form>
+	<form name="goLink">
+		<input type="hidden" name="userEmail"/>
+	</form>
 	
     <nav aria-label="Page navigation">
 	  <ul class="pagination">
@@ -130,7 +127,7 @@
  
 	function page_move(s_page,s_email){
 		  var f=document.goLink;  //폼 name
-		  console.log(f);
+		 
 		  f.userEmail.value = s_email;
 		  f.action=s_page;  //이동할 페이지
 		  f.method="post";  //POST방식

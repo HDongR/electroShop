@@ -8,10 +8,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
  
 @Controller
 public class MainController {
-	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
-	 
+	
+	private static final Logger logger = LoggerFactory.getLogger(MainController.class); 
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home() {
-		return "main";
+		return "main"; 
 	}
 }

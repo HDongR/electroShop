@@ -165,7 +165,7 @@
 	   	$("#catMidSelect").selectpicker("refresh"); 
 	}   
 	
-	function setCatMidNameOrHighName(catMidSeq){
+	function getCatSelectValue(catMidSeq){
 		for(key in jsonData){
 			var midList = jsonData[key].categoryMidList; 
 		   	for(var i=0; i< midList.length; i++){
@@ -179,7 +179,7 @@
 	$(document).ready(function () {
 		for(var i=0; i<${count}; i++){ 
 			var midSeq = $("#catName" + i).text(); 
-			var rsult = setCatMidNameOrHighName(midSeq); 
+			var rsult = getCatSelectValue(midSeq); 
 			$("#catName" + i).text( rsult.catHighName + '-' + rsult.catMidName);  
 		} 
 	}); 

@@ -5,10 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Repository;
 
-import ryu.park.shop.controller.UserController;
 import ryu.park.shop.vo.UserVO;
 
 @Repository 
@@ -36,22 +34,22 @@ public class UserDAOImpl implements UserDAO{
 	public int addUser(UserVO userVO) { 
 		try {
 			return session.insert(NAMESPACE + "addUser", userVO);
-		} catch(DuplicateKeyException dke) {
-			logger.error(dke.getLocalizedMessage(), dke);
+		} catch(Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
 			return -1;
 		}
 	}
 
 	@Override
-	public void updateUser(UserVO userVO) {
+	public int updateUser(UserVO userVO) {
 		// TODO Auto-generated method stub
-		
+		return 0;
 	}
 
 	@Override
-	public void deleteUser(UserVO userVO) {
+	public int deleteUser(UserVO userVO) {
 		// TODO Auto-generated method stub
-		
+		return 0;
 	}
 
 }

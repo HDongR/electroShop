@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
 <!-- 맵핑될 DAO 인터페이스의 Full name 을 줍니다. -->
 <mapper namespace="UserMapper"> 
+
 	<select id="findUser" resultType="ryu.park.shop.vo.UserVO"> 
-		SELECT user_email, user_phone_num, user_password, user_addr_city, user_addr_area, user_addr_detail, user_name, user_nickname, user_join_date, user_join_type
+		SELECT user_email, user_phone_num, user_password, user_addr, user_addr_detail, user_name, user_nickname, user_join_date, user_join_type
 		FROM user_t
 		WHERE user_email = #{userEmail}
 	</select>

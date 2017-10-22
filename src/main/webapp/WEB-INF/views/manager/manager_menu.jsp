@@ -25,7 +25,7 @@
 				</li> 
 						
 				<li class="${condition eq 'user_manage_page' ? 'active' : ''}"><a href="/manager/user/user_manage_page">유저관리</a></li>
-				<li><a href="#section3">Geo</a></li>
+				 
 						
 			</ul>
 			<br>

@@ -32,11 +32,9 @@
 
 	<update id="updateUserOne" parameterType="ryu.park.shop.vo.UserVO">
 		UPDATE user_t
-		SET
-			user_phone_num = #{userPhoneNum, jdbcType=VARCHAR},
+		SET 
 			user_addr = #{userAddr, jdbcType=VARCHAR},
 			user_addr_detail = #{userAddrDetail, jdbcType=VARCHAR},
-			user_name = #{userName, jdbcType=VARCHAR},
 		 	user_nickname = #{userNickname}
 		WHERE user_email = #{userEmail}
 	</update> 

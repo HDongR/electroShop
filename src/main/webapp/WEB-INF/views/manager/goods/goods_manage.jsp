@@ -146,22 +146,31 @@
 
 	var jsonData = <c:out value="${categoryJson}" escapeXml="false"/>;
 	$(document).ready(function () {
-		makeSelectMidbox(Object.keys(jsonData)[0]);
+		makeSelectHighbox(${goodsCatHighSeq});
+		makeSelectMidbox(${goodsCatHighSeq}, ${goodsCatMidSeq});
 	});
 	
-	$(document).ready(function(){
+	function makeSelectHighbox(highSeq){
 		for(key in jsonData){
-			$('#catHighSelect').append('<option value="'+ key +'">' + jsonData[key].catHighName + '</option>');
+			if(key==highSeq){
+				$('#catHighSelect').append('<option value="'+ key +'" selected>' + jsonData[key].catHighName + '</option>');
+			}else{
+				$('#catHighSelect').append('<option value="'+ key +'">' + jsonData[key].catHighName + '</option>');
+			}
 		}
 		$("#catHighSelect").selectpicker("refresh");
-	});
+	}
 	
-	function makeSelectMidbox(highSeq){ 
+	function makeSelectMidbox(highSeq, midSeq){ 
 		$('#catMidSelect').empty();
 	   	var midList = jsonData[highSeq].categoryMidList; 
 	   	for(i=0; i< midList.length; i++){
-	   		$('#catMidSelect').append('<option value="'+ midList[i].catMidSeq +'">' + midList[i].catMidName + '</option>');
-	   	}	 
+	   		if(midSeq == midList[i].catMidSeq){
+	   			$('#catMidSelect').append('<option value="'+ midList[i].catMidSeq +'" selected>' + midList[i].catMidName + '</option>');
+	   		}else{
+	   			$('#catMidSelect').append('<option value="'+ midList[i].catMidSeq +'">' + midList[i].catMidName + '</option>');
+	   		}
+	   	}
 	   	$("#catMidSelect").selectpicker("refresh"); 
 	}   
 	
@@ -193,7 +202,7 @@
 <!-- 페이지처리 -->
 <script type="text/javascript">
 	function list(page){
-	    location.href="/manager/goods/goods_manage_page?curPage="+page+"&searchOption=${searchOption}"+"&keyword=${keyword}";
+	    location.href="/manager/goods/goods_manage_page?curPage="+page+"&searchOption=${searchOption}"+"&keyword=${keyword}"+"&goodsCatHighSeq=${goodsCatHighSeq}" + "&goodsCatMidSeq=${goodsCatMidSeq}";
 	} 
 </script>
 

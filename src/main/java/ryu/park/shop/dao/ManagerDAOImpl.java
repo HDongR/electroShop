@@ -86,11 +86,6 @@ public class ManagerDAOImpl implements ManagerDAO {
 	@Override
 	public int updateUserOne(UserVO userVO) {
 		try {
-			logger.info("phonenum:"+userVO.getUserPhoneNum());
-			logger.info("email:"+userVO.getUserEmail());
-			logger.info("addr:"+userVO.getUserAddr());
-			logger.info("nick:"+userVO.getUserNickname());
-			
 			return session.update(NAMESPACE + "updateUserOne", userVO);
 		}catch(Exception e) {
 			logger.error(e.getLocalizedMessage(), e);

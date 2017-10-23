@@ -183,6 +183,8 @@ public class ManagerController {
 		model.addAttribute("searchOption", searchOption); // 검색옵션
 		model.addAttribute("keyword", keyword); // 검색키워드
 		model.addAttribute("boardPager", boardPager);
+		model.addAttribute("goodsCatHighSeq", goodsCatHighSeq);
+		model.addAttribute("goodsCatMidSeq", goodsCatMidSeq);
 		
 		Map<Integer,CategoryHighVO> category = goodsService.getGoodsCat(true);
 		

@@ -30,9 +30,19 @@ public class GoodsVO {
 	@NotNull
 	@Range(min=0)
 	private Integer goodsCatMidSeq;
+	@Range(min=0)
+	private Integer goodsClkCnt;
 	
 	public GoodsVO() {
 		
+	}
+
+	public Integer getGoodsClkCnt() {
+		return goodsClkCnt;
+	}
+
+	public void setGoodsClkCnt(Integer goodsClkCnt) {
+		this.goodsClkCnt = goodsClkCnt;
 	}
 
 	public Integer getGoodsSeq() {

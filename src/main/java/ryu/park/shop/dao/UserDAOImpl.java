@@ -41,9 +41,13 @@ public class UserDAOImpl implements UserDAO{
 	}
 
 	@Override
-	public int updateUser(UserVO userVO) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int updateUser(UserVO userVO) { 
+		try {
+			return session.update(NAMESPACE + "updateUser", userVO);
+		} catch(Exception e) {
+			logger.error(e.getLocalizedMessage(), e);
+			return -1;
+		}
 	}
 
 	@Override

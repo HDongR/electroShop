@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import ryu.park.shop.dao.GoodsDAOImpl;
+import ryu.park.shop.type.OrderType;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.CategoryHighVO.CategoryMidVO; 
@@ -51,9 +52,9 @@ private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.cl
 
 	@Override
 	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword, int goodsCatHighSeq,
-			int goodsCatMidSeq) {
-		return dao.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
-	} 
+			int goodsCatMidSeq, OrderType orderType, String order) {
+		return dao.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq, orderType, order);
+	}  
 	 
 	/*  
 	 * @param seachMode : 카테고리로 검색조건을 할 경우 전체선택카테고리를 추가해준다. 
@@ -80,6 +81,6 @@ private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.cl
 			
 			return map;
 		}
-	}
+	} 
 	
 }

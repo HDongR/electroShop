@@ -1,10 +1,10 @@
 package ryu.park.shop.utils;
 
-public class BoardPager {
-	// 페이지당 게시물 수
-	public static final int PAGE_SCALE = 10;
+public class BoardPager { 
     // 화면당 페이지 수
     public static final int BLOCK_SCALE = 10;
+
+ 	private int pageScale = 10; // 페이지당 게시물 수
     private int curPage; // 현재 페이수
     private int prevPage; // 이전 페이지
     private int nextPage; // 다음 페이지
@@ -23,8 +23,9 @@ public class BoardPager {
     
     // 생성자
     // BoardPager(레코드 갯수, 현재 페이지 번호)
-    public BoardPager(int count, int curPage){
+    public BoardPager(int count, int curPage, int pageScale){
         curBlock = 1; // 현재 페이지 블록 번호
+        this.pageScale = pageScale;
         this.curPage = curPage; // 현재 페이지 설정
         setTotPage(count); // 전체 페이지 갯수 계산
         setPageRange(); // 
@@ -52,9 +53,9 @@ public class BoardPager {
     public void setPageRange(){
     // WHERE rn BETWEEN #{start} AND #{end}
         // 시작번호 = (현재페이지-1)*페이지당 게시물수 +1
-        pageBegin = (curPage-1)*PAGE_SCALE+1;
+        pageBegin = (curPage-1)*pageScale+1;
         // 끝번호 = 시작번호+페이지당 게시물수 -1
-        pageEnd = pageBegin+PAGE_SCALE-1;
+        pageEnd = pageBegin+pageScale-1;
     }
      
     // Getter/Setter
@@ -81,7 +82,7 @@ public class BoardPager {
     }
     public void setTotPage(int count) {
         // Math.ceil(실수) 올림 처리
-        totPage = (int) Math.ceil(count*1.0 / PAGE_SCALE);
+        totPage = (int) Math.ceil(count*1.0 / pageScale);
     }
     public int getTotBlock() {
         return totBlock;

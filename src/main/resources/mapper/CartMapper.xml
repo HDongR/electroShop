@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 맵핑될 DAO 인터페이스의 Full name 을 줍니다. -->
+<mapper namespace="CartMapper">
+
+	<select id="totalCount">
+		SELECT count(*) FROM cart_t WHERE cart_user_email = #{userEmail} 
+	</select>
+	
+	<insert id="addCart" parameterType="ryu.park.shop.vo.CartVO">
+		INSERT INTO cart_t(cart_seq, cart_goods_seq, cart_user_email, cart_goods_cnt, cart_crt_date)
+		VALUES(CART_SEQUENCE.NEXTVAL, #{cartGoodsSeq}, #{cartUserEmail}, #{cartGoodsCnt}, #{cartCrtDate})
+		<selectKey keyProperty="cartSeq" resultType="Integer"
+			order="AFTER">
+			SELECT CART_SEQUENCE.CURRVAL FROM DUAL
+		</selectKey>
+	</insert>
+	
+	<update id="updateCart" parameterType="ryu.park.shop.vo.CartVO">
+		UPDATE cart_t
+		SET cart_goods_cnt = #{cartGoodsCnt}
+		WEHRE cart_seq = #{cartSeq}
+	</update>
+	
+	<delete id="deleteCartList" parameterType="java.util.Map">
+		DELETE
+		FROM cart_t
+		WHERE
+		<foreach collection="cartSeqList" item="cartSeq" separator="or" open="(" close=")">
+			cart_seq = #{cartSeq}
+		</foreach>
+	</delete>
+	 
+	
+	<select id="getCartList">
+		SELECT * FROM cart_t WHERE cart_user_email = #{userEmail}  
+	</select> 
+	
+</mapper>

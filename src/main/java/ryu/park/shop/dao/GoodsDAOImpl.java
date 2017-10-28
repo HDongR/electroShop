@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
+import ryu.park.shop.type.OrderType;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 
@@ -74,7 +75,7 @@ public class GoodsDAOImpl implements GoodsDAO {
 
 	@Override
 	public List<GoodsVO> getGoodsList(int start, int end, String searchOption, String keyword, int goodsCatHighSeq,
-			int goodsCatMidSeq) {
+			int goodsCatMidSeq, OrderType orderType, String order) {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchOption", searchOption);
 		map.put("keyword", keyword);
@@ -82,6 +83,8 @@ public class GoodsDAOImpl implements GoodsDAO {
 		map.put("end", end);
 		map.put("goodsCatHighSeq", goodsCatHighSeq);
 		map.put("goodsCatMidSeq", goodsCatMidSeq);
+		map.put("orderType", orderType.toString());
+		map.put("order", order);
 		return session.selectList(NAMESPACE + "getGoodsList", map);
 	}
 

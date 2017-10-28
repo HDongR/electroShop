@@ -50,7 +50,7 @@ public class ThirdApiServiceImpl implements ThirdApiService {
 			sb.append("?regkey=" + postalApiKey + "&target=postNew&query=");
 			sb.append(URLEncoder.encode(name, "EUC-KR"));
 			sb.append("&currentPage=" + pCurrentPage);
-			sb.append("&countPerPage=" + BoardPager.PAGE_SCALE);
+			sb.append("&countPerPage=" + 10);
 			String query = sb.toString();
 
 			URL url = new URL(query);
@@ -95,7 +95,7 @@ public class ThirdApiServiceImpl implements ThirdApiService {
 			}
 
 			result = new HashMap<String, Object>();
-			pager = new BoardPager(Integer.valueOf(totalCount), Integer.valueOf(currentPage));
+			pager = new BoardPager(Integer.valueOf(totalCount), Integer.valueOf(currentPage), 10);
 			addrs = new ArrayList<AddrVO>();
 			int addrNum = 0;
 			for (int i = 0; i < addrEl.getChildNodes().getLength(); i++) {

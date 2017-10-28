@@ -19,4 +19,13 @@
 		INSERT INTO user_t (user_email, user_password, user_nickname, user_join_date, user_join_type)
 		VALUES (#{userEmail}, #{userPassword}, #{userNickname}, #{userJoinDate}, #{userJoinType})
 	</insert>
+	
+	<update id="updateUser" parameterType="ryu.park.shop.vo.UserVO">
+		UPDATE user_t
+		SET 
+			user_addr = #{userAddr, jdbcType=VARCHAR},
+			user_addr_detail = #{userAddrDetail, jdbcType=VARCHAR},
+		 	user_nickname = #{userNickname}
+		WHERE user_email = #{userEmail}
+	</update> 
 </mapper>

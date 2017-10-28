@@ -27,6 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ryu.park.shop.service.GoodsService;
 import ryu.park.shop.service.ManagerService;
+import ryu.park.shop.type.OrderType;
 import ryu.park.shop.utils.BoardPager;
 import ryu.park.shop.utils.ImgStore;
 import ryu.park.shop.utils.ImgStore.IMG_STORE_TYPE;
@@ -97,35 +98,32 @@ public class ManagerController {
 
 	@RequestMapping(value = "goods/add_goods_page", method = RequestMethod.GET)
 	public String addGoodsPage(Model model) throws JsonProcessingException {
-		logger.info("add_goods_page"); 
+		logger.info("add_goods_page");
 		model.addAttribute("condition", "add_goods_page");
-		
-		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(false); 
-		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
-		model.addAttribute("categoryJson",jsonCategory);
-	 
+
+		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(false);
+		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category);
+		model.addAttribute("categoryJson", jsonCategory);
+
 		return "manager/goods/add_goods";
 	}
 
 	@RequestMapping(value = "add_goods", method = RequestMethod.POST)
 	public void addGoods(@Valid GoodsVO goodsVO, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res, Model model, @RequestParam MultipartFile goodsMainPic) throws IOException {
-		logger.info("addGoods"); 
-		
+		logger.info("addGoods");
+
 		if (bindingResult.hasErrors() || goodsMainPic.getSize() < 1) {
 			logger.info("valid error" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
 		} else {
-			
-			String fileUrl = new ImgStore()
-					.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
-					.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
-					.setFileName(goodsMainPic.getOriginalFilename())
+
+			String fileUrl = new ImgStore().setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+					.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN).setFileName(goodsMainPic.getOriginalFilename())
 					.build(goodsMainPic)[0];
 
 			goodsVO.setGoodsMainPicUrl(fileUrl);
-			
-			
+
 			int r = goodsService.addGoods(goodsVO);
 			logger.info("result:" + r);
 			if (r > 0) {
@@ -140,25 +138,20 @@ public class ManagerController {
 	}
 
 	@RequestMapping(value = "upload_img", method = RequestMethod.POST)
-	public void uploadImg(HttpServletRequest req, HttpServletResponse res, @RequestParam MultipartFile upload) throws IllegalStateException, IOException {
+	public void uploadImg(HttpServletRequest req, HttpServletResponse res, @RequestParam MultipartFile upload)
+			throws IllegalStateException, IOException {
 		logger.info("uploadImg");
 
-		String fileUrl = new ImgStore()
-				.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
-				.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_CONTENTS)
-				.setFileName(upload.getOriginalFilename())
+		String fileUrl = new ImgStore().setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+				.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_CONTENTS).setFileName(upload.getOriginalFilename())
 				.build(upload)[0];
-		
+
 		res.setCharacterEncoding("utf-8");
-		res.setContentType("text/html;charset=utf-8"); 
+		res.setContentType("text/html;charset=utf-8");
 		String callback = req.getParameter("CKEditorFuncNum");
-		
-		res.getWriter().println("<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction(" 
-				+ callback
-				+ ",'" 
-				+ fileUrl 
-				+ "','이미지를 업로드 하였습니다.'" 
-				+ ")</script>");
+
+		res.getWriter().println("<script type='text/javascript'>window.parent.CKEDITOR.tools.callFunction(" + callback
+				+ ",'" + fileUrl + "','이미지를 업로드 하였습니다.'" + ")</script>");
 
 	}
 
@@ -166,17 +159,19 @@ public class ManagerController {
 	public String goodsManagePage(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
 			@RequestParam(defaultValue = "0") int goodsCatHighSeq, @RequestParam(defaultValue = "0") int goodsCatMidSeq,
+			@RequestParam(defaultValue = "SEQ") OrderType orderType, @RequestParam(defaultValue = "DESC") String order,
 			Model model) throws JsonProcessingException {
 		logger.info("goods_manage_page");
 		model.addAttribute("condition", "goods_manage_page");
 
 		int count = goodsService.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
 		// 페이지 나누기 관련 처리
-		BoardPager boardPager = new BoardPager(count, curPage);
+		BoardPager boardPager = new BoardPager(count, curPage, 10);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
 
-		List<GoodsVO> list = goodsService.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
+		List<GoodsVO> list = goodsService.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq,
+				goodsCatMidSeq, orderType, order);
 
 		model.addAttribute("list", list); // list
 		model.addAttribute("count", count); // 레코드의 갯수
@@ -185,11 +180,11 @@ public class ManagerController {
 		model.addAttribute("boardPager", boardPager);
 		model.addAttribute("goodsCatHighSeq", goodsCatHighSeq);
 		model.addAttribute("goodsCatMidSeq", goodsCatMidSeq);
-		
-		Map<Integer,CategoryHighVO> category = goodsService.getGoodsCat(true);
-		
-		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
-		model.addAttribute("categoryJson",jsonCategory);
+
+		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(true);
+
+		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category);
+		model.addAttribute("categoryJson", jsonCategory);
 
 		return "manager/goods/goods_manage";
 	}
@@ -199,11 +194,11 @@ public class ManagerController {
 		logger.info("goods_modify_page");
 		GoodsVO goodsVO = goodsService.getGoodsOne(goodsSeq);
 		model.addAttribute("goodsVO", goodsVO);
-		
-		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(false); 
-		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category); 
-		model.addAttribute("categoryJson",jsonCategory);
-		
+
+		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(false);
+		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category);
+		model.addAttribute("categoryJson", jsonCategory);
+
 		return "manager/goods/modify_goods";
 	}
 
@@ -211,7 +206,7 @@ public class ManagerController {
 	public void modifyGoods(@Valid GoodsVO goodsVO, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res, @RequestParam MultipartFile goodsMainPic) throws Exception, IOException {
 		logger.info("modifyGoods");
- 
+
 		if (bindingResult.hasErrors()) {
 			logger.info("valid error" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
@@ -219,12 +214,10 @@ public class ManagerController {
 			if (goodsMainPic.getSize() < 1) {
 				logger.info("mainPic is NuLl");
 			} else {
-				String fileUrl = new ImgStore()
-						.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
-						.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN)
-						.setFileName(goodsMainPic.getOriginalFilename())
+				String fileUrl = new ImgStore().setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+						.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN).setFileName(goodsMainPic.getOriginalFilename())
 						.build(goodsMainPic)[0];
-				
+
 				goodsVO.setGoodsMainPicUrl(fileUrl);
 			}
 
@@ -258,7 +251,7 @@ public class ManagerController {
 
 		int count = managerService.userTotalCount(searchOption, keyword);
 		// 페이지 나누기 관련 처리
-		BoardPager boardPager = new BoardPager(count, curPage);
+		BoardPager boardPager = new BoardPager(count, curPage, 10);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
 
@@ -275,25 +268,23 @@ public class ManagerController {
 
 	@RequestMapping(value = "user/modify_user_page", method = RequestMethod.POST)
 	public String userModifyPage(@RequestParam("userEmail") String email, Model model) {
-		logger.info("user_modify_page");  
-		UserVO userVO = managerService.getUserOne(email); 
+		logger.info("user_modify_page");
+		UserVO userVO = managerService.getUserOne(email);
 		model.addAttribute("userVO", userVO);
 		return "manager/user/modify_user";
 	}
-	
-	
-	
+
 	@RequestMapping(value = "user/modify_user", method = RequestMethod.POST)
 	public void modifyUser(@Valid UserVO userVO, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res) throws Exception, IOException {
 		logger.info("modifyUser");
- 
+
 		if (bindingResult.hasErrors()) {
 			logger.info("valid error" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
-		} else { 
+		} else {
 			int r = managerService.updateUserOne(userVO);
-			if(r > 0)
+			if (r > 0)
 				res.getWriter().print("completeUpdatedUser");
 			else {
 				res.getWriter().print("error");

@@ -19,23 +19,22 @@
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav"> 
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#">SamSung<span class="caret"></span></a>
-					<ul class="dropdown-menu list-inline">
-						<li><a href="#">TV</a></li>
-						<li><a href="#">NoteBook</a></li>
-						<li><a href="#">Refrigerator</a></li>
+					data-toggle="dropdown" href="#">TV<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/board/goods?goodsCatHighSeq=1&goodsCatMidSeq=1">Google</a></li>
+						<li><a href="/board/goods?goodsCatHighSeq=1&goodsCatMidSeq=2">Apple</a></li> 
 					</ul></li>
 				<li class="dropdown"><a class="dropdown-toggle"
-					data-toggle="dropdown" href="#">LG<span class="caret"></span></a>
-					<ul class="dropdown-menu list-inline">
-						<li><a href="#">TV</a></li>
-						<li><a href="#">NoteBook</a></li>
-						<li><a href="#">Refrigerator</a></li>
+					data-toggle="dropdown" href="#">NoteBook<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="/board/goods?goodsCatHighSeq=2&goodsCatMidSeq=3">SamSung</a></li>
+						<li><a href="/board/goods?goodsCatHighSeq=2&goodsCatMidSeq=5">Intel</a></li>
+						<li><a href="/board/goods?goodsCatHighSeq=2&goodsCatMidSeq=4">LG</a></li>
 					</ul></li>
 				
 				<li class="dropdown"><a class="dropdown-toggle"
 					data-toggle="dropdown" href="#">Comunity<span class="caret"></span></a>
-					<ul class="dropdown-menu list-inline">
+					<ul class="dropdown-menu">
 						<li><a href="#">자유게시판</a></li>
 						<li><a href="#">질문게시판</a></li> 
 					</ul></li>
@@ -61,7 +60,7 @@
 						
 						<span class="caret"></span></a>
 							<ul class="dropdown-menu list-inline">
-								<li><a href="/user/update/"><span class="glyphicon glyphicon-pencil"></span> 정보수정</a></li> 
+								<li><a href="javascript:page_move('/user/modify_user_page', '${user.userEmail}');"><span class="glyphicon glyphicon-pencil"></span> 정보수정</a></li> 
 								<c:choose>
 									<c:when test="${user.userJoinType == 'MANAGER'}">
 										<li><a href="manager/"><span class="glyphicon glyphicon-cog"></span> 관리자 페이지</a> </li>
@@ -90,6 +89,10 @@
 	</div>
 </nav> 
 
+<form name="goLink">
+	<input type="hidden" name="userEmail"/>
+</form>
+
 <script>
 $("#manager").click(function(){ 
 	location.href='/user/logout';
@@ -109,5 +112,13 @@ $("#kakao").click(function(){
 $("#naver").click(function(){
 	location.href='/user/logout';
 });
+
+function page_move(s_page,s_email){
+	  var f=document.goLink;  //폼 name 
+	  f.userEmail.value = s_email;
+	  f.action=s_page;  //이동할 페이지
+	  f.method="post";  //POST방식
+	  f.submit(); 
+}
  
 </script> 

@@ -41,11 +41,12 @@
 		<result column="goods_contents" jdbcType="CLOB" property="goodsContents" javaType="java.lang.String" />
 		<result column="goods_crt_date" property="goodsCrtDate" />
 		<result column="goods_cat_mid_seq" property="goodsCatMidSeq"/>
+		<result column="clk_cnt" property="goodsClkCnt"/>
 	</resultMap>
 
 	<select id="getGoodsOne" resultMap="getGoodsListResult">
-		SELECT *
-		FROM goods_t
+		SELECT G.*, C.clk_cnt
+		FROM goods_t G inner join goods_clk_t C on G.goods_seq = C.goods_clk_seq
 		WHERE
 		goods_seq = #{goodsSeq}
 	</select>
@@ -55,10 +56,10 @@
 		<!-- 목록 조회 및 페이징 전체 쿼리 -->
 		<include refid="pagingHeader"></include>
 		SELECT 
-			G.* 
-		FROM goods_t G, goods_cat_high_t H, goods_cat_mid_t M
-		<include refid="search"></include>
-		ORDER BY goods_seq DESC
+			G.*, C.clk_cnt
+		FROM goods_t G inner join goods_clk_t C on G.goods_seq = C.goods_clk_seq, goods_cat_high_t H, goods_cat_mid_t M
+		<include refid="search"></include> 
+		<include refid="order_by"></include>
 		<include refid="pagingFooter"></include>
 	</select>
 	
@@ -143,4 +144,26 @@
 		WHERE X.rnum >= #{start}
 		]]>
 	</sql> 
+	
+	<!-- 정렬 sql -->
+	<sql id="order_by">
+		ORDER BY
+		<choose> 
+			<when test="orderType == 'SEQ'"> 
+				goods_seq <if test="order == 'DESC'">DESC</if>
+			</when>
+			<when test="orderType == 'DATE'"> 
+				goods_crt_date <if test="order == 'DESC'">DESC</if>
+			</when> 
+			<when test="orderType == 'COST'"> 
+				goods_cost <if test="order == 'DESC'">DESC</if>
+			</when>
+			<when test="orderType == 'SUBJECT'"> 
+				goods_subject <if test="order == 'DESC'">DESC</if>
+			</when>
+			<when test="orderType == 'SCORE'"> 
+				clk_cnt <if test="order == 'DESC'">DESC</if>
+			</when> 
+		</choose>   
+	</sql>
 </mapper>

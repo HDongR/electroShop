@@ -23,6 +23,8 @@
 		<mvc:interceptor> 
 			<mvc:mapping path="/user/**" />  
 			<mvc:exclude-mapping path="/user/logout"/>
+			<mvc:exclude-mapping path="/user/modify_user_page"/>
+			<mvc:exclude-mapping path="/user/modify_user"/>
 			<beans:bean name="loginInterceptor" class="ryu.park.shop.interceptor.LoginInterceptor"/> 
 		</mvc:interceptor>
 		
@@ -61,6 +63,21 @@
 			<beans:list>
 				<beans:value>/WEB-INF/tiles/tiles-def.xml</beans:value>
 			</beans:list>
+		</beans:property>
+	</beans:bean>
+
+	<!-- converter -->
+	<beans:bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<beans:property name="webBindingInitializer" ref="webBindingInitializer"/>
+	</beans:bean>
+	<beans:bean id="webBindingInitializer" class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">
+		<beans:property name="conversionService" ref="conversionService"/>
+	</beans:bean>
+	<beans:bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+		<beans:property name="converters">
+			<beans:set>
+				<beans:bean class="ryu.park.shop.utils.EnumConverter"/>
+			</beans:set>
 		</beans:property>
 	</beans:bean>
 

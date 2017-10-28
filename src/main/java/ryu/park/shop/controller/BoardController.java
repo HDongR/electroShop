@@ -21,24 +21,26 @@ import ryu.park.shop.utils.JsonFormatter;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 
+@RequestMapping("/board/*")
 @Controller
-public class MainController {
+public class BoardController {
 
-	private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
 	@Autowired
 	private GoodsService goodsService;
 
-	@RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.POST })
-	public String home(@RequestParam(defaultValue = "allGoods") String searchOption,
+	@RequestMapping(value = "goods", method = { RequestMethod.GET, RequestMethod.POST })
+	public String goodsBoardPage(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
 			@RequestParam(defaultValue = "0") int goodsCatHighSeq, @RequestParam(defaultValue = "0") int goodsCatMidSeq,
-			@RequestParam(defaultValue = "SEQ") OrderType orderType, @RequestParam(defaultValue = "DESC") String order,
-			Model model) throws JsonProcessingException {
+			@RequestParam(defaultValue = "SEQ") OrderType orderType,
+			@RequestParam(defaultValue = "DESC") String order, Model model) throws JsonProcessingException {
+		logger.info("goodsBoardPage: " + orderType + " order:" +order);
 
 		int count = goodsService.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
 		// 페이지 나누기 관련 처리
-		BoardPager boardPager = new BoardPager(count, curPage, 10);
+		BoardPager boardPager = new BoardPager(count, curPage, 9);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
 
@@ -52,12 +54,15 @@ public class MainController {
 		model.addAttribute("boardPager", boardPager);
 		model.addAttribute("goodsCatHighSeq", goodsCatHighSeq);
 		model.addAttribute("goodsCatMidSeq", goodsCatMidSeq);
+		model.addAttribute("orderType", orderType);
+		model.addAttribute("order", order);
+		
 
-		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(true);
-
+		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(false);
 		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category);
 		model.addAttribute("categoryJson", jsonCategory);
 
-		return "main";
+		return "board/goods_list";
 	}
+
 }

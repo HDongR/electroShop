@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,26 +39,20 @@ public class UserController {
 
 	// check Email
 	@RequestMapping(value = "check_email", method = RequestMethod.POST)
-	public void checkEmail(@RequestParam("userEmail") String email, HttpSession session, HttpServletResponse response)
+	public void checkEmail(@RequestParam("userEmail") String email, HttpServletResponse res)
 			throws IOException {
 		logger.info("checkEmail: " + email);
-		UserVO user = service.findUser(email);
-		 
-		if (user == null) {
-			logger.info(email + " checkEmail result is null");
-			response.getWriter().print("isNotDuplicateEmail");
-		} else if (user.getUserJoinType() == JoinType.MANAGER) {
-			logger.info("checkEmail: MANAGER");
-			response.getWriter().print("isManagerJoined");
-		} else if (user.getUserJoinType() == JoinType.COMMON) {
-			logger.info("checkEmail: COMMON");
-			response.getWriter().print("isCommonJoined");
-		} else if (user.getUserJoinType() == JoinType.KAKAO) {
-			logger.info("checkEmail: KAKAO");
-			response.getWriter().print("isKakaoJoined");
-		} else if (user.getUserJoinType() == JoinType.NAVER) {
-			logger.info("checkEmail: NAVER");
-			response.getWriter().print("isNaverJoined");
+		UserVO user = service.findUser(email); 
+		if (user == null) { 
+			res.getWriter().print("isNotDuplicateEmail");
+		} else if (user.getUserJoinType() == JoinType.MANAGER) { 
+			res.getWriter().print("isManagerJoined");
+		} else if (user.getUserJoinType() == JoinType.COMMON) { 
+			res.getWriter().print("isCommonJoined");
+		} else if (user.getUserJoinType() == JoinType.KAKAO) { 
+			res.getWriter().print("isKakaoJoined");
+		} else if (user.getUserJoinType() == JoinType.NAVER) { 
+			res.getWriter().print("isNaverJoined");
 		}
 	}
 
@@ -178,6 +173,32 @@ public class UserController {
 				session.setAttribute("user", userVO);
 
 				res.getWriter().print("loginComplete");
+			}
+		}
+	}
+	
+	@RequestMapping(value = "modify_user_page", method = RequestMethod.POST)
+	public String userModifyPage(@RequestParam("userEmail") String email, Model model) {
+		logger.info("user_modify_page");  
+		UserVO userVO = service.findUser(email); 
+		model.addAttribute("userVO", userVO);
+		return "user/user_modify";
+	}
+	
+	@RequestMapping(value = "modify_user", method = RequestMethod.POST)
+	public void modifyUser(@Valid UserVO userVO, BindingResult bindingResult, HttpServletRequest req,
+			HttpServletResponse res) throws Exception, IOException {
+		logger.info("modifyUser");
+ 
+		if (bindingResult.hasErrors()) {
+			logger.info("valid error" + bindingResult.getFieldError());
+			res.getWriter().print("validError");
+		} else { 
+			int r = service.updateUser(userVO);
+			if(r > 0)
+				res.getWriter().print("completeUpdatedUser");
+			else {
+				res.getWriter().print("error");
 			}
 		}
 	}

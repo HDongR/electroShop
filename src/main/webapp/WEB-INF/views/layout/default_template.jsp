@@ -15,7 +15,7 @@
 <!-- bootstrap css-->
 <link rel="stylesheet"
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	
+
 <!-- main css -->
 <link rel="stylesheet" type="text/css"
 	href="<c:url value='/resources/css/main.css'/>">
@@ -32,7 +32,15 @@
 <script
 	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
 
-<title>ElectroShop</title>
+<!-- bootstrap select CSS -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+
+<!-- bootstrap select JS -->
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/js/bootstrap-select.min.js"></script>
+
+<title>ElectroShop</title>  
 </head>
 <body>
 	<tiles:insertAttribute name="header" />

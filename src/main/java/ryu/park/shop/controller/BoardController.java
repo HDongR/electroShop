@@ -27,6 +27,7 @@ public class BoardController {
 
 	private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
 
+	int test;
 	@Autowired
 	private GoodsService goodsService;
 

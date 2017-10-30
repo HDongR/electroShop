@@ -21,10 +21,20 @@ import ryu.park.shop.utils.JsonFormatter;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 
+ 
 /**
- * 뭐에 쓰는 클래스요?
- * @author JAE SUNG PARK
- * @since 언제만들었어요?
+ * @Class		BoardController.java
+ * @packagename	ryu.park.shop.controller
+ * @author		hodongryu
+ * @since		2017.10.30.
+ * @version		1.0
+ * @see			게시판 관련 컨트롤러
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *    수정일       수정자          수정내용
+ *    -------      -------     -------------------
+ *    2017.10.30.  hodongryu      최초작성
+ * </pre>
  */
 @RequestMapping("/board/*")
 @Controller
@@ -35,20 +45,29 @@ public class BoardController {
 	@Autowired
 	private GoodsService goodsService;
 
+ 
 	/**
-	 * 뭐에 쓰는 메서드에요?
-	 * @author 누가 작성한 메서드에요?
-	 * @since 언제 작성한 메서드에요?
-	 * @param searchOption
-	 * @param keyword
-	 * @param curPage
-	 * @param goodsCatHighSeq
-	 * @param goodsCatMidSeq
-	 * @param orderType
-	 * @param order
+	 * @method		goodsBoardPage : 상품페이지
+	 * @param searchOption : 검색옵션
+	 * @param keyword : 검색키워드
+	 * @param curPage : 현재페이지
+	 * @param goodsCatHighSeq : 상위카테고리
+	 * @param goodsCatMidSeq : 하위카테고리
+	 * @param orderType : 정렬옵션
+	 * @param order : asc,desc 
 	 * @param model
 	 * @return
 	 * @throws JsonProcessingException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
 	 */
 	@RequestMapping(value = "goods", method = { RequestMethod.GET, RequestMethod.POST })
 	public String goodsBoardPage(@RequestParam(defaultValue = "allGoods") String searchOption,
@@ -67,10 +86,10 @@ public class BoardController {
 		List<GoodsVO> list = goodsService.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq,
 				goodsCatMidSeq, orderType, order);
 
-		model.addAttribute("list", list); // list
-		model.addAttribute("count", count); // 레코드의 갯수
-		model.addAttribute("searchOption", searchOption); // 검색옵션
-		model.addAttribute("keyword", keyword); // 검색키워드
+		model.addAttribute("list", list);
+		model.addAttribute("count", count);
+		model.addAttribute("searchOption", searchOption);
+		model.addAttribute("keyword", keyword);
 		model.addAttribute("boardPager", boardPager);
 		model.addAttribute("goodsCatHighSeq", goodsCatHighSeq);
 		model.addAttribute("goodsCatMidSeq", goodsCatMidSeq);

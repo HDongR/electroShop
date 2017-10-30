@@ -11,6 +11,20 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import ryu.park.shop.type.JoinType;
 import ryu.park.shop.vo.UserVO;
 
+/**
+ * @Class		ManagerInterceptor.java
+ * @packagename	ryu.park.shop.interceptor
+ * @author		hodongryu
+ * @since		2017.10.30.
+ * @version		1.0
+ * @see			매니저 페이지를 일반유저가 접근하지 못하게 처리
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *    수정일       수정자          수정내용
+ *    -------      -------     -------------------
+ *    2017.10.30.  hodongryu      최초작성
+ * </pre>
+ */
 public class ManagerInterceptor extends HandlerInterceptorAdapter {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
 	public static boolean isDEBUG = true;

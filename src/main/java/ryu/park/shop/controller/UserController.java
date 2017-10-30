@@ -23,8 +23,19 @@ import ryu.park.shop.utils.SecurityUtils;
 import ryu.park.shop.vo.UserVO;
 
 /**
- * Handles requests for the application home page.
- */
+ * @Class		UserController.java
+ * @packagename	ryu.park.shop.controller
+ * @author		hodongryu
+ * @since		2017.10.30.
+ * @version		1.0
+ * @see			유저 로그인 관련 컨트롤러
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *    수정일       수정자          수정내용
+ *    -------      -------     -------------------
+ *    2017.10.30.  hodongryu      최초작성
+ * </pre>
+ */ 
 @RequestMapping("/user/*")
 @Controller
 public class UserController {
@@ -36,8 +47,23 @@ public class UserController {
 
 	@Autowired
 	private SecurityUtils securityUtils;
-
-	// check Email
+ 
+	/**
+	 * @method		checkEmail : 이메일 중복체크
+	 * @param email
+	 * @param res
+	 * @throws IOException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "check_email", method = RequestMethod.POST)
 	public void checkEmail(@RequestParam("userEmail") String email, HttpServletResponse res)
 			throws IOException {
@@ -55,19 +81,49 @@ public class UserController {
 			res.getWriter().print("isNaverJoined");
 		}
 	}
-
-	// login page
+ 
+	/**
+	 * @method		loginPage : 로그인페이지
+	 * @return
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "login_page", method = RequestMethod.GET)
 	public String loginPage() {
 		return "user/user_login";
 	}
-
-	// es login
+ 
+	/**
+	 * @method		esLogin : 사이트 로그인
+	 * @param user : 유저모델
+	 * @param bindingResult : 유저모델 바인딩 결과
+	 * @param req
+	 * @param res
+	 * @throws IOException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "eslogin", method = RequestMethod.POST)
-	public void esLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
+	public void esLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
 		logger.info("esLogin");
-		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
+		if (bindingResult.hasErrors()) {
 			logger.info("valid error");
 			res.getWriter().print("validError");
 		} else {
@@ -78,7 +134,7 @@ public class UserController {
 			} else if (userVO.getUserJoinType() == JoinType.MANAGER) {
 				res.getWriter().print("validManager");
 			} else {
-				HttpSession session = request.getSession(true);
+				HttpSession session = req.getSession(true);
 				session.setAttribute("user", userVO);
 				res.getWriter().print("loginComplete");
 			}
@@ -86,7 +142,22 @@ public class UserController {
 		}
 	}
 
-	// logout
+	 
+	/**
+	 * @method		logout : 로그아웃
+	 * @param req
+	 * @return
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "logout", method = RequestMethod.GET)
 	public String logout(HttpServletRequest req) {
 		logger.info("user is logout");
@@ -96,70 +167,151 @@ public class UserController {
 		return "redirect:/";
 	}
 
-	// join page
+	 
+	/**
+	 * @method		loginnaver_callback : 네이버 로그인 콜백페이지
+	 * @return
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "login/naver_callback", method = RequestMethod.GET)
 	public String loginnaver_callback() {
 		return "user/naver_callback";
 	}
 
-	// join page
+	 
+	/**
+	 * @method		joinPage : 사이트 회원가입 페이지
+	 * @return
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "join_page", method = RequestMethod.GET)
 	public String joinPage() {
 		return "user/user_join";
-	}
-
-	// es join
+	} 
+	 
+	/**
+	 * @method		joinUser : 사이트 내 회원가입
+	 * @param user : 유저모델
+	 * @param bindingResult : 유저모델 바인딩 결과 
+	 * @param req
+	 * @param res
+	 * @throws IOException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "esjoin", method = RequestMethod.POST)
-	public void joinUser(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	public void joinUser(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
+			HttpServletResponse res) throws IOException {
 		logger.info("es join");
-		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
+		if (bindingResult.hasErrors()) {
 			logger.info("valid error");
-			response.getWriter().print("validError");
+			res.getWriter().print("validError");
 		} else {
 			user.setUserPassword(securityUtils.getHash(user.getUserPassword()));
 			logger.info(user.getUserPassword());
 			int r = service.addUser(user);
 			logger.info("result:" + r);
-			if (r > 0) { // database 에러처리
-				response.getWriter().print("joinUserComplete");
-				HttpSession session = request.getSession();
+			if (r > 0) {
+				res.getWriter().print("joinUserComplete");
+				HttpSession session = req.getSession();
 				session.setAttribute("user", user);
 			} else {
-				response.getWriter().print("databaseError");
+				res.getWriter().print("databaseError");
 			}
 		}
 	}
 
-	// sns join
+ 
+	/**
+	 * @method		snsJoin : sns회원가입
+	 * @param user : 유저모델 
+	 * @param bindingResult : 유저모델 바인딩 결과
+	 * @param req
+	 * @param res
+	 * @throws IOException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "snsjoin", method = RequestMethod.POST)
-	public void kakaoJoin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
-			HttpServletResponse response) throws IOException {
+	public void snsJoin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
+			HttpServletResponse res) throws IOException {
 		logger.info("snsJoin");
-		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
+		if (bindingResult.hasErrors()) {
 			logger.info("valid error");
-			response.getWriter().print("validError");
+			res.getWriter().print("validError");
 		} else {
 			user.setUserPassword(securityUtils.getHash(user.getUserEmail()));
 			logger.info(user.getUserEmail());
 			int r = service.addUser(user);
 			logger.info("result:" + r);
-			if (r > 0) { // database 에러처리
-				response.getWriter().print("joinUserComplete");
-				HttpSession session = request.getSession();
+			if (r > 0) {
+				res.getWriter().print("joinUserComplete");
+				HttpSession session = req.getSession();
 				session.setAttribute("user", user);
 			} else {
-				response.getWriter().print("databaseError");
+				res.getWriter().print("databaseError");
 			}
 		}
 	}
 
-	// sns login
+	 
+	/**
+	 * @method		snsLogin : sns로그인
+	 * @param user : 유저모델 
+	 * @param bindingResult : 유저모델 바인딩 결과
+	 * @param req
+	 * @param res
+	 * @throws IOException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "snslogin", method = RequestMethod.POST)
-	public void kakaoLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest request,
+	public void snsLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
 		logger.info("snsLogin");
-		if (bindingResult.hasErrors()) { // 검증에 실패한 빈은 BindingResult에 담겨 뷰에 전달된다.
+		if (bindingResult.hasErrors()) {
 			logger.info("valid error:" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
 		} else {
@@ -169,7 +321,7 @@ public class UserController {
 			if (userVO == null) {
 				res.getWriter().print("invalid Email or Pwd");
 			} else {
-				HttpSession session = request.getSession(true);
+				HttpSession session = req.getSession(true);
 				session.setAttribute("user", userVO);
 
 				res.getWriter().print("loginComplete");
@@ -177,6 +329,22 @@ public class UserController {
 		}
 	}
 	
+	/**
+	 * @method		userModifyPage : 유저정보 수정 페이지
+	 * @param email
+	 * @param model
+	 * @return
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "modify_user_page", method = RequestMethod.POST)
 	public String userModifyPage(@RequestParam("userEmail") String email, Model model) {
 		logger.info("user_modify_page");  
@@ -185,6 +353,25 @@ public class UserController {
 		return "user/user_modify";
 	}
 	
+	/**
+	 * @method		modifyUser : 유저정보 수정
+	 * @param userVO : 유저모델
+	 * @param bindingResult : 유저모델 바인딩 결과
+	 * @param req 
+	 * @param res
+	 * @throws Exception
+	 * @throws IOException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "modify_user", method = RequestMethod.POST)
 	public void modifyUser(@Valid UserVO userVO, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res) throws Exception, IOException {

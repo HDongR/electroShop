@@ -1,5 +1,19 @@
 package ryu.park.shop.utils;
 
+/**
+ * @Class		BoardPager.java
+ * @packagename	ryu.park.shop.utils
+ * @author		hodongryu
+ * @since		2017.10.30.
+ * @version		1.0
+ * @see			페이지 유틸 (필요할때마다 생성)
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *    수정일       수정자          수정내용
+ *    -------      -------     -------------------
+ *    2017.10.30.  hodongryu      최초작성
+ * </pre>
+ */
 public class BoardPager { 
     // 화면당 페이지 수
     public static final int BLOCK_SCALE = 10;

@@ -3,7 +3,6 @@ package ryu.park.shop.controller;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -38,6 +37,29 @@ public class MainController {
 	@Autowired
 	private CartService cartService;
 
+	/**
+	 * @method		home : 메인페이지
+	 * @param searchOption
+	 * @param keyword
+	 * @param curPage
+	 * @param goodsCatHighSeq
+	 * @param goodsCatMidSeq
+	 * @param orderType
+	 * @param order
+	 * @param model
+	 * @return
+	 * @throws JsonProcessingException
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.POST })
 	public String home(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
@@ -46,7 +68,7 @@ public class MainController {
 			Model model) throws JsonProcessingException {
 
 		int count = goodsService.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
-		// 페이지 나누기 관련 처리
+		
 		BoardPager boardPager = new BoardPager(count, curPage, 10);
 		int start = boardPager.getPageBegin();
 		int end = boardPager.getPageEnd();
@@ -54,10 +76,10 @@ public class MainController {
 		List<GoodsVO> list = goodsService.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq,
 				goodsCatMidSeq, orderType, order);
 
-		model.addAttribute("list", list); // list
-		model.addAttribute("count", count); // 레코드의 갯수
-		model.addAttribute("searchOption", searchOption); // 검색옵션
-		model.addAttribute("keyword", keyword); // 검색키워드
+		model.addAttribute("list", list);
+		model.addAttribute("count", count);
+		model.addAttribute("searchOption", searchOption);
+		model.addAttribute("keyword", keyword);
 		model.addAttribute("boardPager", boardPager);
 		model.addAttribute("goodsCatHighSeq", goodsCatHighSeq);
 		model.addAttribute("goodsCatMidSeq", goodsCatMidSeq);
@@ -71,6 +93,21 @@ public class MainController {
 		return "main";
 	}
 	
+	/**
+	 * @method		cartList : 기본적으로 모든 페이지에 장바구니 리스트 포함
+	 * @param session : 현재세션
+	 * @return
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see			메인 페이지 컨트롤러
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	@ModelAttribute("cartList")
 	public Map<Integer, CartVO> cartList(HttpSession session) {
 		return cartService.getCartList(session);

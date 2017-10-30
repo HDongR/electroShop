@@ -45,7 +45,7 @@ public class ThirdApiServiceImpl implements ThirdApiService {
 
 		HttpURLConnection conn = null;
 		try {
-			StringBuffer sb = new StringBuffer(3);
+			StringBuffer sb = new StringBuffer();
 			sb.append(postalApiUrl);
 			sb.append("?regkey=" + postalApiKey + "&target=postNew&query=");
 			sb.append(URLEncoder.encode(name, "EUC-KR"));
@@ -75,6 +75,7 @@ public class ThirdApiServiceImpl implements ThirdApiService {
 			Document doc = docBuilder.parse(new InputSource(new StringReader(xmlData)));
 			Element pageInfoEl = (Element) doc.getElementsByTagName("pageinfo").item(0);
 			Element addrEl = (Element) doc.getElementsByTagName("itemlist").item(0);
+			
 			if (pageInfoEl == null || addrEl == null) {
 				if (conn != null)
 					conn.disconnect();

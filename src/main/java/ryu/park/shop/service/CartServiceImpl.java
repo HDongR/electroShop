@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 
 import ryu.park.shop.dao.CartDAOImpl;
 import ryu.park.shop.vo.CartVO;
+import ryu.park.shop.vo.UserVO;
 
 @Service
 public class CartServiceImpl implements CartService {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(CartServiceImpl.class);
 
 	@Autowired
@@ -44,8 +45,9 @@ public class CartServiceImpl implements CartService {
 				cartList.put(cartVO.getCartGoodsSeq(), cartVO);
 			}
 			return 0;
-			// 로그인이 되어있을 경우
 		} else {
+			// 로그인이 되어있을 경우
+			cartVO.setCartUserEmail(((UserVO)session.getAttribute("user")).getUserEmail());
 			return dao.addCart(cartVO);
 		}
 	}
@@ -71,26 +73,49 @@ public class CartServiceImpl implements CartService {
 				session.setAttribute("cartList", cartList);
 
 				return 0;
-			}else {
+			} else {
 				return -1;
 			}
-
-			// 로그인이 되어있을 경우
 		} else {
-			if(cartSeqList != null) {
+			// 로그인이 되어있을 경우
+			if (cartSeqList != null) {
 				int result = dao.deleteCartList(cartSeqList);
 				return cartSeqList.size() == result ? 1 : -1;
-			}else {
+			} else {
 				return -1;
-			} 
+			}
 		}
 	}
 
 	@Override
-	public List<CartVO> getCartList(String userEmail) {
-		return dao.getCartList(userEmail);
+	public Map<Integer, CartVO> getCartList(HttpSession session) {
+		// 로그인이 안되었을 경우 세션에서 가져옴
+		if (!isLoginUser(session)) {
+			logger.info("getCartList user is null");
+			Map<Integer, CartVO> sessionCart = getCartFromSession(session);
+			if (sessionCart == null) {
+				Map<Integer, CartVO> cartList = new HashMap<Integer, CartVO>(); // 세션당 하나의 맵을 생성 key:상품번호
+				session.setAttribute("cartList", cartList);
+			} 
+			return sessionCart;
+		
+			
+		} else {
+			logger.info("isUser");
+			// 로그인이 되었을경우 디비에서 가져옴
+			List<CartVO> cartList = dao.getCartList(((UserVO)session.getAttribute("user")).getUserEmail());
+			logger.info("isUser size"+ cartList.size());
+			Map<Integer, CartVO> ret = new HashMap<Integer, CartVO>();
+			
+			for(CartVO cart : cartList) {
+				if(cart instanceof CartVO)
+				logger.info("cart is null?" + (cart == null ? "null" : "not null"));
+				//ret.put(cart.getCartSeq(), cart);
+			}
+			return ret; 
+		}
 	}
-
+ 
 	private boolean isLoginUser(HttpSession session) {
 		return session.getAttribute("user") != null ? true : false;
 	}

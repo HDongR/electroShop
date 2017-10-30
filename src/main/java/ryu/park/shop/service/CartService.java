@@ -1,6 +1,7 @@
 package ryu.park.shop.service;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,5 +17,5 @@ public interface CartService {
 	public int updateCart(CartVO cartVO);
 	@Transactional
 	public int deleteCartList(HttpSession session, List<Integer> cartSeqList, List<Integer> goodsSeqList);
-	public List<CartVO> getCartList(String userEmail); 
+	public Map<Integer, CartVO> getCartList(HttpSession session); 
 }

@@ -3,21 +3,27 @@ package ryu.park.shop.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import ryu.park.shop.service.CartService;
 import ryu.park.shop.service.GoodsService;
 import ryu.park.shop.type.OrderType;
 import ryu.park.shop.utils.BoardPager;
 import ryu.park.shop.utils.JsonFormatter;
+import ryu.park.shop.vo.CartVO;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 
@@ -28,6 +34,9 @@ public class MainController {
 
 	@Autowired
 	private GoodsService goodsService;
+	
+	@Autowired
+	private CartService cartService;
 
 	@RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.POST })
 	public String home(@RequestParam(defaultValue = "allGoods") String searchOption,
@@ -56,8 +65,14 @@ public class MainController {
 		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(true);
 
 		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category);
-		model.addAttribute("categoryJson", jsonCategory);
-
+		model.addAttribute("categoryJson", jsonCategory); 
+		model.addAttribute("cartList");
+		
 		return "main";
+	}
+	
+	@ModelAttribute("cartList")
+	public Map<Integer, CartVO> cartList(HttpSession session) {
+		return cartService.getCartList(session);
 	}
 }

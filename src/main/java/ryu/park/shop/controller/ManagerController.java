@@ -214,7 +214,8 @@ public class ManagerController {
 			if (goodsMainPic.getSize() < 1) {
 				logger.info("mainPic is NuLl");
 			} else {
-				String fileUrl = new ImgStore().setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
+				String fileUrl = new ImgStore()
+						.setRealRootPath(req.getSession().getServletContext().getRealPath("/"))
 						.setImgStoreType(IMG_STORE_TYPE.IMG_GOODS_MAIN).setFileName(goodsMainPic.getOriginalFilename())
 						.build(goodsMainPic)[0];
 

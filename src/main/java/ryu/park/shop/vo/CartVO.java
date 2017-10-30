@@ -8,7 +8,9 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 public class CartVO {
-
+	// 상품
+	private GoodsVO goodsVO;
+	 
 	// 장바구니_시퀀스
 	private Integer cartSeq;
 
@@ -31,7 +33,15 @@ public class CartVO {
 	public Integer getCartSeq() {
 		return cartSeq;
 	}
+ 
+	public GoodsVO getGoodsVO() {
+		return goodsVO;
+	}
 
+	public void setGoodsVO(GoodsVO goodsVO) {
+		this.goodsVO = goodsVO;
+	}
+	
 	public void setCartSeq(Integer cartSeq) {
 		this.cartSeq = cartSeq;
 	}

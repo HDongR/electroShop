@@ -1,6 +1,5 @@
 package ryu.park.shop.vo;
 
-import java.util.HashMap;
 import java.util.List; 
 
 public class CategoryHighVO {

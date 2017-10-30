@@ -23,8 +23,8 @@ import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 
 import ryu.park.shop.utils.BoardPager;
-import ryu.park.shop.vo.AddrVO;
-
+import ryu.park.shop.vo.AddrVO; 
+  
 @Service
 public class ThirdApiServiceImpl implements ThirdApiService {
 
@@ -33,9 +33,9 @@ public class ThirdApiServiceImpl implements ThirdApiService {
 
 	@Value("${kpostpostal.api}")
 	private String postalApiKey;
-
+ 
 	private static final Logger logger = LoggerFactory.getLogger(ThirdApiServiceImpl.class);
-
+ 
 	@Override
 	public HashMap<String, Object> getPostAndAddress(String name, int pCurrentPage) {
 

@@ -33,13 +33,14 @@ public class CartController {
 	}
 
 	@RequestMapping(value = "addCart", method = RequestMethod.POST)
-	public void addCart(HttpSession session, @Valid CartVO cartVO) {
+	public void addCart(HttpSession session, @Valid CartVO cartVO, HttpServletResponse res) throws IOException {
 		logger.info("addCart");
 		int r = cartService.addCart(session, cartVO);
 		if(r < 0) {
 			//error
+			res.getWriter().print("error");
 		}else {
-			//success
+			res.getWriter().print("success");
 		}
 	}
 
@@ -60,7 +61,7 @@ public class CartController {
 
 	@RequestMapping(value = "cartList", method = RequestMethod.POST)
 	public void getCartList(@RequestParam("userEmail") String userEmail) {
-
+		
 	}
 
 }

@@ -4,36 +4,63 @@
 <mapper namespace="CartMapper">
 
 	<select id="totalCount">
-		SELECT count(*) FROM cart_t WHERE cart_user_email = #{userEmail} 
+		SELECT count(*) FROM cart_t WHERE cart_user_email = #{userEmail}
 	</select>
-	
+
 	<insert id="addCart" parameterType="ryu.park.shop.vo.CartVO">
 		INSERT INTO cart_t(cart_seq, cart_goods_seq, cart_user_email, cart_goods_cnt, cart_crt_date)
-		VALUES(CART_SEQUENCE.NEXTVAL, #{cartGoodsSeq}, #{cartUserEmail}, #{cartGoodsCnt}, #{cartCrtDate})
-		<selectKey keyProperty="cartSeq" resultType="Integer"
-			order="AFTER">
+		VALUES(
+		CART_SEQUENCE.NEXTVAL,
+		#{cartGoodsSeq}, 
+		#{cartUserEmail}, 
+		#{cartGoodsCnt}, 
+		#{cartCrtDate})
+		<selectKey keyProperty="cartSeq" resultType="Integer" order="AFTER">
 			SELECT CART_SEQUENCE.CURRVAL FROM DUAL
 		</selectKey>
 	</insert>
-	
+
 	<update id="updateCart" parameterType="ryu.park.shop.vo.CartVO">
 		UPDATE cart_t
-		SET cart_goods_cnt = #{cartGoodsCnt}
+		SET
+		cart_goods_cnt = #{cartGoodsCnt}
 		WEHRE cart_seq = #{cartSeq}
 	</update>
-	
+
 	<delete id="deleteCartList" parameterType="java.util.Map">
 		DELETE
 		FROM cart_t
 		WHERE
-		<foreach collection="cartSeqList" item="cartSeq" separator="or" open="(" close=")">
+		<foreach collection="cartSeqList" item="cartSeq" separator="or"
+			open="(" close=")">
 			cart_seq = #{cartSeq}
 		</foreach>
 	</delete>
-	 
+
+
+	<select id="getCartList" resultMap="cartVOResultMap">
+		SELECT C.*, G.* FROM cart_t C INNER JOIN goods_t G ON C.cart_goods_seq = G.goods_seq  
+		WHERE
+		C.cart_user_email = #{userEmail}
+	</select>
+ 
+	<resultMap type="ryu.park.shop.vo.CartVO" id="cartVOResultMap">
+		<id property="cart_seq" column="cartSeq"/>
+		<result property="cart_goods_seq" column="cartGoodsSeq"/>
+		<result property="cart_user_email" column="cartUserEmail"/>
+		<result property="cart_goods_cnt" column="cartGoodsCnt"/>
+		<result property="cart_crt_date" column="cartCrtDate"/>
+		
+		<association property="goodsVO" javaType="ryu.park.shop.vo.GoodsVO">
+			<id property="goods_seq" column="goodsSeq" />
+			<result property="goods_subject" column="goodsSubject" />
+			<result property="goods_cost" column="goodsCost" />
+			<result property="goods_main_pic_url" column="goodsMainPicUrl" />
+			<result property="goods_contents" column="goodsContents" />
+			<result property="goods_crt_date" column="goodsCrtDate" />
+			<result property="goods_stock" column="goodsStock" /> 
+		</association>
+	</resultMap>
 	
-	<select id="getCartList">
-		SELECT * FROM cart_t WHERE cart_user_email = #{userEmail}  
-	</select> 
-	
+
 </mapper>

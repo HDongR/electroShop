@@ -3,67 +3,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 
-<script type="text/javascript" src="/resources/js/date_utils.js/"></script> 
-    
 <div class="container">
-	<h2>카테고리 내 상품 리스트 </h2>  
-	<form name="form1" method="post" action="/board/goods">
-	 
-        <select class="selectpicker" name="searchOption">
-            <!-- 검색조건을 검색처리후 결과화면에 보여주기위해  c:out 출력태그 사용, 삼항연산자 -->
-            <option value="allGoods" <c:out value="${searchOption == 'allGoods'?'selected':''}"/> >제목+내용</option>
-            <option value="goods_subject" <c:out value="${searchOption == 'goods_subject'?'selected':''}"/> >이름</option>
-            <option value="goods_contents" <c:out value="${searchOption == 'goods_contents'?'selected':''}"/> >내용</option>
-        </select> 
-        <input type="hidden" name="goodsCatHighSeq" value="${goodsCatHighSeq}">
-        <input type="hidden" name="goodsCatMidSeq" value="${goodsCatMidSeq}">
-        <div class="input-group col-sm-6">
-	      <input type="text" class="form-control" placeholder="제목이나 내용을 검색하세요" name="keyword" value="${keyword}">
-	      <div class="input-group-btn">
-	        <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
-	      </div>
-	    </div>
-    </form>
-    <h5> ${count}개의 상품이 있습니다.</h5>
+	<h2>장바구니 내 상품 리스트 </h2>  
+	
+    <h5> ${count}개의 장바구니 상품이 있습니다.</h5>
     <div class="btn-group btn-group-justified"> 
-    
-		<!-- 인기순 -->
-		<c:if test="${(order == 'DESC' && orderType == 'SCORE') || orderType != 'SCORE'}">
-			<a href="javascript:list('1','SCORE', 'ASC')" class="btn btn-primary">인기순 <span class="glyphicon glyphicon-triangle-bottom"></span></a> 
-		</c:if>
-		<c:if test="${order == 'ASC' && orderType == 'SCORE'}">
-			<a href="javascript:list('1','SCORE', 'DESC')" class="btn btn-primary">인기순 <span class="glyphicon glyphicon-triangle-top"></span></a> 
-		</c:if>
-				 
-		<!-- 신상품순 -->
-		<c:if test="${(order == 'DESC' && orderType == 'DATE') || orderType != 'DATE'}">
-			<a href="javascript:list('1','DATE', 'ASC')" class="btn btn-primary">신상품순 <span class="glyphicon glyphicon-triangle-bottom"></span></a> 
-		</c:if>
-		<c:if test="${order == 'ASC' && orderType == 'DATE'}">
-			<a href="javascript:list('1','DATE', 'DESC')" class="btn btn-primary">신상품순 <span class="glyphicon glyphicon-triangle-top"></span></a> 
-		</c:if>
-		 
-		<!-- 이름순 -->
-		<c:if test="${(order == 'DESC' && orderType == 'SUBJECT') || orderType != 'SUBJECT'}">
-			<a href="javascript:list('1','SUBJECT', 'ASC')" class="btn btn-primary">이름순 <span class="glyphicon glyphicon-triangle-bottom"></span></a> 
-		</c:if>
-		<c:if test="${order == 'ASC' && orderType == 'SUBJECT'}">
-			<a href="javascript:list('1','SUBJECT', 'DESC')" class="btn btn-primary">이름순 <span class="glyphicon glyphicon-triangle-top"></span></a> 
-		</c:if>
-		
-		<!-- 가격순 -->
-		<c:if test="${(order == 'DESC' && orderType == 'COST') || orderType != 'COST'}">
-			<a href="javascript:list('1','COST', 'ASC')" class="btn btn-primary">가격순 <span class="glyphicon glyphicon-triangle-bottom"></span></a> 
-		</c:if>
-		<c:if test="${order == 'ASC' && orderType == 'COST'}">
-			<a href="javascript:list('1','COST', 'DESC')" class="btn btn-primary">가격순 <span class="glyphicon glyphicon-triangle-top"></span></a> 
-		</c:if>
-		
-	</div>
+     
 	<br/>
     
     <div class="row">
-        <c:forEach var="goods" items="${list}"> 
+        <c:forEach var="cart" items="${cartList}"> 
  			<div class="col-sm-4">
 	 			<div class="panel panel-primary">
 	 				<a href="#" style="text-decoration:none">
@@ -148,36 +97,3 @@
 		</nav>
 	</div>
 </div>
-
-<!-- 장바구니로 등록 -->
-<script type="text/javascript">
- 	function addCart(goodsSeq){
- 		var goodsCnt = $("#goodsCnt"+goodsSeq).val();
- 		if(goodsCnt < 1){
- 			alert("1개 이상 등록하세요")
- 		}else{
- 			$.post("/cart/addCart", {
- 				cartGoodsSeq : goodsSeq,
- 				cartGoodsCnt : goodsCnt,
- 				cartCrtDate : now()
- 			}, function(data,status){
- 				if(status == "success"){
- 					if(data == "error"){
- 						
- 					}else if(data == "success"){
- 						location.reload();
- 					}
- 				}else{
- 					alert("다시시도해주세요");
- 				}
- 			});
- 		}
- 	}
-</script>
-
-<!-- 정렬옵션 -->
-<script type="text/javascript">
-	function list(page, orderType, order){
-		location.href="/board/goods?curPage="+page+"&searchOption=${searchOption}"+"&keyword=${keyword}"+"&goodsCatHighSeq=${goodsCatHighSeq}" + "&goodsCatMidSeq=${goodsCatMidSeq}" + "&orderType="+orderType+"&order="+order;         
-	} 
-</script>

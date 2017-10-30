@@ -21,6 +21,11 @@ import ryu.park.shop.utils.JsonFormatter;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 
+/**
+ * 뭐에 쓰는 클래스요?
+ * @author JAE SUNG PARK
+ * @since 언제만들었어요?
+ */
 @RequestMapping("/board/*")
 @Controller
 public class BoardController {
@@ -30,6 +35,21 @@ public class BoardController {
 	@Autowired
 	private GoodsService goodsService;
 
+	/**
+	 * 뭐에 쓰는 메서드에요?
+	 * @author 누가 작성한 메서드에요?
+	 * @since 언제 작성한 메서드에요?
+	 * @param searchOption
+	 * @param keyword
+	 * @param curPage
+	 * @param goodsCatHighSeq
+	 * @param goodsCatMidSeq
+	 * @param orderType
+	 * @param order
+	 * @param model
+	 * @return
+	 * @throws JsonProcessingException
+	 */
 	@RequestMapping(value = "goods", method = { RequestMethod.GET, RequestMethod.POST })
 	public String goodsBoardPage(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,

@@ -76,7 +76,8 @@
 	<beans:bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
 		<beans:property name="converters">
 			<beans:set>
-				<beans:bean class="ryu.park.shop.utils.EnumConverter"/>
+				<beans:bean class="ryu.park.shop.type.OrderTypeConverter"/>
+				<beans:bean class="ryu.park.shop.type.JoinTypeConverter"/>
 			</beans:set>
 		</beans:property>
 	</beans:bean>

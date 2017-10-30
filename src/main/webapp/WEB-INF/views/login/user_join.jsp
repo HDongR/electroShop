@@ -201,7 +201,7 @@
 				//회원가입 
 				$('#join_complete').click(function(){   
 					$('#join_complete').prop('disabled', true);
-					$.post("/user/esjoin",
+					$.post("/user/join",
 						    {
 						        userEmail: $scope.email,
 						        userPassword: $scope.pwd,

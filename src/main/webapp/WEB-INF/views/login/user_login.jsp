@@ -60,7 +60,7 @@
 </div>
 
 <!-- validaeCtrl -->
-<script>   
+<script type="text/javascript">   
 	var app = angular.module('myApp', []);
 	app.controller('validateCtrl',
 			function($scope) {  
@@ -101,38 +101,14 @@
 				
 				$("#es_login").click(function(){
 					$('#es_login').prop('disabled', true);
-					$.post("/user/eslogin",
-						    {
-						        userEmail: $scope.email,
-						       	userPassword: $scope.pwd
-						    },
-						    function(data, status){ 
-								if(status == 'success'){
-						        		if(data == 'validError'){ 
-						        			alert('유효하지 않은 데이터를 입력하셨네요');   
-						        		}else if(data == 'invalid Email or Pwd'){
-						        			alert('유효하지 않은 이메일 또는 비밀번호입니다');   
-						        		}else if(data == 'validManager'){
-						        			alert('관리자로 로그인 해주세요');   
-						        		}else if(data == 'loginComplete'){
-						        			//complete
-						        			location.href='/'; 
-						        		}
-						        }else{
-						        		alert('다시 시도해 주세요');
-						        }
-								
-								$('#es_login').prop('disabled', false);
-						    });  
+					login('COMMON', $scope.email, $scope.pwd);
 				}); 
 
 			});
 	
 </script> 
 
-<script>
-// sns login
-
+<script type="text/javascript">  
 function checkEmail(_joinType, _email, _nickname){ 
 		$.post('/user/check_email',{
 				userEmail: _email
@@ -140,7 +116,7 @@ function checkEmail(_joinType, _email, _nickname){
 				, function(data, status){
 				if(status == 'success'){ 
 						if(data == 'isNotDuplicateEmail') { 
-							snsJoin(_joinType, _email, _nickname); 
+							join(_joinType, _email, '', _nickname); 
 						}else if(data == 'isManagerJoined'){
 							alert('이미 관리자로 가입하셨습니다.');
 						}else if(data == 'isCommonJoined'){
@@ -151,21 +127,23 @@ function checkEmail(_joinType, _email, _nickname){
 							}else if(_joinType == 'KAKAO' && data == 'isNaverJoined'){
 								alert('이미 NAVER로 가입하셨습니다.');
 							}else{
-								snsLogin(_email);
+								login(_joinType, _email, '');
 							}
 						} 
 				}else{
 						alert('다시 시도해 주세요');
 				}
+				
 		});  
 	}  
 	
 	
-function snsLogin(_email){
-	$.post("/user/snslogin",
+function login(_joinType, _email, _password){
+	$.post("/user/login",
 		    {
+				userJoinType: _joinType,
 		        userEmail: _email,
-		        userPassword: ''
+		        userPassword: _password
 		    },
 		    function(data, status){
 				if(status == 'success'){
@@ -173,6 +151,8 @@ function snsLogin(_email){
 		        			alert('유효하지 않은 데이터를 입력하셨네요');   
 		        		}else if(data == "invalid Email or Pwd"){
 		        			alert('유효하지 않은 이메일 또는 비밀번호입니다');   
+		        		}else if(data == "validManager"){
+		        			alert('관리자로 로그인 해주세요');
 		        		}else if(data == 'loginComplete') {  
 		        			//complete
 		        			location.href='/'; 
@@ -180,16 +160,17 @@ function snsLogin(_email){
 		        }else{
 		        		alert('다시 시도해 주세요');
 		        }
-				 
+				
+				$('#es_login').prop('disabled', false);
 		    }); 
 }
 
-// sns join
-function snsJoin(_joinType, _email, _nickname){
-	$.post('/user/snsjoin',
+
+function join(_joinType, _email, _password, _nickname){
+	$.post('/user/join',
 		    {
 		        userEmail: _email, 
-		        userPassword: '',
+		        userPassword: _password,
 		        userNickname: _nickname,
 		        userJoinDate: now(),
 		        userJoinType: _joinType

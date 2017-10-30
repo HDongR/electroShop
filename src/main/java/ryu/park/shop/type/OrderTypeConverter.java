@@ -1,8 +1,6 @@
-package ryu.park.shop.utils;
+package ryu.park.shop.type;
 
 import org.springframework.core.convert.converter.Converter;
-
-import ryu.park.shop.type.OrderType;
 
 /**
  * @Class		EnumConverter.java
@@ -18,7 +16,7 @@ import ryu.park.shop.type.OrderType;
  *    2017.10.30.  hodongryu      최초작성
  * </pre>
  */
-public class EnumConverter implements Converter<String, OrderType>{
+public class OrderTypeConverter implements Converter<String, OrderType>{
 
 	@Override
 	public OrderType convert(String source) {

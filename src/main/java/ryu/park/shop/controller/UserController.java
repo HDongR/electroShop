@@ -1,6 +1,7 @@
 package ryu.park.shop.controller;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,13 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import ryu.park.shop.service.CartService;
 import ryu.park.shop.service.UserService;
 import ryu.park.shop.type.JoinType;
-import ryu.park.shop.utils.SecurityUtils;
+import ryu.park.shop.vo.CartVO;
 import ryu.park.shop.vo.UserVO;
 
 /**
@@ -43,10 +46,10 @@ public class UserController {
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
 	@Autowired
-	private UserService service;
-
+	private UserService service; 
+	
 	@Autowired
-	private SecurityUtils securityUtils;
+	private CartService cartService;
  
 	/**
 	 * @method		checkEmail : 이메일 중복체크
@@ -102,7 +105,7 @@ public class UserController {
 	}
  
 	/**
-	 * @method		esLogin : 사이트 로그인
+	 * @method		login : 로그인
 	 * @param user : 유저모델
 	 * @param bindingResult : 유저모델 바인딩 결과
 	 * @param req
@@ -119,15 +122,14 @@ public class UserController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "eslogin", method = RequestMethod.POST)
-	public void esLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
+	@RequestMapping(value = "login", method = RequestMethod.POST)
+	public void login(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
-		logger.info("esLogin");
+		logger.info("login");
 		if (bindingResult.hasErrors()) {
-			logger.info("valid error");
+			logger.info("valid error:" + bindingResult.getFieldError());
 			res.getWriter().print("validError");
 		} else {
-			user.setUserPassword(securityUtils.getHash(user.getUserPassword()));
 			UserVO userVO = service.loginUser(user);
 			if (userVO == null) {
 				res.getWriter().print("invalid Email or Pwd");
@@ -208,7 +210,7 @@ public class UserController {
 	} 
 	 
 	/**
-	 * @method		joinUser : 사이트 내 회원가입
+	 * @method		joinUser : 회원가입
 	 * @param user : 유저모델
 	 * @param bindingResult : 유저모델 바인딩 결과 
 	 * @param req
@@ -225,16 +227,14 @@ public class UserController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "esjoin", method = RequestMethod.POST)
+	@RequestMapping(value = "join", method = RequestMethod.POST)
 	public void joinUser(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
 			HttpServletResponse res) throws IOException {
 		logger.info("es join");
 		if (bindingResult.hasErrors()) {
 			logger.info("valid error");
 			res.getWriter().print("validError");
-		} else {
-			user.setUserPassword(securityUtils.getHash(user.getUserPassword()));
-			logger.info(user.getUserPassword());
+		} else { 
 			int r = service.addUser(user);
 			logger.info("result:" + r);
 			if (r > 0) {
@@ -245,89 +245,7 @@ public class UserController {
 				res.getWriter().print("databaseError");
 			}
 		}
-	}
-
- 
-	/**
-	 * @method		snsJoin : sns회원가입
-	 * @param user : 유저모델 
-	 * @param bindingResult : 유저모델 바인딩 결과
-	 * @param req
-	 * @param res
-	 * @throws IOException
-	 * @author		hodongryu
-	 * @since		2017.10.30.
-	 * @version		1.0
-	 * @see
-	 * <pre>
-	 * << 개정이력(Modification Information) >>
-	 *    수정일       수정자          수정내용
-	 *    -------      -------     -------------------
-	 *    2017.10.30.  hodongryu      최초작성
-	 * </pre>
-	 */
-	@RequestMapping(value = "snsjoin", method = RequestMethod.POST)
-	public void snsJoin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
-			HttpServletResponse res) throws IOException {
-		logger.info("snsJoin");
-		if (bindingResult.hasErrors()) {
-			logger.info("valid error");
-			res.getWriter().print("validError");
-		} else {
-			user.setUserPassword(securityUtils.getHash(user.getUserEmail()));
-			logger.info(user.getUserEmail());
-			int r = service.addUser(user);
-			logger.info("result:" + r);
-			if (r > 0) {
-				res.getWriter().print("joinUserComplete");
-				HttpSession session = req.getSession();
-				session.setAttribute("user", user);
-			} else {
-				res.getWriter().print("databaseError");
-			}
-		}
-	}
-
-	 
-	/**
-	 * @method		snsLogin : sns로그인
-	 * @param user : 유저모델 
-	 * @param bindingResult : 유저모델 바인딩 결과
-	 * @param req
-	 * @param res
-	 * @throws IOException
-	 * @author		hodongryu
-	 * @since		2017.10.30.
-	 * @version		1.0
-	 * @see
-	 * <pre>
-	 * << 개정이력(Modification Information) >>
-	 *    수정일       수정자          수정내용
-	 *    -------      -------     -------------------
-	 *    2017.10.30.  hodongryu      최초작성
-	 * </pre>
-	 */
-	@RequestMapping(value = "snslogin", method = RequestMethod.POST)
-	public void snsLogin(@Valid UserVO user, BindingResult bindingResult, HttpServletRequest req,
-			HttpServletResponse res) throws IOException {
-		logger.info("snsLogin");
-		if (bindingResult.hasErrors()) {
-			logger.info("valid error:" + bindingResult.getFieldError());
-			res.getWriter().print("validError");
-		} else {
-			user.setUserPassword(securityUtils.getHash(user.getUserEmail()));
-			UserVO userVO = service.loginUser(user);
-
-			if (userVO == null) {
-				res.getWriter().print("invalid Email or Pwd");
-			} else {
-				HttpSession session = req.getSession(true);
-				session.setAttribute("user", userVO);
-
-				res.getWriter().print("loginComplete");
-			}
-		}
-	}
+	} 
 	
 	/**
 	 * @method		userModifyPage : 유저정보 수정 페이지
@@ -390,4 +308,23 @@ public class UserController {
 		}
 	}
 
+	/**
+	 * @method		cartList : 기본적으로 모든 페이지에 장바구니 리스트 포함
+	 * @param session : 현재세션
+	 * @return
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see			모든 페이지에 장바구니 리스트를 포함시킴
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
+	@ModelAttribute("cartList")
+	public Map<Integer, CartVO> cartList(HttpSession session) {
+		return cartService.getCartList(session);
+	} 
 }

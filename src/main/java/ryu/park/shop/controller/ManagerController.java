@@ -30,7 +30,6 @@ import ryu.park.shop.utils.BoardPager;
 import ryu.park.shop.utils.ImgStore;
 import ryu.park.shop.utils.ImgStore.IMG_STORE_TYPE;
 import ryu.park.shop.utils.JsonFormatter;
-import ryu.park.shop.utils.SecurityUtils;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 import ryu.park.shop.vo.UserVO;
@@ -57,10 +56,8 @@ public class ManagerController {
 	@Autowired
 	private ManagerService managerService;
 	@Autowired
-	private GoodsService goodsService;
-	@Autowired
-	private SecurityUtils securityUtils;
-
+	private GoodsService goodsService; 
+	
 	/**
 	 * @method		manager_home : 매니저 메인페이지 
 	 * @param model
@@ -112,8 +109,7 @@ public class ManagerController {
 		if (bindingResult.hasErrors()) {
 			logger.info("valid error");
 			res.getWriter().print("validError");
-		} else {
-			manager.setUserPassword(securityUtils.getHash(manager.getUserPassword()));
+		} else { 
 			UserVO managerResult = managerService.loginManager(manager);
 
 			if (managerResult == null) {

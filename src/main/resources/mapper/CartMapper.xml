@@ -33,32 +33,34 @@
 		WHERE
 		<foreach collection="cartSeqList" item="cartSeq" separator="or"
 			open="(" close=")">
-			cart_seq = #{cartSeq}
+			cart_user_email = (SELECT cart_user_email FROM cart_t WHERE cart_seq = #{cartSeq})
+			AND  
+			cart_goods_seq = (SELECT cart_goods_seq FROM cart_t WHERE cart_seq = #{cartSeq})
 		</foreach>
 	</delete>
 
 
-	<select id="getCartList" resultMap="cartVOResultMap">
+	<select id="getCartList" resultMap="cartVOResultMap" resultType="java.util.HashMap">
 		SELECT C.*, G.* FROM cart_t C INNER JOIN goods_t G ON C.cart_goods_seq = G.goods_seq  
 		WHERE
 		C.cart_user_email = #{userEmail}
 	</select>
  
 	<resultMap type="ryu.park.shop.vo.CartVO" id="cartVOResultMap">
-		<id property="cart_seq" column="cartSeq"/>
-		<result property="cart_goods_seq" column="cartGoodsSeq"/>
-		<result property="cart_user_email" column="cartUserEmail"/>
-		<result property="cart_goods_cnt" column="cartGoodsCnt"/>
-		<result property="cart_crt_date" column="cartCrtDate"/>
+		<id property="cartSeq" column="cart_seq"/>
+		<result property="cartGoodsSeq" column="cart_goods_seq"/>
+		<result property="cartUserEmail" column="cart_user_email"/>
+		<result property="cartGoodsCnt" column="cart_goods_cnt"/>
+		<result property="cartCrtDate" column="cart_crt_date"/> 
 		
 		<association property="goodsVO" javaType="ryu.park.shop.vo.GoodsVO">
-			<id property="goods_seq" column="goodsSeq" />
-			<result property="goods_subject" column="goodsSubject" />
-			<result property="goods_cost" column="goodsCost" />
-			<result property="goods_main_pic_url" column="goodsMainPicUrl" />
-			<result property="goods_contents" column="goodsContents" />
-			<result property="goods_crt_date" column="goodsCrtDate" />
-			<result property="goods_stock" column="goodsStock" /> 
+			<id property="goodsSeq" column="goods_seq" />
+			<result property="goodsSubject" column="goods_subject" />
+			<result property="goodsCost" column="goods_cost" />
+			<result property="goodsMainPicUrl" column="goods_main_pic_url" />
+			<result property="goodsContents" column="goods_contents" />
+			<result property="goodsCrtDate" column="goods_crt_date" />
+			<result property="goodsStock" column="goods_stock" /> 
 		</association>
 	</resultMap>
 	

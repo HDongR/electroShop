@@ -28,6 +28,7 @@ public class CartDAOImpl implements CartDAO{
 	public int totalCount(String userEmail) { 
 		return session.selectOne(NAMESPACE + "totalCount", userEmail);
 	}
+	 
 
 	@Override
 	public int addCart(CartVO cartVO) {
@@ -62,8 +63,9 @@ public class CartDAOImpl implements CartDAO{
 	} 
 
 	@Override
-	public List<CartVO> getCartList(String userEmail) {
-		return session.selectList(NAMESPACE + "getCartList", userEmail);
+	public Map<Integer, CartVO> getCartList(String userEmail) {
+		return session.selectMap(NAMESPACE + "getCartList", userEmail, "cartSeq");
 	}
+
 
 }

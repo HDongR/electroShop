@@ -1,5 +1,7 @@
 package ryu.park.shop.service;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	@Qualifier("userDao")
-	private UserDAOImpl dao;
+	private UserDAOImpl dao; 
 	 
 	@Autowired
 	private SecurityUtils securityUtils;
@@ -31,7 +33,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public UserVO loginUser(UserVO userVO) {
+	public UserVO loginUser(UserVO userVO, HttpSession session) {
 		setUserPassword(userVO);
 		return dao.loginUser(userVO);
 	}
@@ -46,10 +48,25 @@ public class UserServiceImpl implements UserService {
 		return dao.deleteUser(userVO);
 	}
  
+	/**
+	 * @method		setUserPassword
+	 * @param userVO 
+	 * @author		hodongryu
+	 * @since		2017.10.30.
+	 * @version		1.0
+	 * @see			일반 로그인일 경우 비밀번호 해시, sns 로그인일 경우 비밀번호를 이메일로 해시
+	 * <pre>
+	 * << 개정이력(Modification Information) >>
+	 *    수정일       수정자          수정내용
+	 *    -------      -------     -------------------
+	 *    2017.10.30.  hodongryu      최초작성
+	 * </pre>
+	 */
 	private void setUserPassword(UserVO userVO) {
 		if(userVO.getUserJoinType() == JoinType.COMMON)
 			userVO.setUserPassword(securityUtils.getHash(userVO.getUserPassword()));
 		else if(userVO.getUserJoinType() == JoinType.KAKAO || userVO.getUserJoinType() == JoinType.NAVER)
 			userVO.setUserPassword(securityUtils.getHash(userVO.getUserEmail()));
 	}
+
 }

@@ -26,6 +26,20 @@ import ryu.park.shop.vo.CartVO;
 import ryu.park.shop.vo.CategoryHighVO;
 import ryu.park.shop.vo.GoodsVO;
 
+/**
+ * @Class		MainController.java
+ * @packagename	ryu.park.shop.controller
+ * @author		hodongryu
+ * @since		2017.10.30.
+ * @version		1.0
+ * @see			메인페이지 컨트롤러
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *    수정일       수정자          수정내용
+ *    -------      -------     -------------------
+ *    2017.10.30.  hodongryu      최초작성
+ * </pre>
+ */
 @Controller
 public class MainController {
 
@@ -67,27 +81,27 @@ public class MainController {
 			@RequestParam(defaultValue = "SEQ") OrderType orderType, @RequestParam(defaultValue = "DESC") String order,
 			Model model) throws JsonProcessingException {
 
-		int count = goodsService.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
-		
-		BoardPager boardPager = new BoardPager(count, curPage, 10);
-		int start = boardPager.getPageBegin();
-		int end = boardPager.getPageEnd();
-
-		List<GoodsVO> list = goodsService.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq,
-				goodsCatMidSeq, orderType, order);
-
-		model.addAttribute("list", list);
-		model.addAttribute("count", count);
-		model.addAttribute("searchOption", searchOption);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("boardPager", boardPager);
-		model.addAttribute("goodsCatHighSeq", goodsCatHighSeq);
-		model.addAttribute("goodsCatMidSeq", goodsCatMidSeq);
-
-		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(true);
-
-		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category);
-		model.addAttribute("categoryJson", jsonCategory); 
+//		int count = goodsService.goodsTotalCount(searchOption, keyword, goodsCatHighSeq, goodsCatMidSeq);
+//		
+//		BoardPager boardPager = new BoardPager(count, curPage, 10);
+//		int start = boardPager.getPageBegin();
+//		int end = boardPager.getPageEnd();
+//
+//		List<GoodsVO> list = goodsService.getGoodsList(start, end, searchOption, keyword, goodsCatHighSeq,
+//				goodsCatMidSeq, orderType, order);
+//
+//		model.addAttribute("list", list);
+//		model.addAttribute("count", count);
+//		model.addAttribute("searchOption", searchOption);
+//		model.addAttribute("keyword", keyword);
+//		model.addAttribute("boardPager", boardPager);
+//		model.addAttribute("goodsCatHighSeq", goodsCatHighSeq);
+//		model.addAttribute("goodsCatMidSeq", goodsCatMidSeq);
+//
+//		Map<Integer, CategoryHighVO> category = goodsService.getGoodsCat(true);
+//
+//		String jsonCategory = JsonFormatter.INSTANCE.getObjectMapper().writeValueAsString(category);
+//		model.addAttribute("categoryJson", jsonCategory); 
 		model.addAttribute("cartList");
 		
 		return "main";
@@ -100,7 +114,7 @@ public class MainController {
 	 * @author		hodongryu
 	 * @since		2017.10.30.
 	 * @version		1.0
-	 * @see			메인 페이지 컨트롤러
+	 * @see			모든 페이지에 장바구니 리스트를 포함시킴
 	 * <pre>
 	 * << 개정이력(Modification Information) >>
 	 *    수정일       수정자          수정내용

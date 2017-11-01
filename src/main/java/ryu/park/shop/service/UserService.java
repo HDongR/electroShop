@@ -1,12 +1,14 @@
 package ryu.park.shop.service;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import ryu.park.shop.vo.UserVO;
 
 public interface UserService {
 	public UserVO findUser(String email);
-	public UserVO loginUser(UserVO userVO);
+	public UserVO loginUser(UserVO userVO, HttpSession session);
 	@Transactional
 	public int addUser(UserVO userVO);
 	@Transactional

@@ -15,6 +15,9 @@
 	<definition name="board/*" extends="main">
 		<put-attribute name="body" value="/WEB-INF/views/board/{1}.jsp"/> 
 	</definition> 
+	<definition name="cart/*" extends="main">
+		<put-attribute name="body" value="/WEB-INF/views/biz/{1}.jsp"/> 
+	</definition> 
 	
 	<definition name="manager_main" template="/WEB-INF/views/manager/layout/manager_default_template.jsp">   
 		<put-attribute name="manager_header" value="/WEB-INF/views/manager/manager_header.jsp"/>

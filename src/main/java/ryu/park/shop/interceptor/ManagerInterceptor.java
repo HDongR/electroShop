@@ -52,6 +52,7 @@ public class ManagerInterceptor extends HandlerInterceptorAdapter {
 			logger.info("user is null");
 			if(isDEBUG) { 
 				UserVO userVO = new UserVO();
+				userVO.setUserEmail("master@master.com");
 				userVO.setUserJoinType(JoinType.MANAGER);
 				session.setAttribute("user", userVO); 
 			}

@@ -81,7 +81,7 @@
 			        <div align="center" class="panel-footer">
 			        <div class="row">
 			        		<div class="col-sm-5">
-				        		<input id="goodsCnt${goods.goodsSeq}" class="form-control" type="number" min="0" step="1" name="goodsCnt" value="0">				        		
+				        		<input id="goodsCnt${goods.goodsSeq}" class="form-control" type="number" min="0" step="1" name="goodsCnt" value="1">				        		
 			        		</div> 
 			        		<button onclick="javascript:addCart('${goods.goodsSeq}')" class="btn btn-primary btn-link">장바구니에 담기</button>
 			        		</div>
@@ -163,7 +163,7 @@
  			}, function(data,status){
  				if(status == "success"){
  					if(data == "error"){
- 						
+ 						alert("다시시도해주세요")
  					}else if(data == "success"){
  						location.reload();
  					}

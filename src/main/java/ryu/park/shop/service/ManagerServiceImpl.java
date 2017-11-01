@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import ryu.park.shop.dao.ManagerDAOImpl;
+import ryu.park.shop.utils.SecurityUtils;
 import ryu.park.shop.vo.UserVO; 
 
 @Service
@@ -19,6 +20,9 @@ public class ManagerServiceImpl implements ManagerService{
 	@Qualifier("managerDao")
 	private ManagerDAOImpl dao;
 	
+	@Autowired
+	private SecurityUtils securityUtils;
+	
 	@Override
 	public UserVO findManager(String managerEmail) { 
 		return dao.findManager(managerEmail);
@@ -26,6 +30,7 @@ public class ManagerServiceImpl implements ManagerService{
 
 	@Override
 	public UserVO loginManager(UserVO userVO) { 
+		userVO.setUserPassword(securityUtils.getHash(userVO.getUserPassword()));
 		return dao.loginManager(userVO);
 	}
  

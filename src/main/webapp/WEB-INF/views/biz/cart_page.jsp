@@ -6,94 +6,206 @@
 <div class="container">
 	<h2>장바구니 내 상품 리스트 </h2>  
 	
-    <h5> ${count}개의 장바구니 상품이 있습니다.</h5>
-    <div class="btn-group btn-group-justified"> 
+    <h5> ${cartList.size()}개의 장바구니 상품이 있습니다.</h5>
      
+    <button id="cartDeleteBtn" class="btn btn-danger btn-md" data-toggle="modal" data-target="#deleteModal">삭제하기</button>
+    
+    <!-- Modal -->
+ 	<div class="modal fade" id="deleteModal" role="dialog">
+	    <div class="modal-dialog">
+	    
+	      <!-- Modal content-->
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	          <h4 class="modal-title">장바구니 상품 삭제</h4>
+	        </div>
+	        <div class="modal-body">
+	          <p>정말 장바구니 상품(들)을 삭제하시겠습니까</p>
+	        </div>
+	       
+	        <div class="modal-footer">
+	          <button id="cartDeleteOK" type="button" class="btn btn-default" data-dismiss="modal">삭제</button>
+	          <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+	        </div>
+	      </div>
+	      
+	    </div>
+    </div>
+    
 	<br/>
     
-    <div class="row">
-        <c:forEach var="cart" items="${cartList}"> 
- 			<div class="col-sm-4">
-	 			<div class="panel panel-primary">
-	 				<a href="#" style="text-decoration:none">
-			        <div class="panel-heading"><h4>상품명 : ${goods.goodsSubject}</h4></div>
-			        <div align="center" class="panel-body">
-			        		<img src="${goods.goodsMainPicUrl}" class="img-responsive" style="width:100%" alt="Image">
-			        		<br/>
-			        		<h4>가격 : <fmt:formatNumber pattern="#,###" value="${goods.goodsCost}"/> 원</h4> 
-			        		<div class="row">
-			        			<label class="bg-primary">재고 : ${goods.goodsStock} 개</label>
-			        			 
-			        		</div>
-			        </div>
-			        </a>
-			        <div align="center" class="panel-footer">
-			        <div class="row">
-			        		<div class="col-sm-5">
-				        		<input id="goodsCnt${goods.goodsSeq}" class="form-control" type="number" min="0" step="1" name="goodsCnt" value="0">				        		
-			        		</div> 
-			        		<button onclick="javascript:addCart('${goods.goodsSeq}')" class="btn btn-primary btn-link">장바구니에 담기</button>
-			        		</div>
-					</div>
-		      	</div>
-	   		</div>
-  		</c:forEach> 
-	</div>
+    <div class="text-center">  
+		<table class="table">
+	    <thead>
+	      <tr>
+	        <th class="text-center "><input id="allCheck" type="checkbox"></th>
+	        <th class="text-center ">상품명</th>
+	        <th class="text-center ">가격</th>
+	        <th class="text-center ">수량</th>
+	        <th class="text-center ">합계</th>
+	        <th class="text-center ">배송비</th> 
+	        <th class="text-center ">평균준비기간</th>
+	      </tr>
+	    </thead> 
+	    <tbody>
+	    	  <c:forEach items="${cartList}" var="cart" varStatus="status">  
+	    	    <tr>
+	    	    	  <td style="vertical-align:middle"><input name="isChecked" type="checkbox" value="${cart.key}"></td>
+		 	  <td style="vertical-align:middle"><img src="${cart.value.goodsVO.goodsMainPicUrl}" width="80"/>${cart.value.goodsVO.goodsSubject}</td>
+		 	  <td id="goodsCost${cart.key}" style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${cart.value.goodsVO.goodsCost}"/> 원</td>
+		 	  <td style="vertical-align:middle"><input id="cartCnt${cart.key}"  onfocusout="javascript:oneGoodsAllCostSum('${cart.key}','');" type="number" step="1" min="0" value="${cart.value.cartGoodsCnt}" style="width: 50px;"></td>
+		 	  <td id="oneGoodsAllCost${cart.key}" style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${cart.value.goodsVO.goodsCost * cart.value.cartGoodsCnt}"/> 원</td>
+		 	  <td style="vertical-align:middle">기본배송</td>
+		 	  <td style="vertical-align:middle">2~3일</td>
+		 	</tr>
+		  </c:forEach>  
+	    </tbody>
+	  	<tfoot>
+	    		<tr>
+	    			<td colspan="7" align="right">
+		    			<h5 id="allGoodsCost"></h5>
+		    		</td>
+	    		</tr>
+	    </tfoot>
+	    </table> 
+	</div>  
+	
+	 
     
-    <br/>
-    <div align="center">
-	    <nav aria-label="Page navigation">
-		  <ul class="pagination">
-		
-					<c:if test="${boardPager.curBlock > 1}">
-						<li class="page-item">
-					      <a class="page-link" href="javascript:list('1','${orderType}','${order}')" aria-label="First">
-					        <span aria-hidden="true">&laquo;</span> 
-					      </a>
-					    </li> 
-	                </c:if>
-	                
-	                <!-- **이전페이지 블록으로 이동 : 현재 페이지 블럭이 1보다 크면 [이전]하이퍼링크를 화면에 출력 -->
-	                <c:if test="${boardPager.curBlock > 1}">
-		                <li class="page-item">
-					      <a class="page-link" href="javascript:list('${boardPager.prevPage}','${orderType}','${order}')" aria-label="Previous">
-					        <span aria-hidden="true">&lsaquo;</span> 
-					      </a>
-					    </li> 
-	                </c:if>
-	                
-	                <!-- **하나의 블럭에서 반복문 수행 시작페이지부터 끝페이지까지 -->
-	                <c:forEach var="num" begin="${boardPager.blockBegin}" end="${boardPager.blockEnd}">
-	                    <!-- **현재페이지이면 하이퍼링크 제거 -->
-	                    <c:choose>
-	                        <c:when test="${num == boardPager.curPage}">
-	                       		<li class="page-item active"><a class="page-link" href="#">${num}</a></li>
-	                        </c:when>
-	                        <c:otherwise>
-	                        		<li class="page-item"><a class="page-link" href="javascript:list('${num}','${orderType}','${order}')">${num}</a></li>
-	                        </c:otherwise>
-	                    </c:choose>
-	                </c:forEach>
-	                
-	                <!-- **다음페이지 블록으로 이동 : 현재 페이지 블럭이 전체 페이지 블럭보다 작거나 같으면 [다음]하이퍼링크를 화면에 출력 -->
-	                <c:if test="${boardPager.curBlock <= boardPager.totBlock}">
-	                		<li class="page-item">
-					      <a class="page-link" href="javascript:list('${boardPager.nextPage}','${orderType}','${order}')" aria-label="Next">
-					        <span aria-hidden="true">&rsaquo;</span> 
-					      </a>
-					    </li> 
-	                </c:if>
-	                
-	                <!-- **끝페이지로 이동 : 현재 페이지가 전체 페이지보다 작거나 같으면 [끝]하이퍼링크를 화면에 출력 -->
-	                <c:if test="${boardPager.curPage <= boardPager.totPage}">
-		                <li class="page-item">
-					      <a class="page-link" href="javascript:list('${boardPager.totPage}','${orderType}','${order}')" aria-label="Last">
-					        <span aria-hidden="true">&raquo;</span> 
-					      </a>
-					    </li> 
-	                </c:if>
-	                
-	      </ul>
-		</nav>
-	</div>
+    <br/> 
 </div>
+ 
+
+<!-- 개수에 따른 가격표기 -->
+<script type="text/javascript">
+	$("input[type=number]").click(function(event){
+		oneGoodsAllCostSum(event.target.id.substring(7,), event.target.value);
+	});
+	
+	//한상품의 개수에서 
+	function oneGoodsAllCostSum(cartKey, goodsCnt){
+		if(goodsCnt == ''){
+			goodsCnt = $("#cartCnt"+cartKey).val();
+		}
+		var leng = $("#goodsCost"+cartKey).html().length;
+		var goodsCost = deleteDelimeterToCost($("#goodsCost"+cartKey).html().substring(0, leng-1)); 
+		var sum = Number(goodsCost) * Number(goodsCnt);
+		 
+		if(sum > 0){
+			$("#oneGoodsAllCost"+cartKey).html(Number(sum.toFixed(1)).toLocaleString('ko') + ' 원');
+		}else{
+			$("#cartCnt"+cartKey).val(0);
+			$("#oneGoodsAllCost"+cartKey).html('0 원');
+		}
+		
+		allGoodsCostMake();
+	}
+	
+	//가격에서 ','을 삭제후 숫자만 리턴
+	function deleteDelimeterToCost(goodsCost){
+		var result = '';
+		for(var i=0; i<goodsCost.length; i++){
+			if(goodsCost[i] != ','){
+				result+=goodsCost[i];
+			}
+		}
+		return result;
+	}
+	
+	//초기에 모든가격 표기
+	$(document).ready(function () { 
+		allGoodsCostMake(); 
+	}); 
+	
+	function allGoodsCostMake(){
+		var numbers = $("input[type=number]");
+		var allSum=0;
+		
+		for(i=0; i<numbers.length; i++){
+			var goodsCnt = Number(numbers.get(i).value);
+			
+			var cartKey = numbers.get(i).id.substring(7,);
+			var leng = $("#goodsCost"+cartKey).html().length;
+			var goodsCost = deleteDelimeterToCost($("#goodsCost"+cartKey).html().substring(0, leng-1)); 
+			
+			var sum = goodsCnt * Number(goodsCost);
+			allSum+=sum;
+		} 
+		 
+		$("#allGoodsCost").html('총구매금액 : ' + Number(allSum.toFixed(1)).toLocaleString('ko') + ' 원');
+	}
+	
+</script>
+
+<!-- 체크박스 및 삭제처리 -->
+<script type="text/javascript">
+	$("#cartDeleteBtn").hide();
+	
+	$("input[type=checkbox]").click(function(event){
+		 
+		if(event.target.id == 'allCheck'){
+			if($("#allCheck").prop("checked")){ 
+				$("input[type=checkbox]").prop("checked", true);
+			}else{
+				$("input[type=checkbox]").prop("checked", false);
+			}
+		}else{
+			if($("#allCheck").prop("checked")){ 
+				$("#allCheck").prop("checked", false);
+			}
+		}
+		
+		if(isCheckedAllComponent()){
+			$("#cartDeleteBtn").show();
+		}else{
+			$("#cartDeleteBtn").hide();
+		}
+	});
+	
+	function isCheckedAllComponent(){ 
+		var checkBoxs = $("input[type=checkbox]");
+		for(i=0; i<checkBoxs.length; i++){
+			if(checkBoxs.get(i).checked && checkBoxs.get(i).id != 'allCheck'){
+				return true;	
+			} 
+		} 
+		return false;
+	}
+	
+	$("#cartDeleteOK").click(function(event){
+		$("#cartDeleteBtn").prop("disabled", true);
+		
+		var checkBoxs = $("input[type=checkbox]");
+		var cartSeqList = [];
+		for(i=0; i<checkBoxs.length; i++){
+			if(checkBoxs.get(i).checked && checkBoxs.get(i).id != 'allCheck'){ 
+				cartSeqList.push(checkBoxs.get(i).value); 
+			} 
+		} 
+		
+		deletePost(cartSeqList);
+		 
+	});
+	
+	function deletePost(_cartSeqList){
+		$.post('/cart/deleteCart', 
+				{
+					cartSeqList : _cartSeqList
+				},
+				function(data, status){ 
+					if(status == 'success'){ 
+						if(data == 'completeDeleteCart'){ 
+							window.location.reload();
+						} else if(data == 'Error'){
+						 	alert("Error")
+						}
+					}else{
+						alert("다시 시도하세요");
+					} 
+					
+					$("#cartDeleteBtn").prop("disabled", false);
+		}); 
+	}
+
+</script>

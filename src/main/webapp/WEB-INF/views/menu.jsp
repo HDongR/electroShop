@@ -82,9 +82,9 @@
 					</c:if>
 					 
   				<c:if test="${user.userJoinType != 'MANAGER'}">
-					<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> 장바구니
+					<li><a href="/cart/cart_page"><span class="glyphicon glyphicon-shopping-cart"></span> 장바구니
 					  
-					<span class="badge">${cartList.size()}</span>
+					<span id="cartListSize" class="badge">${cartList.size()}</span>
 					
 					</a> </li>
 				</c:if>

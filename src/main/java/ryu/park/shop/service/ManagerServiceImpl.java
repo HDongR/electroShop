@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import ryu.park.shop.dao.ManagerDAOImpl;
+import ryu.park.shop.dao.ManagerDAO;
 import ryu.park.shop.utils.SecurityUtils;
 import ryu.park.shop.vo.UserVO; 
 
@@ -18,7 +18,7 @@ public class ManagerServiceImpl implements ManagerService{
 	
 	@Autowired 
 	@Qualifier("managerDao")
-	private ManagerDAOImpl dao;
+	private ManagerDAO dao;
 	
 	@Autowired
 	private SecurityUtils securityUtils;

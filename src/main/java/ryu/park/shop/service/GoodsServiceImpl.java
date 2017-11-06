@@ -10,20 +10,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import ryu.park.shop.dao.GoodsDAOImpl;
+import ryu.park.shop.dao.GoodsDAO;
 import ryu.park.shop.type.OrderType;
 import ryu.park.shop.vo.CategoryHighVO;
-import ryu.park.shop.vo.GoodsVO;
-import ryu.park.shop.vo.CategoryHighVO.CategoryMidVO; 
+import ryu.park.shop.vo.CategoryHighVO.CategoryMidVO;
+import ryu.park.shop.vo.GoodsVO; 
  
 @Service
 public class GoodsServiceImpl implements GoodsService{
 	
-private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(GoodsServiceImpl.class);
 	
 	@Autowired 
 	@Qualifier("goodsDao")
-	private GoodsDAOImpl dao;
+	private GoodsDAO dao;
 
 	@Override
 	public int goodsTotalCount(String searchOption, String keyword, int goodsCatHighSeq, int goodsCatMidSeq) {

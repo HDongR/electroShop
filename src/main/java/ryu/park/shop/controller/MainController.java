@@ -8,12 +8,14 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -74,7 +76,8 @@ public class MainController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.POST })
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value = "/", method = { RequestMethod.GET, RequestMethod.POST }, produces = {"text/html"})
 	public String home(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
 			@RequestParam(defaultValue = "0") int goodsCatHighSeq, @RequestParam(defaultValue = "0") int goodsCatMidSeq,

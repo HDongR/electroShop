@@ -5,17 +5,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import ryu.park.shop.vo.CartVO;
 
 public interface CartService {
 	public int totalCount(String userEmail); 
-	@Transactional
-	public int addCart(HttpSession session, CartVO cartVO); 
-	@Transactional
-	public int updateCart(CartVO cartVO);
-	@Transactional
+	public int upsertCart(HttpSession session, CartVO cartVO); 
+	public int updateCart(HttpSession session, CartVO cartVO);
 	public int deleteCartList(HttpSession session, List<Integer> cartSeqList);
 	public Map<Integer, CartVO> getCartList(HttpSession session); 
 }

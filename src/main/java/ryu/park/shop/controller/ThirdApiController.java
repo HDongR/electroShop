@@ -55,7 +55,7 @@ public class ThirdApiController {
 	@ResponseBody
 	@RequestMapping(value = "postal", method = RequestMethod.GET)
 	public Map<String, Object> postalQuery(@RequestParam String query, @RequestParam(defaultValue = "1") int currentPage){
-		logger.info("api/postar query:"+query + " page:"+currentPage);
+		logger.info("api/postal query:"+query + " page:"+currentPage);
 		return thirdApiService.getPostAndAddress(query, currentPage); 
 	}
 }

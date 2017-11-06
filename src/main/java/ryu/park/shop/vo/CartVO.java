@@ -23,7 +23,7 @@ public class CartVO {
 
 	// 장바구니_상품_갯수
 	@NotNull
-	@Range(min=0)
+	@Range(min=0, max=9999)
 	private Integer cartGoodsCnt;
 
 	// 장바구니_생성일

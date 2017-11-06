@@ -77,7 +77,7 @@ public class BoardController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "goods", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "goods", method = { RequestMethod.GET, RequestMethod.POST }, produces = {"text/html"})
 	public String goodsBoardPage(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
 			@RequestParam(defaultValue = "0") int goodsCatHighSeq, @RequestParam(defaultValue = "0") int goodsCatMidSeq,

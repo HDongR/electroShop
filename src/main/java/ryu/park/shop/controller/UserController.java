@@ -100,7 +100,7 @@ public class UserController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "login_page", method = RequestMethod.GET)
+	@RequestMapping(value = "login_page", method = RequestMethod.GET, produces = {"text/html"})
 	public String loginPage() {
 		return "user/user_login";
 	}
@@ -164,7 +164,7 @@ public class UserController {
 		Map<Integer, CartVO> cartList = (HashMap<Integer, CartVO>)session.getAttribute("cartList");
 		for(Integer goodsSeq : cartList.keySet()) {
 			CartVO cartVO = cartList.get(goodsSeq);
-			cartService.addCart(session, cartVO);
+			cartService.updateCart(session, cartVO);
 		}
 		cartList.clear();
 		session.setAttribute("cartList", cartList);
@@ -209,7 +209,7 @@ public class UserController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "login/naver_callback", method = RequestMethod.GET)
+	@RequestMapping(value = "login/naver_callback", method = RequestMethod.GET, produces = {"text/html"})
 	public String loginnaver_callback() {
 		return "user/naver_callback";
 	}
@@ -229,7 +229,7 @@ public class UserController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "join_page", method = RequestMethod.GET)
+	@RequestMapping(value = "join_page", method = RequestMethod.GET, produces = {"text/html"})
 	public String joinPage() {
 		return "user/user_join";
 	} 
@@ -288,7 +288,7 @@ public class UserController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "modify_user_page", method = RequestMethod.POST)
+	@RequestMapping(value = "modify_user_page", method = RequestMethod.POST, produces = {"text/html"})
 	public String userModifyPage(@RequestParam("userEmail") String email, Model model) {
 		logger.info("user_modify_page");  
 		UserVO userVO = service.findUser(email); 

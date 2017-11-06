@@ -13,10 +13,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import ryu.park.shop.service.CartService;
 import ryu.park.shop.vo.CartVO;
@@ -45,10 +47,18 @@ public class CartController {
 	@Autowired
 	private CartService cartService;
 
-	@RequestMapping(value = "cart_page", method = RequestMethod.GET)
+	@RequestMapping(value = "cart_page", method = RequestMethod.GET, produces = {"text/html"})
 	public String cartPage(Model model) {
 		return "cart/cart_page";
 	}
+	
+	@RequestMapping(value = "cart_estimate_page", method = RequestMethod.GET, produces = {"text/html","application/pdf","application/vnd.ms-excel"})
+	public String cartEstimate(@ModelAttribute String cartList, Model model) {
+		 
+		
+		model.addAttribute("estimateCartList", cartList);
+		return "cart/cart_estimate_page";
+	} 
 
 	@RequestMapping(value = "totalCount", method = RequestMethod.GET)
 	public void totalCartCount(@RequestParam String userEmail) {
@@ -77,17 +87,40 @@ public class CartController {
 	 *      </pre>
 	 */
 	@RequestMapping(value = "addCart", method = RequestMethod.POST)
-	public void addCart(HttpSession session, @Valid CartVO cartVO, HttpServletResponse res) throws IOException {
+	public void addCart(HttpSession session, @Valid CartVO cartVO, BindingResult bindingResult, HttpServletResponse res) throws IOException {
 		logger.info("addCart");
-		int r = cartService.addCart(session, cartVO);
-		if (r < 0) {
-			// error
-			res.getWriter().print("error");
-		} else {
-			res.getWriter().print("success");
+		if (bindingResult.hasErrors()) {
+			logger.info("valid error : " + bindingResult.getAllErrors());
+			res.getWriter().print("validError");
+		}else{
+			int r = cartService.upsertCart(session, cartVO);
+			if (r < 0) {
+				// error
+				res.getWriter().print("error");
+			} else {
+				res.getWriter().print("success");
+			}
 		}
 	}
 
+	@RequestMapping(value = "updateCart", method = RequestMethod.POST)
+	public void updateCart(HttpSession session, @Valid CartVO cartVO, BindingResult bindingResult, HttpServletResponse res) throws IOException {
+		logger.info("updateCart");
+		if (bindingResult.hasErrors()) {
+			logger.info("valid error : " + bindingResult.getAllErrors());
+			res.getWriter().print("validError");
+		}else{
+			int r = cartService.updateCart(session, cartVO);
+			if (r < 0) {
+				// error
+				res.getWriter().print("error");
+			} else {
+				res.getWriter().print("success");
+			}
+		}
+	}
+	
+	
 	/**
 	 * @method deleteCartList : 장바구니내 상품 삭제
 	 * @param session

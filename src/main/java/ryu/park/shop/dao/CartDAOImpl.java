@@ -28,12 +28,11 @@ public class CartDAOImpl implements CartDAO{
 	public int totalCount(String userEmail) { 
 		return session.selectOne(NAMESPACE + "totalCount", userEmail);
 	}
-	 
-
+	
 	@Override
-	public int addCart(CartVO cartVO) {
+	public int upsertCart(CartVO cartVO) {
 		try {
-			return session.insert(NAMESPACE + "addCart", cartVO);
+			return session.update(NAMESPACE + "upsertCart", cartVO);
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return -1;
@@ -49,7 +48,7 @@ public class CartDAOImpl implements CartDAO{
 			return -1;
 		}
 	}
-
+ 
 	@Override
 	public int deleteCartList(List<Integer> cartSeqList) {
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -65,7 +64,6 @@ public class CartDAOImpl implements CartDAO{
 	@Override
 	public Map<Integer, CartVO> getCartList(String userEmail) {
 		return session.selectMap(NAMESPACE + "getCartList", userEmail, "cartSeq");
-	}
-
-
+	} 
+ 
 }

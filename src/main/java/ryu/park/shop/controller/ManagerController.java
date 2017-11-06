@@ -136,7 +136,7 @@ public class ManagerController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "login_page", method = RequestMethod.GET)
+	@RequestMapping(value = "login_page", method = RequestMethod.GET, produces = {"text/html"})
 	public String loginPage() {
 		return "manager/manager_login";
 	}
@@ -157,7 +157,7 @@ public class ManagerController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "goods/add_goods_page", method = RequestMethod.GET)
+	@RequestMapping(value = "goods/add_goods_page", method = RequestMethod.GET, produces = {"text/html"})
 	public String addGoodsPage(Model model) throws JsonProcessingException {
 		logger.info("add_goods_page");
 		model.addAttribute("condition", "add_goods_page");
@@ -276,7 +276,7 @@ public class ManagerController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "goods/goods_manage_page", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "goods/goods_manage_page", method = { RequestMethod.GET, RequestMethod.POST }, produces = {"text/html"})
 	public String goodsManagePage(@RequestParam(defaultValue = "allGoods") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
 			@RequestParam(defaultValue = "0") int goodsCatHighSeq, @RequestParam(defaultValue = "0") int goodsCatMidSeq,
@@ -327,7 +327,7 @@ public class ManagerController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "goods/modify_goods_page/{goodsSeq}", method = RequestMethod.GET)
+	@RequestMapping(value = "goods/modify_goods_page/{goodsSeq}", method = RequestMethod.GET, produces = {"text/html"})
 	public String goodsModifyPage(@PathVariable("goodsSeq") int goodsSeq, Model model) throws JsonProcessingException {
 		logger.info("goods_modify_page");
 		GoodsVO goodsVO = goodsService.getGoodsOne(goodsSeq);
@@ -434,7 +434,7 @@ public class ManagerController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "user/user_manage_page", method = { RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "user/user_manage_page", method = { RequestMethod.GET, RequestMethod.POST }, produces = {"text/html"})
 	public String userManagePage(@RequestParam(defaultValue = "allUser") String searchOption,
 			@RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "1") int curPage,
 			Model model) {
@@ -475,7 +475,7 @@ public class ManagerController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 * </pre>
 	 */
-	@RequestMapping(value = "user/modify_user_page", method = RequestMethod.POST)
+	@RequestMapping(value = "user/modify_user_page", method = RequestMethod.POST, produces = {"text/html"})
 	public String userModifyPage(@RequestParam("userEmail") String email, Model model) {
 		logger.info("user_modify_page");
 		UserVO userVO = managerService.getUserOne(email);

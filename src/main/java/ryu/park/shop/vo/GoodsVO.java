@@ -1,5 +1,6 @@
 package ryu.park.shop.vo;
 
+import java.io.Serializable;
 import java.util.Date;
  
 import javax.validation.constraints.NotNull;
@@ -11,7 +12,12 @@ import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Alias("GoodsVO")
-public class GoodsVO {
+public class GoodsVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4521067817952906818L;
+	
 	private Integer goodsSeq;
 	@NotEmpty
 	@Size(min=0, max=100)

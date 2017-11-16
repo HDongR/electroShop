@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 
+<c:set var="user" value="${sessionScope.user}"/>
+ 
+
 <div class="container">
 	<h2>장바구니 내 상품 리스트 </h2>  
 	
@@ -49,13 +52,13 @@
 	      </tr>
 	    </thead> 
 	    <tbody>
-	    	  <c:forEach items="${cartList}" var="cart" varStatus="status">  
+	    	  <c:forEach items="${cartList}" var="cart">
 	    	    <tr>
-	    	    	  <td style="vertical-align:middle"><input name="isChecked" type="checkbox" value="${cart.key}"></td>
-		 	  <td style="vertical-align:middle"><img src="${cart.value.goodsVO.goodsMainPicUrl}" width="80"/>${cart.value.goodsVO.goodsSubject}</td>
-		 	  <td id="goodsCost${cart.key}" style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${cart.value.goodsVO.goodsCost}"/> 원</td>
-		 	  <td style="vertical-align:middle"><input id="cartCnt${cart.key}" type="number" step="1" min="1" max="9999" style="width: 50px;" value="${cart.value.cartGoodsCnt>9999? 9999:cart.value.cartGoodsCnt}" ></td>
-		 	  <td id="oneGoodsAllCost${cart.key}" style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${cart.value.goodsVO.goodsCost * cart.value.cartGoodsCnt}"/> 원</td>
+	    	    	  <td style="vertical-align:middle"><input name="isChecked" type="checkbox" value="${cart.cartGoodsSeq}"></td>
+		 	  <td style="vertical-align:middle"><img src="${cart.goodsVO.goodsMainPicUrl}" width="80"/>${cart.goodsVO.goodsSubject}</td>
+		 	  <td id="goodsCost${cart.cartGoodsSeq}" style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${cart.goodsVO.goodsCost}"/> 원</td>
+		 	  <td style="vertical-align:middle"><input id="cartCnt${cart.cartGoodsSeq}" type="number" step="1" min="1" max="9999" style="width: 50px;" value="${cart.cartGoodsCnt>9999? 9999:cart.cartGoodsCnt}" ></td>
+		 	  <td id="oneGoodsAllCost${cart.cartGoodsSeq}" style="vertical-align:middle"><fmt:formatNumber pattern="#,###" value="${cart.goodsVO.goodsCost * cart.cartGoodsCnt}"/> 원</td>
 		 	  <td style="vertical-align:middle">기본배송</td>
 		 	  <td style="vertical-align:middle">2~3일</td>
 		 	</tr>
@@ -74,7 +77,7 @@
     
     <div align="right">
 		<button type="button" class="btn btn-primary btn-lg" onclick="#">구매하기</button>
-	 	<button type="button" class="btn btn-info btn-lg" onclick="javascript:void(window.open('http://localhost:8080','win0','width=700,height=600,status=no,toolbar=no,scrollbars=yes'))">견적서출력</button> 
+	 	<button type="button" class="btn btn-info btn-lg" onclick="javascript:void(window.open('/cart/cart_estimate_page','win0','width=700,height=600,status=no,toolbar=no,scrollbars=yes'))">견적서출력</button> 
 	 	 
 	</div>
  
@@ -108,18 +111,16 @@
 	
 	$("input[type=number]").on('change keyup', function(event) {
 		oneGoodsAllCostSum(event.target.id.substring(7,), event.target.value);
-	}); 
-	   
-	   
+	});  
 	
 	//한상품의 개수에 따른 가격표시 및 개수업데이트
-	function oneGoodsAllCostSum(cartKey, goodsCnt){
-		if(goodsCnt < 1 || goodsCnt > 9999){
+	function oneGoodsAllCostSum(cartGoodsSeq, cartGoodsCnt){
+		if(cartGoodsCnt < 1 || cartGoodsCnt > 9999){
 			alert("1개이상 9999개 이하로 입력해주세요");
-			$("#cartCnt"+cartKey).val(1);
-			updateCart(cartKey, 1); 
+			$("#cartCnt"+cartGoodsSeq).val(1);
+			upsertCart(cartGoodsSeq, 1); 
 		}else{ 
-			updateCart(cartKey, goodsCnt);
+			upsertCart(cartGoodsSeq, cartGoodsCnt);
 		}
 	}
 	
@@ -144,12 +145,12 @@
 			for(i=0; i<numbers.length; i++){
 				var goodsCnt = Number(numbers.get(i).value);
 				
-				var cartKey = numbers.get(i).id.substring(7,);
-				var leng = $("#goodsCost"+cartKey).html().length;
-				var goodsCost = deleteDelimeterToCost($("#goodsCost"+cartKey).html().substring(0, leng-1)); 
+				var cartGoodsSeq = numbers.get(i).id.substring(7,);
+				var leng = $("#goodsCost"+cartGoodsSeq).html().length;
+				var goodsCost = deleteDelimeterToCost($("#goodsCost"+cartGoodsSeq).html().substring(0, leng-1)); 
 				
 				var sum = goodsCnt * Number(goodsCost);
-				$("#oneGoodsAllCost"+cartKey).html(Number(sum.toFixed(1)).toLocaleString('ko') + ' 원');
+				$("#oneGoodsAllCost"+cartGoodsSeq).html(Number(sum.toFixed(1)).toLocaleString('ko') + ' 원');
 				allGoodsSum+=sum; 
 			} 
 			tax=Math.round(allGoodsSum/10);
@@ -162,19 +163,19 @@
 	}
 	
 	//장바구니 개수 업데이트 
-	function updateCart(cartKey, goodsCnt){
-		if(goodsCnt > 0 && goodsCnt < 10000){
-			$.post("/cart/updateCart", {
-				cartGoodsSeq : cartKey,
-				cartGoodsCnt : goodsCnt
+	function upsertCart(cartGoodsSeq, cartGoodsCnt){
+		if(cartGoodsCnt > 0 && cartGoodsCnt < 10000){
+			$.post("/cart/upsertCart", { 
+				cartGoodsSeq : cartGoodsSeq,
+				cartGoodsCnt : cartGoodsCnt
  			}, function(data,status){
  				if(status == "success"){
  					if(data == "error"){
  						alert("다시시도해주세요");
- 					}else if(data == "validError"){
- 						alert("알맞게 다시 입력하세요");
- 					}else if(data == "success"){
- 						 
+ 						location.reload(); 
+ 					}else{
+ 						resultGoodsCnt = Number(data);
+ 						$("#cartCnt"+cartGoodsSeq).val(resultGoodsCnt);
  						allGoodsCostMake();
  					}
  				}else{
@@ -226,21 +227,21 @@
 		$("#cartDeleteBtn").prop("disabled", true);
 		
 		var checkBoxs = $("input[type=checkbox]");
-		var cartSeqList = [];
+		var cartGoodsSeqList = [];
 		for(i=0; i<checkBoxs.length; i++){
 			if(checkBoxs.get(i).checked && checkBoxs.get(i).id != 'allCheck'){ 
-				cartSeqList.push(checkBoxs.get(i).value); 
+				cartGoodsSeqList.push(checkBoxs.get(i).value); 
 			} 
 		} 
 		
-		deletePost(cartSeqList);
+		deletePost(cartGoodsSeqList);
 		 
 	});
 	
-	function deletePost(_cartSeqList){
+	function deletePost(cartGoodsSeqList){
 		$.post('/cart/deleteCart', 
 				{
-					cartSeqList : _cartSeqList
+					cartGoodsSeqList : cartGoodsSeqList
 				},
 				function(data, status){ 
 					if(status == 'success'){ 

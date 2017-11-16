@@ -1,7 +1,8 @@
 package ryu.park.shop.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -138,37 +139,13 @@ public class UserController {
 				res.getWriter().print("validManager");
 			} else {
 				req.getSession(true).setAttribute("user", userVO);
-				translateCartList(userVO, session);
+				cartService.translateCartList(userVO, session);
 				res.getWriter().print("loginComplete");
 			}
 
 		}
 	}
-
-	/**
-	 * @method		translateCartList
-	 * @param userVO
-	 * @param session
-	 * @author		hodongryu
-	 * @since		2017.10.30.
-	 * @version		1.0
-	 * @see			로그인시 장바구니를 세션에서 데이터베이스로 옮기고 세션장바구니를 비움
-	 * <pre>
-	 * << 개정이력(Modification Information) >>
-	 *    수정일       수정자          수정내용
-	 *    -------      -------     -------------------
-	 *    2017.10.30.  hodongryu      최초작성
-	 * </pre>
-	 */
-	private void translateCartList(UserVO userVO, HttpSession session) { 
-		Map<Integer, CartVO> cartList = (HashMap<Integer, CartVO>)session.getAttribute("cartList");
-		for(Integer goodsSeq : cartList.keySet()) {
-			CartVO cartVO = cartList.get(goodsSeq);
-			cartService.updateCart(session, cartVO);
-		}
-		cartList.clear();
-		session.setAttribute("cartList", cartList);
-	}
+ 
 	 
 	/**
 	 * @method		logout : 로그아웃
@@ -349,7 +326,7 @@ public class UserController {
 	 * </pre>
 	 */
 	@ModelAttribute("cartList")
-	public Map<Integer, CartVO> cartList(HttpSession session) {
+	public List<CartVO> cartList(HttpSession session) {
 		return cartService.getCartList(session);
 	} 
 }

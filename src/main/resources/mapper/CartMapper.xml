@@ -6,45 +6,36 @@
 	<select id="totalCount">
 		SELECT count(*) FROM cart_t WHERE cart_user_email = #{userEmail}
 	</select>
-
-	<update id="upsertCart" parameterType="ryu.park.shop.vo.CartVO">
-		MERGE INTO cart_t
-		USING DUAL
-		ON ( cart_goods_seq = #{cartGoodsSeq} and cart_user_email = #{cartUserEmail} )
-		WHEN MATCHED THEN
-			UPDATE SET cart_goods_cnt = (cart_goods_cnt + #{cartGoodsCnt})
-		WHEN NOT MATCHED THEN
-	   		INSERT  
-	   		VALUES(
-	            CART_SEQUENCE.NEXTVAL,
-	            #{cartGoodsSeq}, 
-	            #{cartUserEmail}, 
-	            #{cartGoodsCnt}, 
-	            #{cartCrtDate}
-        		);
-	</update>
 	
-	<update id="updateCart" parameterType="ryu.park.shop.vo.CartVO">
-		UPDATE SET cart_goods_cnt = #{cartGoodsCnt} WHERE cart_goods_seq = #{cartGoodsSeq} AND cart_user_email = #{cartUserEmail}
-	</update>
+	<resultMap id="procTestMap" type="HashMap"></resultMap> 
+
+	<parameterMap type="java.util.Map" id="upsertCartParamMap">
+		<parameter property="result" mode="OUT" jdbcType="INTEGER" javaType="java.lang.Integer" resultMap="procTestMap"/>
+		<parameter property="cartUserEmail" mode="IN" jdbcType="VARCHAR" javaType="java.lang.String" />
+		<parameter property="cartGoodsSeq" mode="IN" jdbcType="INTEGER" javaType="java.lang.Integer" />
+		<parameter property="cartGoodsCnt" mode="IN" jdbcType="INTEGER" javaType="java.lang.Integer" />
+	</parameterMap>
+
+	<select id="upsertCart" parameterMap="upsertCartParamMap" statementType="CALLABLE">
+		{ CALL CART_UPSERT_PROC(?,?,?,?) }
+	</select>
 
 	<delete id="deleteCartList" parameterType="java.util.Map">
 		DELETE
 		FROM cart_t
 		WHERE
-		<foreach collection="cartSeqList" item="cartSeq" separator="or"
+		<foreach collection="cartGoodsSeqList" item="cartGoodsSeq" separator="or"
 			open="(" close=")">
-			cart_user_email = (SELECT cart_user_email FROM cart_t WHERE cart_seq = #{cartSeq})
-			AND  
-			cart_goods_seq = (SELECT cart_goods_seq FROM cart_t WHERE cart_seq = #{cartSeq})
+			cart_user_email = #{cartUserEmail} AND cart_goods_seq = #{cartGoodsSeq}
 		</foreach>
 	</delete>
 
 
-	<select id="getCartList" resultMap="cartVOResultMap" resultType="java.util.HashMap">
+	<select id="getCartList" resultMap="cartVOResultMap">
 		SELECT C.*, G.* FROM cart_t C INNER JOIN goods_t G ON C.cart_goods_seq = G.goods_seq  
 		WHERE
 		C.cart_user_email = #{userEmail}
+		ORDER BY C.cart_crt_date DESC
 	</select>
  
 	<resultMap type="ryu.park.shop.vo.CartVO" id="cartVOResultMap">

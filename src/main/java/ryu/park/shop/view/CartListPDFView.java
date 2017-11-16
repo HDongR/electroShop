@@ -15,7 +15,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import ryu.park.shop.utils.ResourcesUtils;
 
-public class CartListPDFView extends AbstractPdfView {
+public class CartListPDFView extends AbstractPdfView{
 	
 
 	public static final String FONT_PATH = "/fonts/GulimChe.ttf";

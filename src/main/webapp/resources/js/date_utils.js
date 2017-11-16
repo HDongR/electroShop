@@ -13,6 +13,14 @@ function now() {
 			+ (i > 9 ? i : '0' + i) + ':' + (s > 9 ? s : '0' + s);
 }
 
+function now_short() {
+	var date = new Date();
+	var m = date.getMonth() + 1;
+	var d = date.getDate(); 
+	return date.getFullYear() + '년 ' + (m > 9 ? m : '0' + m) + '월 '
+			+ (d > 9 ? d : '0' + d) + '일';
+}
+
 function formatDate(date) {
 	var m = date.getMonth() + 1;
 	var d = date.getDate();

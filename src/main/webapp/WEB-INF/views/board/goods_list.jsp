@@ -83,7 +83,7 @@
 			        		<div class="col-sm-5">
 				        		<input id="goodsCnt${goods.goodsSeq}" class="form-control" type="number" min="1" max="9999" step="1" name="goodsCnt" value="1">				        		
 			        		</div> 
-			        		<button onclick="javascript:addCart('${goods.goodsSeq}')" class="btn btn-primary btn-link">장바구니에 담기</button>
+			        		<button onclick="javascript:upsertCart('${goods.goodsSeq}')" class="btn btn-primary btn-link">장바구니에 담기</button>
 			        		</div>
 					</div>
 		      	</div>
@@ -151,7 +151,7 @@
 
 <!-- 장바구니로 등록 -->
 <script type="text/javascript">
- 	function addCart(goodsSeq){
+ 	function upsertCart(goodsSeq){
  		var goodsCnt = $("#goodsCnt"+goodsSeq).val();
  		if(goodsCnt < 1){
  			alert("1개 이상 등록하세요")
@@ -159,7 +159,7 @@
  			alert("10000개 이상 등록할 수 없습니다")
  			$("#goodsCnt"+goodsSeq).val(1);
  		}else{
- 			$.post("/cart/addCart", {
+ 			$.post("/cart/upsertCart", {
  				cartGoodsSeq : goodsSeq,
  				cartGoodsCnt : goodsCnt,
  				cartCrtDate : now()
@@ -167,7 +167,7 @@
  				if(status == "success"){
  					if(data == "error"){
  						alert("다시시도해주세요");
- 					}else if(data == "success"){
+ 					}else{
  						location.reload();
  					}
  				}else{

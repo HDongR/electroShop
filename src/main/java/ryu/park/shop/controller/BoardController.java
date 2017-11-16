@@ -128,7 +128,7 @@ public class BoardController {
 	 * </pre>
 	 */
 	@ModelAttribute("cartList")
-	public Map<Integer, CartVO> cartList(HttpSession session) {
+	public List<CartVO> cartList(HttpSession session) {
 		return cartService.getCartList(session);
 	}
 }

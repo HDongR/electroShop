@@ -13,6 +13,24 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 
+/**
+ * @Class		AbstractPdfView.java
+ * @packagename	ryu.park.shop.view
+ * @author		hodongryu
+ * @since		2017.11.14.
+ * @version		1.0
+ * @see			lowagie(iText예전이름) 라이브러리와 패키지명이 겹침을 해결하기 위한 추상클래스.
+ * 				org.springframework.web.servlet.view.document.AbstractPdfView 추상클래스와 코드가 같음.
+ * <pre>
+ * << 개정이력(Modification Information) >>
+ *    수정일       수정자          수정내용
+ *    -------      -------     -------------------
+ *    2017.11.14.  hodongryu      최초작성
+ * </pre>
+ */
+
+
+
 public abstract class AbstractPdfView extends AbstractView {
 
 	public AbstractPdfView() {

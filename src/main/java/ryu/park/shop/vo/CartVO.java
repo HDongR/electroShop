@@ -1,5 +1,6 @@
 package ryu.park.shop.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
@@ -7,7 +8,12 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
-public class CartVO {
+public class CartVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4127532053115769310L;
+
 	// 상품
 	private GoodsVO goodsVO;
 	 

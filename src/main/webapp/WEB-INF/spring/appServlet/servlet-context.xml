@@ -55,7 +55,7 @@
 		
 		<beans:property name="viewResolvers">
 			<beans:list> 
-			 
+			  
 				<!-- TilesViewResolver -->
 				<beans:bean class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
 					<beans:property name="contentType" value="text/html" />

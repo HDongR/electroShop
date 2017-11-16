@@ -54,10 +54,7 @@ public class CartController {
 	
 	@RequestMapping(value = "cart_estimate_page", method = RequestMethod.GET, produces = {"text/html","application/pdf","application/vnd.ms-excel"})
 	public String cartEstimate(@ModelAttribute String cartList, Model model) {
-		 
-		
-		model.addAttribute("estimateCartList", cartList);
-		return "cart/cart_estimate_page";
+		return "doc/cart_estimate_page";
 	} 
 
 	@RequestMapping(value = "totalCount", method = RequestMethod.GET)
@@ -86,40 +83,24 @@ public class CartController {
 	 *    2017.10.30.  hodongryu      최초작성
 	 *      </pre>
 	 */
-	@RequestMapping(value = "addCart", method = RequestMethod.POST)
-	public void addCart(HttpSession session, @Valid CartVO cartVO, BindingResult bindingResult, HttpServletResponse res) throws IOException {
-		logger.info("addCart");
+	@RequestMapping(value = "upsertCart", method = RequestMethod.POST)
+	public void upsertCart(HttpSession session, @Valid CartVO cartVO, BindingResult bindingResult, HttpServletResponse res) throws IOException {
+		logger.info("upsertCart");
 		if (bindingResult.hasErrors()) {
 			logger.info("valid error : " + bindingResult.getAllErrors());
 			res.getWriter().print("validError");
 		}else{
 			int r = cartService.upsertCart(session, cartVO);
-			if (r < 0) {
-				// error
+	
+			logger.info("result:"+r);
+			if (r > 0) {
+				res.getWriter().print(r);
+			}else{
 				res.getWriter().print("error");
-			} else {
-				res.getWriter().print("success");
-			}
+			} 
 		}
 	}
 
-	@RequestMapping(value = "updateCart", method = RequestMethod.POST)
-	public void updateCart(HttpSession session, @Valid CartVO cartVO, BindingResult bindingResult, HttpServletResponse res) throws IOException {
-		logger.info("updateCart");
-		if (bindingResult.hasErrors()) {
-			logger.info("valid error : " + bindingResult.getAllErrors());
-			res.getWriter().print("validError");
-		}else{
-			int r = cartService.updateCart(session, cartVO);
-			if (r < 0) {
-				// error
-				res.getWriter().print("error");
-			} else {
-				res.getWriter().print("success");
-			}
-		}
-	}
-	
 	
 	/**
 	 * @method deleteCartList : 장바구니내 상품 삭제
@@ -145,11 +126,11 @@ public class CartController {
 	 *      </pre>
 	 */
 	@RequestMapping(value = "deleteCart", method = RequestMethod.POST)
-	public void deleteCartList(HttpSession session, @RequestParam(value = "cartSeqList[]") List<Integer> cartSeqList,
+	public void deleteCartList(HttpSession session, @RequestParam(value = "cartGoodsSeqList[]") List<Integer> cartGoodsSeqList,
 			HttpServletResponse res) throws IOException {
 		logger.info("deleteCart");
 
-		int result = cartService.deleteCartList(session, cartSeqList);
+		int result = cartService.deleteCartList(session, cartGoodsSeqList);
 
 		if (result < 0) {
 			// error
@@ -178,7 +159,15 @@ public class CartController {
 	 *      </pre>
 	 */
 	@ModelAttribute("cartList")
-	public Map<Integer, CartVO> cartList(HttpSession session) {
-		return cartService.getCartList(session);
+	public List<CartVO> cartList(HttpSession session) {
+		List<CartVO> v = cartService.getCartList(session);
+		for(CartVO c : v) {
+			logger.info("get cartSeq:"+ c.getCartSeq());
+			logger.info("get cartGoodsSeq:"+ c.getCartGoodsSeq());
+			logger.info("get godosSubject:"+ c.getGoodsVO().getGoodsSubject());
+			logger.info("get goodsCnt:"+ c.getCartGoodsCnt()); 
+			logger.info("get cartEmail:"+ c.getCartUserEmail()); 
+		}
+		return v;
 	}
 }

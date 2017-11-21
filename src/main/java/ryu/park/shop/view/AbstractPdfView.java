@@ -11,6 +11,7 @@ import java.io.ByteArrayOutputStream;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.PdfWriter;
 
 /**
@@ -42,6 +43,10 @@ public abstract class AbstractPdfView extends AbstractView {
 		return true;
 	}
 
+	protected Document newDocument() {
+		return new Document(PageSize.A4);
+	}
+	
 	@Override
 	protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -49,7 +54,7 @@ public abstract class AbstractPdfView extends AbstractView {
 		ByteArrayOutputStream baos = createTemporaryOutputStream();
 
 		// Apply preferences and build metadata.
-		Document document = new Document();
+		Document document = newDocument();
 		PdfWriter writer = PdfWriter.getInstance(document, baos);
 		prepareWriter(model, writer, request);
 		buildPdfMetadata(model, document, request);

@@ -19,7 +19,7 @@ public class PdfViewResolver implements ViewResolver {
 	public PdfViewResolver() {
 		super();
 		pdfViewMap = new HashMap<>();
-		pdfViewMap.put("cart/cart_estimate_page.pdf", new CartListPDFView());
+		pdfViewMap.put("doc/cart_estimate_download.pdf", new CartListPDFView());
 	}
 	
     @Override

@@ -1,6 +1,7 @@
 package ryu.park.shop.view;
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,11 +23,13 @@ public class CartListExcelView extends AbstractExcelView {
 	protected void buildExcelDocument(Map<String, Object> model, HSSFWorkbook workbook, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 	 
-	//	response.setHeader("Content-Disposition", "attachment; filename=\"my-xls-file.xls\"");
+		String name = "견적서";
+		name = new String(name.getBytes("UTF-8"), "ISO-8859-1");
+		response.setHeader("Content-Disposition", "attachment; filename=\"" + name +".xls\"");
 		Sheet sheet = workbook.createSheet("sheet 1");
 
 		@SuppressWarnings("unchecked")
-		Map<Integer, CartVO> cartList = (HashMap<Integer, CartVO>) model.get("cartList");
+		List<CartVO> cartList = (ArrayList<CartVO>) model.get("cartList");
 
 		Row row = null;
 		Cell cell = null;
@@ -59,13 +62,13 @@ public class CartListExcelView extends AbstractExcelView {
 		cell.setCellValue("수량");
 
 		// Create data cell
-		for (Integer key : cartList.keySet()) {
+		for (CartVO cart : cartList) {
 			row = sheet.createRow(r++);
 			c = 0;
-			row.createCell(c++).setCellValue(cartList.get(key).getGoodsVO().getGoodsSubject());
-			row.createCell(c++).setCellValue(cartList.get(key).getGoodsVO().getGoodsMainPicUrl());
-			row.createCell(c++).setCellValue(cartList.get(key).getGoodsVO().getGoodsCost());
-			row.createCell(c++).setCellValue(cartList.get(key).getCartGoodsCnt());
+			row.createCell(c++).setCellValue(cart.getGoodsVO().getGoodsSubject());
+			row.createCell(c++).setCellValue(cart.getGoodsVO().getGoodsMainPicUrl());
+			row.createCell(c++).setCellValue(cart.getGoodsVO().getGoodsCost());
+			row.createCell(c++).setCellValue(cart.getCartGoodsCnt());
 
 		}
 		for (int i = 0; i < 4; i++)

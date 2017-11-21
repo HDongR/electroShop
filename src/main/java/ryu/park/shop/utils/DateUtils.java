@@ -1,5 +1,6 @@
 package ryu.park.shop.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -25,15 +26,14 @@ public class DateUtils {
 	
 	public String now() {
 		Date date = new Date();
-		int year = date.getYear() + 1900;
-		int month = date.getMonth();
-		String monthStr = "";
-
-		if (month < 10)
-			monthStr = "0" + month;
-		else
-			monthStr = "" + month;
-		
-		return year + monthStr;
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
+	 
+		return format.format(date);
+	}
+	
+	public String now_short() {
+		Date date = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
+		return format.format(date);
 	}
 }

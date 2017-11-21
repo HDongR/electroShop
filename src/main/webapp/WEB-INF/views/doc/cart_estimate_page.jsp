@@ -18,7 +18,7 @@
 					<tbody>
 						<tr>
 							<td>이름 :</td>
-							<td><input type="text" maxlength="20"></td>
+							<td><input id="name" type="text" maxlength="20"></td>
 						</tr>
 						<tr>
 							<td>견적금액 :</td>
@@ -26,11 +26,11 @@
 						</tr>
 						<tr>
 							<td>전화번호 :</td>
-							<td><input type="text" maxlength="15"></td>
+							<td><input id="phoneNum" type="text" maxlength="15"></td>
 						</tr>
 						<tr>
 							<td>팩스번호 :</td>
-							<td><input type="text" maxlength="15"</td>
+							<td><input id="faxNum" type="text" maxlength="15"</td>
 						</tr>
 					</tbody>
 				</table>
@@ -98,16 +98,16 @@
 				</tbody>
 				<tfoot align="right">
 					<tr>
-						<td colspan="4">공급가액:</td>
-						<td colspan="2" id="supplyValue"></td>
+						<td colspan="5">공급가액:</td>
+						<td id="supplyValue"></td>
 					</tr>
 					<tr>
-						<td colspan="4">부가세:</td>
-						<td colspan="2" id="tax"></td>
+						<td colspan="5">부가세:</td>
+						<td id="tax"></td>
 					</tr>
 					<tr class="info">
-						<td colspan="4">견적총액:</td>
-						<td colspan="2" id="totalEstimate"></td>
+						<td colspan="5">견적총액:</td>
+						<td id="totalEstimate"></td>
 					</tr>
 				</tfoot>
 			</table>
@@ -123,8 +123,10 @@
 	</div>
 	<br/>
 	<div class="row" align="center">
-		<button class="btn btn-primary btn-md" type="button" onclick="javascript:window.print()">프린트</button>
-		<button class="btn btn-info btn-md" type="button" onclick="javascript:window.close()">창닫기</button>
+		<button id="printBtn" class="btn btn-primary btn-md" type="button"> <span class="glyphicon glyphicon-print"></span> 프린트</button>
+		<button id="pdfBtn" class="btn btn-primary btn-md" type="button"><span class="glyphicon glyphicon-floppy-save"></span> PDF</button>
+		<button id="excelBtn" class="btn btn-primary btn-md" type="button"><span class="glyphicon glyphicon-floppy-save"></span> EXCEL</button>
+		<button class="btn btn-info btn-md" type="button" onclick="javascript:window.close()"><span class="glyphicon glyphicon-remove"></span> 창닫기</button>
 	</div>
 	<br/>
 </div>
@@ -191,4 +193,52 @@
 		}
 		return result;
 	}
+	
+	$("#printBtn").click(function(){
+		if(validField()){
+			window.print();
+		}
+	});
+	
+	$("#pdfBtn").click(function(){
+		if(validField()){
+			var name = $("#name").val();
+			var phoneNum = $("#phoneNum").val();
+			var faxNum = $("#faxNum").val();
+			
+			downloadEstimate("/doc/cart_estimate_download.pdf", name, phoneNum, faxNum);
+		}
+	});
+	
+	$("#excelBtn").click(function(){
+		if(validField()){
+			var name = $("#name").val();
+			var phoneNum = $("#phoneNum").val();
+			var faxNum = $("#faxNum").val();
+			
+			downloadEstimate("/doc/cart_estimate_download.xls", name, phoneNum, faxNum);
+		}
+	});
+	
+	//출력이나 다운로드시 필드검증
+	function validField(){
+		var name = $("#name").val();
+		var phoneNum = $("#phoneNum").val();
+		var faxNum = $("#faxNum").val();
+		
+		console.log(name, phoneNum, faxNum);
+		
+		if(name != "" && phoneNum != ""){
+			return true;
+		}else{
+			alert("이름과 전화번호는 필수 입력사항 입니다")
+			return false;
+		}
+	}
+	
+	function downloadEstimate(url, name, phoneNum, faxNum){
+		var setUrl = url + "?name=" + name + "&phoneNum=" + phoneNum + "&faxNum=" + faxNum;
+		location.href = setUrl;
+	}
+	
 </script>

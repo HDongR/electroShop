@@ -53,9 +53,9 @@ public class CartController {
 	}
 	
 	@RequestMapping(value = "cart_estimate_page", method = RequestMethod.GET, produces = {"text/html","application/pdf","application/vnd.ms-excel"})
-	public String cartEstimate(@ModelAttribute String cartList, Model model) {
+	public String cartEstimate() {
 		return "doc/cart_estimate_page";
-	} 
+	}
 
 	@RequestMapping(value = "totalCount", method = RequestMethod.GET)
 	public void totalCartCount(@RequestParam String userEmail) {
@@ -160,14 +160,6 @@ public class CartController {
 	 */
 	@ModelAttribute("cartList")
 	public List<CartVO> cartList(HttpSession session) {
-		List<CartVO> v = cartService.getCartList(session);
-		for(CartVO c : v) {
-			logger.info("get cartSeq:"+ c.getCartSeq());
-			logger.info("get cartGoodsSeq:"+ c.getCartGoodsSeq());
-			logger.info("get godosSubject:"+ c.getGoodsVO().getGoodsSubject());
-			logger.info("get goodsCnt:"+ c.getCartGoodsCnt()); 
-			logger.info("get cartEmail:"+ c.getCartUserEmail()); 
-		}
-		return v;
+		return cartService.getCartList(session);
 	}
 }

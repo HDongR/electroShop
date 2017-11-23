@@ -60,8 +60,7 @@ public class DocController {
 
 	/**
 	 * @method cartList : 기본적으로 모든 페이지에 장바구니 리스트 포함
-	 * @param session
-	 *            : 현재세션
+	 * @param session : 현재세션
 	 * @return
 	 * @author hodongryu
 	 * @since 2017.10.30.

@@ -18,7 +18,7 @@ public class ExcelViewResolver implements ViewResolver {
 	
 	public ExcelViewResolver() {
 		super();
-		excelViewMap = new HashMap<>();
+		excelViewMap = new HashMap<String, View>();
 		excelViewMap.put("doc/cart_estimate_download.xls", new CartListExcelView());
 	}
 	

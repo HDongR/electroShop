@@ -13,7 +13,7 @@ public class ExcelStyle {
      * Create a library of cell styles
      */
 	protected static Map<String, CellStyle> createStyles(HSSFWorkbook wb){
-        Map<String, CellStyle> styles = new HashMap<>();
+        Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
         CellStyle style;
         Font titleFont = wb.createFont();
         titleFont.setFontHeightInPoints((short)18);

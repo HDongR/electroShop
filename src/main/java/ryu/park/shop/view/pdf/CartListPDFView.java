@@ -92,13 +92,13 @@ public class CartListPDFView extends AbstractPdfView {
 		table.setWidths(new float[]{0.6f, 1.4f});
 
 		table.addCell(PDFStyle.createCell("견적일 :", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, false));
-		table.addCell(PDFStyle.createCell(DateUtils.getInstance().now_short(), font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, false));
+		table.addCell(PDFStyle.createCell(DateUtils.now_short(), font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, false));
  
 		table.addCell(PDFStyle.createCell("이름 :", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, false));
 		table.addCell(PDFStyle.createCell(name, font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, false));
  
 		table.addCell(PDFStyle.createCell("견적금액 :", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_TOP, null, 1, 1, false));
-		table.addCell(PDFStyle.createCell(BizUtils.getInstance().calculCostCartList(2, model) + "원\n(부과세포함, 운송료별도)", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_TOP, null, 1, 1, false));
+		table.addCell(PDFStyle.createCell(BizUtils.calculCostCartList(2, model) + "원\n(부과세포함, 운송료별도)", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_TOP, null, 1, 1, false));
   
 		table.addCell(PDFStyle.createCell("전화번호 :", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, false));
 		table.addCell(PDFStyle.createCell(phoneNum, font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, false));
@@ -180,7 +180,7 @@ public class CartListPDFView extends AbstractPdfView {
 		allCostLabelCell.setPaddingRight(10f);
 		table.addCell(allCostLabelCell);
 		
-		PdfPCell allCostCell = PDFStyle.createCell(BizUtils.getInstance().calculCostCartList(0, model) + " 원", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, true);
+		PdfPCell allCostCell = PDFStyle.createCell(BizUtils.calculCostCartList(0, model) + " 원", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, true);
 		allCostCell.setPaddingRight(10f); 
 		table.addCell(allCostCell);
 		
@@ -188,7 +188,7 @@ public class CartListPDFView extends AbstractPdfView {
 		taxLabelCell.setPaddingRight(10f);
 		table.addCell(taxLabelCell);
 		
-		PdfPCell taxCell = PDFStyle.createCell(BizUtils.getInstance().calculCostCartList(1, model) + " 원", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, true);
+		PdfPCell taxCell = PDFStyle.createCell(BizUtils.calculCostCartList(1, model) + " 원", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, null, 1, 1, true);
 		taxCell.setPaddingRight(10f);
 		table.addCell(taxCell); 
 		
@@ -196,7 +196,7 @@ public class CartListPDFView extends AbstractPdfView {
 		allSumLabelCell.setPaddingRight(10f);
 		table.addCell(allSumLabelCell);
 		
-		PdfPCell allSumCell = PDFStyle.createCell(BizUtils.getInstance().calculCostCartList(2, model) + " 원", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, hdColor, 1, 1, true);
+		PdfPCell allSumCell = PDFStyle.createCell(BizUtils.calculCostCartList(2, model) + " 원", font, PdfPCell.ALIGN_RIGHT, PdfPCell.ALIGN_MIDDLE, hdColor, 1, 1, true);
 		allSumCell.setPaddingRight(10f);
 		table.addCell(allSumCell); 
 		

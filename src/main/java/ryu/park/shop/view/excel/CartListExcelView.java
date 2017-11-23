@@ -43,10 +43,10 @@ public class CartListExcelView extends AbstractExcelView {
 		String faxNum = (String) model.get("faxNum");
 
 		//견적일, 이름, 견적금액(2개 셀병합), 전화번호, 팩스번호 순
-		List<String> clientInfoValues = new ArrayList<>();
-		clientInfoValues.add(DateUtils.getInstance().now_short());
+		List<String> clientInfoValues = new ArrayList<String>();
+		clientInfoValues.add(DateUtils.now_short());
 		clientInfoValues.add(name);
-		clientInfoValues.add(BizUtils.getInstance().calculCostCartList(2, model) + "원\n(부과세포함, 운송료별도)");
+		clientInfoValues.add(BizUtils.calculCostCartList(2, model) + "원\n(부과세포함, 운송료별도)");
 		clientInfoValues.add("");
 		clientInfoValues.add(phoneNum);
 		clientInfoValues.add(faxNum); 
@@ -204,21 +204,21 @@ public class CartListExcelView extends AbstractExcelView {
 					if(j==0) 
 						cell.setCellValue("공급가액:");
 					else if(j==7) 
-						cell.setCellValue(BizUtils.getInstance().calculCostCartList(0, model) + " 원");
+						cell.setCellValue(BizUtils.calculCostCartList(0, model) + " 원");
 					cell.setCellStyle(styles.get("formula"));
 				} else if(i > cartList.size() + 1 && i < cartList.size() + 3) { //부가세
 					Cell cell = row.createCell(j);
 					if(j==0)
 						cell.setCellValue("부가세:");
 					else if(j==7)
-						cell.setCellValue(BizUtils.getInstance().calculCostCartList(1, model) + " 원");
+						cell.setCellValue(BizUtils.calculCostCartList(1, model) + " 원");
 					cell.setCellStyle(styles.get("formula"));
 				} else { //견적총액
 					Cell cell = row.createCell(j);
 					if(j==0)
 						cell.setCellValue("견적총액:");
 					else if(j==7)
-						cell.setCellValue(BizUtils.getInstance().calculCostCartList(2, model) + " 원");
+						cell.setCellValue(BizUtils.calculCostCartList(2, model) + " 원");
 					cell.setCellStyle(styles.get("formula_2"));
 				}
 			}

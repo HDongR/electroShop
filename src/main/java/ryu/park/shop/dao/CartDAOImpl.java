@@ -38,10 +38,8 @@ public class CartDAOImpl implements CartDAO{
 			map.put("cartGoodsSeq", cartVO.getCartGoodsSeq());
 			map.put("cartGoodsCnt", cartVO.getCartGoodsCnt());
 			
-			session.selectOne(NAMESPACE + "upsertCart", map);
-			int r= (int) map.get("result");
-			logger.info("whatthefuck:"+(int) map.get("result"));
-			return r;
+			session.selectOne(NAMESPACE + "upsertCart", map); 
+			return (Integer) map.get("result");
 		} catch (Exception e) {
 			logger.error(e.getLocalizedMessage(), e);
 			return -1;

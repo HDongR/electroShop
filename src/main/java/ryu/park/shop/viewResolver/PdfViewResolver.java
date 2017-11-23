@@ -18,7 +18,7 @@ public class PdfViewResolver implements ViewResolver {
 	 
 	public PdfViewResolver() {
 		super();
-		pdfViewMap = new HashMap<>();
+		pdfViewMap = new HashMap<String, View>();
 		pdfViewMap.put("doc/cart_estimate_download.pdf", new CartListPDFView());
 	}
 	

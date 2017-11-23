@@ -17,21 +17,16 @@ import java.util.Date;
  *    2017.10.30.  hodongryu      최초작성
  * </pre>
  */
-public class DateUtils {
-	private static DateUtils Instance = new DateUtils();
+public class DateUtils { 
 	
-	public static DateUtils getInstance() {
-		return Instance == null ? new DateUtils() : Instance;
-	}
-	
-	public String now() {
+	public static String now() {
 		Date date = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd_HHmmss");
 	 
 		return format.format(date);
 	}
 	
-	public String now_short() {
+	public static String now_short() {
 		Date date = new Date();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy년 MM월 dd일");
 		return format.format(date);

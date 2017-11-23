@@ -5,12 +5,7 @@ import java.util.Map;
  
 import ryu.park.shop.vo.CartVO;
 
-public class BizUtils {
-	private static BizUtils Instance = new BizUtils();
-
-	public static BizUtils getInstance() {
-		return Instance == null ? new BizUtils() : Instance;
-	}
+public class BizUtils { 
 	
 	/**
 	 * @method calculCostCartList
@@ -30,7 +25,7 @@ public class BizUtils {
 	 *    2017.11.18.  hodongryu      최초작성
 	 *      </pre>
 	 */
-	public String calculCostCartList(int returnType, Map<String, Object> model) {
+	public static String calculCostCartList(int returnType, Map<String, Object> model) {
 		@SuppressWarnings("unchecked")
 		List<CartVO> cartList = (List<CartVO>) model.get("cartList");
 

@@ -58,7 +58,7 @@ public class ImgStore {
 
 	public ImgStore setFileName(String... fileNames) {  
 		for(String fileName : fileNames) {  
-			this.fileNames.add(DateUtils.getInstance().now() + "_" + fileName);
+			this.fileNames.add(DateUtils.now() + "_" + fileName);
 		}
 		return this;
 	}

@@ -51,11 +51,6 @@ public class DocController {
 			@RequestParam(value = "phoneNum") String phoneNum,
 			@RequestParam(value = "faxNum", required = false) String faxNum, Model model) {
 		
-		logger.info("name:" + name );
-		
-		logger.info("phone:" + phoneNum );
-		logger.info("fax:" + faxNum );
-		
 		model.addAttribute("name", name);
 		model.addAttribute("phoneNum", phoneNum);
 		model.addAttribute("faxNum", faxNum);

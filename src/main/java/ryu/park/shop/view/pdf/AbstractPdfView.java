@@ -1,4 +1,4 @@
-package ryu.park.shop.view;
+package ryu.park.shop.view.pdf;
 
 import java.util.Map;
 

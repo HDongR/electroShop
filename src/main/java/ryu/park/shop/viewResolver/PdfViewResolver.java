@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
-import ryu.park.shop.view.CartListPDFView;
+import ryu.park.shop.view.pdf.CartListPDFView;
 
 public class PdfViewResolver implements ViewResolver {
 	

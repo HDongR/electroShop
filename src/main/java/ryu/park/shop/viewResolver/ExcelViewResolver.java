@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 
-import ryu.park.shop.view.CartListExcelView;
+import ryu.park.shop.view.excel.CartListExcelView;
 
 public class ExcelViewResolver implements ViewResolver {
 

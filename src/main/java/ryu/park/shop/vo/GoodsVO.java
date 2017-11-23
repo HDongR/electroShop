@@ -24,7 +24,7 @@ public class GoodsVO implements Serializable{
 	private String goodsSubject;
 	@NotNull
 	@Range(min=0)
-	private Integer goodsCost;
+	private Long goodsCost;
 	private String goodsMainPicUrl;
 	@NotEmpty
 	private String goodsContents;
@@ -67,11 +67,11 @@ public class GoodsVO implements Serializable{
 		this.goodsSubject = goodsSubject;
 	}
 
-	public Integer getGoodsCost() {
+	public Long getGoodsCost() {
 		return goodsCost;
 	}
 
-	public void setGoodsCost(Integer goodsCost) {
+	public void setGoodsCost(Long goodsCost) {
 		this.goodsCost = goodsCost;
 	}
 

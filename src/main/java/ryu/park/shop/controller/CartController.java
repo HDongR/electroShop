@@ -159,7 +159,7 @@ public class CartController {
 	 *      </pre>
 	 */
 	@ModelAttribute("cartList")
-	public List<CartVO> cartList(HttpSession session) {
+	public List<CartVO> cartList(HttpSession session) { 
 		return cartService.getCartList(session);
 	}
 }

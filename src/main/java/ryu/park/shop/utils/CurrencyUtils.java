@@ -14,8 +14,9 @@ public class CurrencyUtils {
 	 * @param int
 	 * @return String
 	 */
-	public static String toNumFormat(long num) {
+	public static String toNumFormat(long num) { 
 		DecimalFormat df = new DecimalFormat("#,###");
-		return df.format(num);
+		String nu = df.format(num); 
+		return nu;
 	}
 }

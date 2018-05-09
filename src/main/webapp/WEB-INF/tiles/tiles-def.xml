@@ -15,8 +15,12 @@
 		<put-attribute name="body" value="/WEB-INF/views/board/{1}.jsp"/> 
 	</definition> 
 	<definition name="cart/*" extends="main">
-		<put-attribute name="body" value="/WEB-INF/views/biz/cart/{1}.jsp"/> 
+		<put-attribute name="body" value="/WEB-INF/views/biz/{1}.jsp"/> 
 	</definition> 
+	<definition name="order/*" extends="main">
+		<put-attribute name="body" value="/WEB-INF/views/biz/{1}.jsp"/> 
+	</definition> 
+	
 	 
 	<definition name="doc/*" template="/WEB-INF/views/doc/layout/doc_default_template.jsp">
 		<put-attribute name="doc_body" value="/WEB-INF/views/doc/{1}.jsp"/> 
